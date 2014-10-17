@@ -1,6 +1,6 @@
 #!/bin/bash 
 
-adomain="int ac ad ae af ag ai al am an ao ar as at au aw ax az"
+adomain="ac ad ae af ag ai al am an ao ar as at au aw ax az"
 bdomain="ba bb bd be bf bg bh bi bj bm bn bo br bs bt bv bw by"
 cdomain="ca cc cd cf cg ch ci ck cl cm cn co cr cs cu cv cw cx cy cz"
 ddomain="de dj dk dm do dz"
@@ -27,6 +27,8 @@ ydomain="ye yt yu"
 zdomain="za zm zr zw"
 
 COUNTRYDOMAINS="${adomain} ${bdomain} ${cdomain} ${ddomain} ${edomain} ${fdomain} ${gdomain} ${hdomain} ${idomain} ${jdomain} ${kdomain} ${ldomain} ${mdomain} ${ndomain} ${odomain} ${pdomain} ${qdomain} ${rdomain} ${sdomain} ${tdomain} ${udomain} ${vdomain} ${wdomain} ${ydomain} ${zdomain}"
+
+OTHERDOMAINS="int"
 
 for from in 0 50 100 150 200 250 300 350 400 450 500 550 600 650 700 750 1000 1050 1100 1150 1200 1250 1300 1350 1400 1450 1500 1550 1600 1650 1700 1750 1800 1850 1900 1950; do
     for code in ${COUNTRYDOMAINS} ; do

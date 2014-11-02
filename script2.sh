@@ -31,6 +31,6 @@ ONEHUNDRED="1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 2 526
 
 for n in ${ONEHUNDRED}; do
     for t2 in `cat dspace-terms.en.utf8 eprints-terms.en.utf8 ojs-terms.en.utf8`; do
-	echo "https://www.yandex.com/yandsearch?lr=87&text=${t2}&p=${n}" >> yandex.urls.en
+	echo "https://www.yandex.com/yandsearch?lr=87&text=${t2}&p=${n}" >> yandex.urls
     done
 done

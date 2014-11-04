@@ -16,10 +16,24 @@ LANGUAGES=en
 #done
 
 rm  google.urls
+
+DOMAINS=`cat country-domains.utf8`
+OAITERMS=`cat oai-terms.utf8`
+
+
+for from in 0 50 100 150 200 250; do
+    for domain in ${COUNTRYDOMAINS} ; do
+	for string in  $OAITERMS; do 
+	    echo "https://www.google.co.nz/search?start=${n}&num=50&filter=0&q=${t1}+site%3A.${domain}" >> google.urls
+	done
+    done
+done
+
+
 for language in ${LANGUAGES}; do
     for t1 in `cat ojs-terms.en.utf8 dspace-terms.${language}.utf8 eprints-terms.${language}.utf8`; do
 	for n in 0 50 100 150 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950 1000 1050  ; do
-	    echo "https://www.google.co.nz/search?start=${n}&num=50&q=${t1}" >> google.urls
+	    echo "https://www.google.co.nz/search?start=${n}&num=50&filter=0&q=${t1}" >> google.urls
 	done;
     done;
 done

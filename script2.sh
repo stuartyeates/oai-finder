@@ -15,10 +15,10 @@ LANGUAGES=en
 #    done;
 #done
 
-
+rm  google.urls
 for language in ${LANGUAGES}; do
     for t1 in `cat ojs-terms.en.utf8 dspace-terms.${language}.utf8 eprints-terms.${language}.utf8`; do
-	for n in 0 50 100 150 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950 ; do
+	for n in 0 50 100 150 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950 1000 1050  ; do
 	    echo "https://www.google.co.nz/search?start=${n}&num=50&q=${t1}" >> google.urls
 	done;
     done;

@@ -21,14 +21,13 @@ DOMAINS=`cat country-domains.utf8`
 OAITERMS=`cat oai-terms.utf8`
 
 
-for from in 0 50 100 150 200 250; do
-    for domain in ${COUNTRYDOMAINS} ; do
-	for string in  $OAITERMS; do 
+for from in 0 50 100 150; do
+    for domain in ${DOMAINS} ; do
+	for t1 in  ${OAITERMS}; do 
 	    echo "https://www.google.co.nz/search?start=${n}&num=50&filter=0&q=${t1}+site%3A.${domain}" >> google.urls
 	done
     done
 done
-
 
 for language in ${LANGUAGES}; do
     for t1 in `cat ojs-terms.en.utf8 dspace-terms.${language}.utf8 eprints-terms.${language}.utf8`; do

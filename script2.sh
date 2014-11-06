@@ -55,7 +55,7 @@ done
 #done
 
 
-######### Google 
+######### Microsoft
 rm  microsoft.urls
 
 for n in 1 51 101 151 201 251 301 351 401 451 501 551 601 651 701 751 801 851 901 951 ; do
@@ -65,8 +65,31 @@ done;
 #check for repository-specific search terms in great depth
 for language in ${LANGUAGES}; do
     for t1 in `cat  oai-terms.utf8 ojs-terms.${language}.utf8 islandora-terms.${language}.utf8 etd-db-terms.${language}.utf8 vital-terms.${language}.utf8 dspace-terms.${language}.utf8 eprints-terms.${language}.utf8`; do
-	for n in 1 51 101 151 201 251 301 351 401 451 501 551 601 651 701 751 801 851 901 951 ; do
-	    echo "https://www.bing.com/search?q=${t1}&count=50&first=${n}"  >> microsoft.urls
+	for t2 in `cat factors.${language}.utf8`; do
+	    for n in 1 51 101 151 201 251 301 351 401 451 501 551 601 651 701 751 801 851 901 951 ; do
+		echo "https://www.bing.com/search?q=${t1} ${t2}&count=50&first=${n}"  >> microsoft.urls
+	    done;
+	done;
+    done;
+done
+
+
+
+
+######### Sogou
+rm  sogou.urls
+
+for n in 1 2 3 4 5 6 7 8 9 ; do
+    echo "http://www.sogou.com/web?query=%22verb%3Didentify%22 OAI-PMH&page=${n}" >> sogou.urls
+done;
+
+#check for repository-specific search terms in great depth
+for language in ${LANGUAGES}; do
+    for t1 in `cat  oai-terms.utf8 ojs-terms.${language}.utf8 islandora-terms.${language}.utf8 etd-db-terms.${language}.utf8 vital-terms.${language}.utf8 dspace-terms.${language}.utf8 eprints-terms.${language}.utf8`; do
+	for t2 in `cat factors.${language}.utf8`; do
+	    for n in 1 2 3 ; do
+		echo "http://www.sogou.com/web?query=${t1} ${t2}&page=${n}" >> sogou.urls
+	    done;
 	done;
     done;
 done

@@ -34,7 +34,7 @@ fi
 if [ false ] 
 then
 for language in ${LANGUAGES}; do
-    for t1 in `cat  oai-terms.utf8 ojs-terms.${language}.utf8 islandora-terms.${language}.utf8 etd-db-terms.${language}.utf8 vital-terms.${language}.utf8 dspace-terms.${language}.utf8 eprints-terms.${language}.utf8`; do
+    for t1 in `cat  oai-terms.utf8 ojs-terms.${language}.utf8 islandora-terms.${language}.utf8 etd-db-terms.${language}.utf8 vital-terms.${language}.utf8 dspace-terms.${language}.utf8  greenstone-terms.${language}.utf6 eprints-terms.${language}.utf8`; do
 	for n in 0 50 100 150 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950 ; do
 	    echo "https://www.google.co.nz/search?start=${n}&num=50&filter=0&q=${t1}" >> build/google.urls
 	done;
@@ -46,7 +46,7 @@ fi
 if [ true ] 
 then
 for language in ${LANGUAGES}; do
-    for t1 in `cat ojs-terms.${language}.utf8 islandora-terms.${language}.utf8 etd-db-terms.${language}.utf8 vital-terms.${language}.utf8 dspace-terms.${language}.utf8 eprints-terms.${language}.utf8`; do
+    for t1 in `cat ojs-terms.${language}.utf8 islandora-terms.${language}.utf8 etd-db-terms.${language}.utf8 vital-terms.${language}.utf8 dspace-terms.${language}.utf8 eprints-terms.${language}.utf8  greenstone-terms.${language}.utf6`; do
 	for t2 in `cat academic-disciplines.${language}.utf8`; do
 	    for n in 0; do
 		echo "https://www.google.co.nz/search?start=${n}&num=50&filter=0&q=${t1} ${t2}" >> build/google.urls
@@ -85,7 +85,7 @@ done;
 
 #check for repository-specific search terms in great depth
 for language in ${LANGUAGES}; do
-    for t1 in `cat  oai-terms.utf8 ojs-terms.${language}.utf8 islandora-terms.${language}.utf8 etd-db-terms.${language}.utf8 vital-terms.${language}.utf8 dspace-terms.${language}.utf8 eprints-terms.${language}.utf8`; do
+    for t1 in `cat  oai-terms.utf8 ojs-terms.${language}.utf8 islandora-terms.${language}.utf8 etd-db-terms.${language}.utf8 vital-terms.${language}.utf8 dspace-terms.${language}.utf8 eprints-terms.${language}.utf8  greenstone-terms.${language}.utf6`; do
 	for n in 1 51 101 151 201 251 301 351 401 451 501 551 601 651 701 751 801 851 901 951 ; do
 	    echo "https://www.bing.com/search?q=${t1}&count=50&first=${n}"  >> build/microsoft.urls
 	done;

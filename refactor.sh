@@ -1,7 +1,15 @@
 #!/bin/bash
 
+# global options
 CACHEDIR=./cache
-#user agent for a ipad
+BUILDDIR=./build
+
+##################################################
+#USERAGENT string and cookie jat randomisation
+##################################################
+
+#various user agents
+USERAGENT00="Mozilla/5.0 (BlackBerry; U; BlackBerry 9900; en) AppleWebKit/534.11+ (KHTML, like Gecko) Version/7.1.0.346 Mobile Safari/534.11+"
 USERAGENT01="Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like Mac OS X; en-us) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8J2 Safari/6533.18.5"
 USERAGENT02="Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25"
 USERAGENT03="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.13+ (KHTML, like Gecko) Version/5.1.7 Safari/534.57.2"
@@ -21,8 +29,39 @@ USERAGENT16="Mozilla/5.0 (compatible; MSIE 10.0; Windows Phone 8.0; Trident/6.0;
 USERAGENT17="Mozilla/5.0 (X11; FreeBSD amd64; rv:5.0) Gecko/20100101 Firefox/5.0"
 USERAGENT18=""
 USERAGENT19="Opera/12.02 (Android 4.1; Linux; Opera Mobi/ADR-1111101157; U; en-US) Presto/2.9.201 Version/12.02"
-USERAGENT20="Mozilla/5.0 (BlackBerry; U; BlackBerry 9900; en) AppleWebKit/534.11+ (KHTML, like Gecko) Version/7.1.0.346 Mobile Safari/534.11+"
 
+COOKIEJAR=
+
+user_agent () {
+    NUM1=${RANDOM}
+    let "NUM1 %=2"
+    NUM2=${RANDOM}
+    let "NUM2 %=10"
+    FULL="USERAGENT${NUM1}${NUM2}"
+    
+    USERAGENT="${!FULL}"
+    COOKIEJAR="${BUILDDIR}"/cookiejar${NUM1}${NUM2}.cookie
+
+}
+
+test_user_agent () {
+
+    user_agent ;
+    echo USERAGENT="${USERAGENT}"
+    echo COOKIEJAR="${COOKIEJAR}"
+    user_agent ;
+    echo USERAGENT="${USERAGENT}"
+    echo COOKIEJAR="${COOKIEJAR}"
+    user_agent ;
+    echo USERAGENT="${USERAGENT}"
+    echo COOKIEJAR="${COOKIEJAR}"
+    user_agent ;
+    echo USERAGENT="${USERAGENT}"
+    echo COOKIEJAR="${COOKIEJAR}"
+
+}
+
+#test_user_agent 
 
 
 google_search () {
@@ -86,5 +125,5 @@ test_google_search() {
 
 
 
-test_google_search
+#test_google_search
 

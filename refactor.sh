@@ -32,6 +32,7 @@ USERAGENT19="Opera/12.02 (Android 4.1; Linux; Opera Mobi/ADR-1111101157; U; en-U
 
 COOKIEJAR=
 
+#assign a random user agent and associated cookie jar
 user_agent () {
     NUM1=${RANDOM}
     let "NUM1 %=2"
@@ -63,7 +64,7 @@ test_user_agent () {
 
 #test_user_agent 
 
-
+#perform a google search with 1-4 argument strings
 google_search () {
     #make sure our cache directory is created
     mkdir -p "${CACHEDIR}/google/"
@@ -123,7 +124,36 @@ test_google_search() {
     
 }
 
-
-
 #test_google_search
 
+download_seeds() {
+#create a list of all domains, so that we can search them separately
+    if [ ! -f "${CACHEDIR}/all-domains" ]; then
+	curl http://data.iana.org/TLD/tlds-alpha-by-domain.txt --output  "${CACHEDIR}/all-domains"
+	cat "${CACHEDIR}/all-domains" | tr 'A-Z' 'a-z' | grep -v \# > "${CACHEDIR}/all-domains-normalised"	
+    fi
+    
+    if [ ! -f "${CACHEDIR}/en-subjects-wordlist" ]; then
+	curl http://en.wikipedia.org/wiki/Outline_of_academic_disciplines  --output "${CACHEDIR}/en-subjects"
+	cat "${CACHEDIR}/en-subjects" | sed 's|<[^>]*>||g' |tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '....' >  "${CACHEDIR}/en-subjects-wordlist"
+    fi
+
+    if [ ! -f "${CACHEDIR}/fr-subjects-wordlist" ]; then
+	curl https://fr.wikipedia.org/wiki/Liste_des_disciplines_scientifiques  --output "${CACHEDIR}/fr-subjects"
+	cat "${CACHEDIR}/fr-subjects" | sed 's|<[^>]*>||g' |tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012'| tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' | tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '....' >  "${CACHEDIR}/fr-subjects-wordlist"
+    fi
+
+    if [ ! -f "${CACHEDIR}/ar-subjects-wordlist" ]; then
+	curl "https://ar.wikipedia.org/wiki/%D9%85%D9%84%D8%AD%D9%82:%D9%82%D8%A7%D8%A6%D9%85%D8%A9_%D8%A7%D9%84%D8%AA%D8%AE%D8%B5%D8%B5%D8%A7%D8%AA_%D8%A7%D9%84%D8%A3%D9%83%D8%A7%D8%AF%D9%8A%D9%85%D9%8A%D8%A9"  --output "${CACHEDIR}/ar-subjects"
+	cat "${CACHEDIR}/ar-subjects" | sed 's|<[^>]*>||g' |tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' |tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '....' >  "${CACHEDIR}/ar-subjects-wordlist"
+    fi
+
+    if [ ! -f "${CACHEDIR}/ja-subjects-wordlist" ]; then
+	curl "https://ja.wikipedia.org/wiki/%E5%AD%A6%E5%95%8F%E3%81%AE%E4%B8%80%E8%A6%A7"  --output "${CACHEDIR}/ja-subjects"
+	cat "${CACHEDIR}/ja-subjects" | sed 's|<[^>]*>||g' | tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' | tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '..' >  "${CACHEDIR}/ja-subjects-wordlist"
+    fi
+
+
+}
+
+download_seeds

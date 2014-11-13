@@ -153,6 +153,16 @@ download_seeds() {
 	cat "${CACHEDIR}/ja-subjects" | sed 's|<[^>]*>||g' | tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' | tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '..' >  "${CACHEDIR}/ja-subjects-wordlist"
     fi
 
+    if [ ! -f "${CACHEDIR}/zh-subjects-wordlist" ]; then
+	curl "https://zh.wikipedia.org/wiki/%E5%AD%B8%E7%A7%91%E5%88%97%E8%A1%A8"  --output "${CACHEDIR}/zh-subjects"
+	cat "${CACHEDIR}/zh-subjects" | sed 's|<[^>]*>||g' | tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' | tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '..' >  "${CACHEDIR}/zh-subjects-wordlist"
+    fi
+
+    if [ ! -f "${CACHEDIR}/ko-subjects-wordlist" ]; then
+	curl "https://ko.wikipedia.org/wiki/%ED%95%99%EB%AC%B8_%EB%B6%84%EC%95%BC_%EB%AA%A9%EB%A1%9D"  --output "${CACHEDIR}/ko-subjects"
+	cat "${CACHEDIR}/ko-subjects" | sed 's|<[^>]*>||g' | tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' | tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '..' >  "${CACHEDIR}/ko-subjects-wordlist"
+    fi
+
 
 }
 

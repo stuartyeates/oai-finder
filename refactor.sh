@@ -3,6 +3,7 @@
 # global options
 CACHEDIR=./cache
 BUILDDIR=./build
+INTERSEARCHPAUSE=120
 
 ##################################################
 #USERAGENT string and cookie jat randomisation
@@ -107,9 +108,9 @@ google_search () {
     else
 	
 	for n in 0 50 100 150 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950 ; do
-	    sleep 120
+	    sleep $INTERSEARCHPAUSE
 	    echo doing "${BASEURL}" ${n}
-	    curl --max-time 30 --dump-header "${CACHEBASE}.${n}.header" --output "${CACHEBASE}.${n}.result" --stderr "${CACHEBASE}.${n}.logging" --referer "http://www.google.com/" --verbose -A "${USERAGENT}" --url "${BASEURL}&start=${n}"
+	    curl --max-time 30  --cookie-jar "${COOKIEJAR}" --dump-header "${CACHEBASE}.${n}.header" --output "${CACHEBASE}.${n}.result" --stderr "${CACHEBASE}.${n}.logging" --referer "http://www.google.com/" --verbose -A "${USERAGENT}" --url "${BASEURL}&start=${n}"
 	done;
     fi
 

@@ -30,6 +30,7 @@ USERAGENT17="Mozilla/5.0 (X11; FreeBSD amd64; rv:5.0) Gecko/20100101 Firefox/5.0
 USERAGENT18=""
 USERAGENT19="Opera/12.02 (Android 4.1; Linux; Opera Mobi/ADR-1111101157; U; en-US) Presto/2.9.201 Version/12.02"
 
+USERAGENT=
 COOKIEJAR=
 
 #assign a random user agent and associated cookie jar
@@ -197,8 +198,16 @@ download_seeds
 
 search_for_urls () {
 
-
-
+    for url in `cat urls.utf8`; do 
+	echo "${url}"
+	user_agent
+	google_search "${url}"
+	    for word in `cat ${CACHEDIR/*-subjects-wordlist| shuf | tail -2}`; do 
+		echo "${word}"
+		google_search "${url}" "${word}"
+		
+	    done
+    done
 }
 
 search_for_urls

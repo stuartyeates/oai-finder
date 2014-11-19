@@ -203,7 +203,7 @@ search_for_urls () {
 	echo "${url}"
 	user_agent
 	google_search "${url}"
-	    for word in `cat ${CACHEDIR/*-subjects-wordlist| shuf | tail -2}`; do 
+	    for word in `cat ${CACHEDIR}/*-subjects-wordlist| shuf | tail -2}`; do 
 		echo "${word}"
 		google_search "${url}" "${word}"
 		

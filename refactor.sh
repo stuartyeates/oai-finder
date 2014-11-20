@@ -98,23 +98,19 @@ google_search () {
 	exit 1;
     fi
     
-    echo BASEURL="${BASEURL}"
-    echo CACHEBASE="${CACHEBASE}"
+    echo searching "${BASEURL}"
 
     #check to make sure we've not done this one before.
     if [ -f "${CACHEBASE}.0.result" ];
     then
 	echo "File "${CACHEBASE}.0.result" exists."
     else
-	
 	for n in 0 50 100 150 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950 ; do
 	    sleep $INTERSEARCHPAUSE
 	    echo doing "${BASEURL}" ${n}
 	    curl --max-time 30  --cookie-jar "${COOKIEJAR}" --dump-header "${CACHEBASE}.${n}.header" --output "${CACHEBASE}.${n}.result" --stderr "${CACHEBASE}.${n}.logging" --referer "http://www.google.com/" --verbose -A "${USERAGENT}" --url "${BASEURL}&start=${n}"
 	done;
     fi
-
-
 }
 
 test_google_search() {
@@ -127,6 +123,53 @@ test_google_search() {
 }
 
 #test_google_search
+
+bing_search () {
+    #make sure our cache directory is created
+    mkdir -p "${CACHEDIR}/bing/"
+
+    if [  "$1" ]
+    then
+	if [  "$2" ]
+	then
+	    if [  "$3" ]
+	    then
+		if [  "$4" ]
+		then
+		    BASEURL="http://www.bing.com/search?q=${1} ${2} ${3} ${4}&filter=0&count=50"
+		    CACHEBASE="${CACHEDIR}/bing/${1}+${2}+${3}+${4}"
+		else
+		    BASEURL="http://www.bing.com/search?q=${1} ${2} ${3}&filter=0&count=50"
+		    CACHEBASE="${CACHEDIR}/bing/${1}+${2}+${3}"
+		fi
+	    else
+		BASEURL="http://www.bing.com/search?q=${1} ${2}&filter=0&count=50"
+		CACHEBASE="${CACHEDIR}/bing/${1}+${2}"
+	    fi
+	else
+	    BASEURL="http://www.bing.com/search?q=${1}&filter=0&count=50"
+	    CACHEBASE="${CACHEDIR}/bing/${1}"
+	fi
+    else
+	echo "Error: bing_search called without args"
+	exit 1;
+    fi
+    
+    echo searching "${BASEURL}"
+
+    #check to make sure we've not done this one before.
+    if [ -f "${CACHEBASE}.0.result" ];
+    then
+	echo "File "${CACHEBASE}.0.result" exists."
+    else
+	for n in 1 51 101 151 201 251 301 351 401 451 501 551 601 651 701 751 801 851 901 951 ; do
+	    sleep $INTERSEARCHPAUSE
+	    echo doing "${BASEURL}" ${n}
+	    curl --max-time 30  --cookie-jar "${COOKIEJAR}" --dump-header "${CACHEBASE}.${n}.header" --output "${CACHEBASE}.${n}.result" --stderr "${CACHEBASE}.${n}.logging" --referer "http://www.bing.com/" --verbose -A "${USERAGENT}" --url "${BASEURL}&first=${n}"
+	done;
+    fi
+}
+
 
 download_seeds() {
 #create a list of all domains, so that we can search them separately
@@ -202,11 +245,12 @@ search_for_urls () {
     for url in `cat urls.utf8`; do 
 	echo "${url}"
 	user_agent
+	bing_search "${url}"
 	google_search "${url}"
 	    for word in `cat ${CACHEDIR}/*-subjects-wordlist| shuf | tail -2}`; do 
 		echo "${word}"
-		google_search "${url}" "${word}"
-		
+		google_search "${url}" "${word}"		
+		bing_search "${url}" "${word}"		
 	    done
     done
 }

@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # global options
-CACHEDIR=./cache
-BUILDDIR=./build
+export CACHEDIR=./cache
+export BUILDDIR=./build
 INTERSEARCHPAUSE=120
 
 ##################################################
@@ -108,7 +108,7 @@ google_search () {
 	for n in 0 50 100 150 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950 ; do
 	    sleep $INTERSEARCHPAUSE
 	    echo doing "${BASEURL}" ${n}
-	    curl --max-time 30  --cookie-jar "${COOKIEJAR}" --dump-header "${CACHEBASE}.${n}.header" --output "${CACHEBASE}.${n}.result" --stderr "${CACHEBASE}.${n}.logging" --referer "http://www.google.com/" --verbose -A "${USERAGENT}" --url "${BASEURL}&start=${n}"
+	    curl --max-time 30  --cookie-jar "${COOKIEJAR}.google" --dump-header "${CACHEBASE}.${n}.header" --output "${CACHEBASE}.${n}.result" --stderr "${CACHEBASE}.${n}.logging" --referer "http://www.google.com/" --verbose -A "${USERAGENT}" --url "${BASEURL}&start=${n}"
 	done;
     fi
 }
@@ -160,12 +160,12 @@ bing_search () {
     #check to make sure we've not done this one before.
     if [ -f "${CACHEBASE}.0.result" ];
     then
-	echo "File "${CACHEBASE}.0.result" exists."
+	echo "File "${CACHEBASE}.1.result" exists."
     else
 	for n in 1 51 101 151 201 251 301 351 401 451 501 551 601 651 701 751 801 851 901 951 ; do
 	    sleep $INTERSEARCHPAUSE
 	    echo doing "${BASEURL}" ${n}
-	    curl --max-time 30  --cookie-jar "${COOKIEJAR}" --dump-header "${CACHEBASE}.${n}.header" --output "${CACHEBASE}.${n}.result" --stderr "${CACHEBASE}.${n}.logging" --referer "http://www.bing.com/" --verbose -A "${USERAGENT}" --url "${BASEURL}&first=${n}"
+	    curl --max-time 30  --cookie-jar "${COOKIEJAR}.bing" --dump-header "${CACHEBASE}.${n}.header" --output "${CACHEBASE}.${n}.result" --stderr "${CACHEBASE}.${n}.logging" --referer "http://www.bing.com/" --verbose -A "${USERAGENT}" --url "${BASEURL}&first=${n}"
 	done;
     fi
 }
@@ -237,22 +237,21 @@ download_seeds() {
 
 }
 
-download_seeds
-
-
 search_for_urls () {
 
     for url in `cat urls.utf8`; do 
 	echo "${url}"
 	user_agent
-	bing_search "${url}"
+	(bing_search "${url}" &)
 	google_search "${url}"
-	    for word in `cat ${CACHEDIR}/*-subjects-wordlist| shuf | tail -2}`; do 
-		echo "${word}"
-		google_search "${url}" "${word}"		
-		bing_search "${url}" "${word}"		
-	    done
+
+	for word in `cat ${CACHEDIR}/*-subjects-wordlist| shuf | tail -2`; do 
+	    echo "${word}"
+	    google_search "${url}" "${word}" 		
+	    ( bing_search "${url}" "${word}" &)	
+	done
     done
 }
 
+download_seeds
 search_for_urls

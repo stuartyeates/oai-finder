@@ -3,7 +3,8 @@
 # global options
 export CACHEDIR=./cache
 export BUILDDIR=./build
-INTERSEARCHPAUSE=120
+INTERSEARCHPAUSE=600
+INTRASEARCHPAUSE=20
 
 ##################################################
 #USERAGENT string and cookie jat randomisation
@@ -106,7 +107,7 @@ google_search () {
 	echo "File "${CACHEBASE}.0.result" exists."
     else
 	for n in 0 50 100 150 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950 ; do
-	    sleep $INTERSEARCHPAUSE
+	    sleep $INTRASEARCHPAUSE
 	    echo doing "${BASEURL}" ${n}
 	    curl --max-time 30  --cookie-jar "${COOKIEJAR}.google" --dump-header "${CACHEBASE}.${n}.header" --output "${CACHEBASE}.${n}.result" --stderr "${CACHEBASE}.${n}.logging" --referer "http://www.google.com/" --verbose -A "${USERAGENT}" --url "${BASEURL}&start=${n}"
 	done;
@@ -163,7 +164,7 @@ bing_search () {
 	echo "File "${CACHEBASE}.1.result" exists."
     else
 	for n in 1 51 101 151 201 251 301 351 401 451 501 551 601 651 701 751 801 851 901 951 ; do
-	    sleep $INTERSEARCHPAUSE
+	    sleep $INTRASEARCHPAUSE
 	    echo doing "${BASEURL}" ${n}
 	    curl --max-time 30  --cookie-jar "${COOKIEJAR}.bing" --dump-header "${CACHEBASE}.${n}.header" --output "${CACHEBASE}.${n}.result" --stderr "${CACHEBASE}.${n}.logging" --referer "http://www.bing.com/" --verbose -A "${USERAGENT}" --url "${BASEURL}&first=${n}"
 	done;
@@ -249,6 +250,7 @@ search_for_urls () {
 	    echo "${word}"
 	    (bing_search "${url}" "${word}" &)	
 	    google_search "${url}" "${word}" 		
+	    sleep $INTERSEARCHPAUSE
 	done
     done
 }

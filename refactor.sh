@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 # global options
@@ -249,7 +250,7 @@ search_for_urls () {
 	for word in `cat ${CACHEDIR}/*-subjects-wordlist| shuf | tail -2`; do 
 	    echo "${word}"
 	    (bing_search "${url}" "${word}" &)	
-	    google_search "${url}" "${word}" 		
+	    (google_search "${url}" "${word}"&)			
 	    sleep $INTERSEARCHPAUSE
 	done
     done

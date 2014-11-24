@@ -160,7 +160,7 @@ bing_search () {
     echo searching "${BASEURL}"
 
     #check to make sure we've not done this one before.
-    if [ -f "${CACHEBASE}.0.result" ];
+    if [ -f "${CACHEBASE}.1.result" ];
     then
 	echo "File "${CACHEBASE}.1.result" exists."
     else
@@ -245,13 +245,13 @@ search_for_urls () {
 	echo "${url}"
 	user_agent
 	(bing_search "${url}" &)
-	google_search "${url}"
+	(google_search "${url}" &)
 
 	for word in `cat ${CACHEDIR}/*-subjects-wordlist| shuf | tail -2`; do 
+	    sleep $INTERSEARCHPAUSE
 	    echo "${word}"
 	    (bing_search "${url}" "${word}" &)	
 	    (google_search "${url}" "${word}"&)			
-	    sleep $INTERSEARCHPAUSE
 	done
     done
 }

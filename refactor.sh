@@ -173,6 +173,53 @@ bing_search () {
 }
 
 
+sogou_search () {
+    #make sure our cache directory is created
+    mkdir -p "${CACHEDIR}/sogou/"
+
+    if [  "$1" ]
+    then
+	if [  "$2" ]
+	then
+	    if [  "$3" ]
+	    then
+		if [  "$4" ]
+		then
+		    BASEURL="http://www.sogou.com/search?q=${1} ${2} ${3} ${4}"
+		    CACHEBASE="${CACHEDIR}/sogou/${1}+${2}+${3}+${4}"
+		else
+		    BASEURL="http://www.sogou.com/search?q=${1} ${2} ${3}"
+		    CACHEBASE="${CACHEDIR}/sogou/${1}+${2}+${3}"
+		fi
+	    else
+		BASEURL="http://www.sogou.com/search?q=${1} ${2}"
+		CACHEBASE="${CACHEDIR}/sogou/${1}+${2}"
+	    fi
+	else
+	    BASEURL="http://www.sogou.com/search?q=${1}"
+	    CACHEBASE="${CACHEDIR}/sogou/${1}"
+	fi
+    else
+	echo "Error: sogou_search called without args"
+	exit 1;
+    fi
+    
+    echo searching "${BASEURL}"
+
+    #check to make sure we've not done this one before.
+    if [ -f "${CACHEBASE}.1.result" ];
+    then
+	echo "File "${CACHEBASE}.1.result" exists."
+    else
+	for n in 1 2 3 4 5 6 7 8 9  ; do
+	    sleep $INTRASEARCHPAUSE
+	    echo doing "${BASEURL}" ${n}
+	    curl --max-time 30  --cookie-jar "${COOKIEJAR}.sogou" --dump-header "${CACHEBASE}.${n}.header" --output "${CACHEBASE}.${n}.result" --stderr "${CACHEBASE}.${n}.logging" --referer "http://www.sogou.com/" --verbose -A "${USERAGENT}" --url "${BASEURL}&page=${n}"
+	done;
+    fi
+}
+
+
 download_seeds() {
 #create a list of all domains, so that we can search them separately
     if [ ! -f "${CACHEDIR}/all-domains" ]; then
@@ -246,12 +293,14 @@ search_for_urls () {
 	user_agent
 	(bing_search "${url}" &)
 	(google_search "${url}" &)
+	(sogou_search  "${url}" &)
 
-	for word in `cat ${CACHEDIR}/*-subjects-wordlist| shuf | tail -2`; do 
+	for word in `cat ${CACHEDIR}/*-subjects-wordlist| shuf | tail -10`; do 
 	    sleep $INTERSEARCHPAUSE
 	    echo "${word}"
 	    (bing_search "${url}" "${word}" &)	
-	    (google_search "${url}" "${word}"&)			
+	    (google_search "${url}" "${word}" &)			
+	    (sogou_search  "${url}" "${word}" &)
 	done
     done
 }

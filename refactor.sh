@@ -305,5 +305,50 @@ search_for_urls () {
     done
 }
 
+
+search_for_oai () {
+
+    for url in `cat oai-terms.utf8`; do 
+	echo "${url}"
+	user_agent
+	(bing_search "${url}" &)
+	(google_search "${url}" &)
+	(sogou_search  "${url}" &)
+
+	for word in `cat ${CACHEDIR}/*-subjects-wordlist| shuf | tail -20`; do 
+	    sleep $INTERSEARCHPAUSE
+	    echo "${word}"
+	    (bing_search "${url}" "${word}" &)	
+	    (google_search "${url}" "${word}" &)			
+	    (sogou_search  "${url}" "${word}" &)
+	done
+    done
+}
+
+
+search_for_software () {
+
+    for url in `cat ojs-terms.*.utf8 islandora-terms.*.utf8 etd-db-terms.*.utf8 vital-terms.*.utf8 dspace-terms.*.utf8 eprints-terms.*.utf8`; do 
+	echo "${url}"
+	user_agent
+	(bing_search "${url}" &)
+	(google_search "${url}" &)
+	(sogou_search  "${url}" &)
+
+	for word in `cat ${CACHEDIR}/*-subjects-wordlist| shuf | tail -20`; do 
+	    sleep $INTERSEARCHPAUSE
+	    echo "${word}"
+	    (bing_search "${url}" "${word}" &)	
+	    (google_search "${url}" "${word}" &)			
+	    (sogou_search  "${url}" "${word}" &)
+	done
+    done
+}
+
+
+
+
 download_seeds
-search_for_urls
+(search_for_urls&)
+(search_for_oai &)
+(search_for_software &)

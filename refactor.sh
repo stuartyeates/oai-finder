@@ -289,7 +289,6 @@ download_seeds() {
 search_for_urls () {
 
     for url in `cat urls.utf8`; do 
-	echo "${url}"
 	user_agent
 	(bing_search "${url}" &)
 	(google_search "${url}" &)
@@ -297,7 +296,6 @@ search_for_urls () {
 
 	for word in `cat ${CACHEDIR}/*-subjects-wordlist| shuf | tail -10`; do 
 	    sleep $INTERSEARCHPAUSE
-	    echo "${word}"
 	    (bing_search "${url}" "${word}" &)	
 	    (google_search "${url}" "${word}" &)			
 	    (sogou_search  "${url}" "${word}" &)
@@ -309,7 +307,6 @@ search_for_urls () {
 search_for_oai () {
 
     for url in `cat oai-terms.utf8`; do 
-	echo "${url}"
 	user_agent
 	(bing_search "${url}" &)
 	(google_search "${url}" &)
@@ -317,7 +314,6 @@ search_for_oai () {
 
 	for word in `cat ${CACHEDIR}/*-subjects-wordlist| shuf | tail -20`; do 
 	    sleep $INTERSEARCHPAUSE
-	    echo "${word}"
 	    (bing_search "${url}" "${word}" &)	
 	    (google_search "${url}" "${word}" &)			
 	    (sogou_search  "${url}" "${word}" &)
@@ -329,7 +325,6 @@ search_for_oai () {
 search_for_software () {
 
     for url in `cat ojs-terms.*.utf8 islandora-terms.*.utf8 etd-db-terms.*.utf8 vital-terms.*.utf8 dspace-terms.*.utf8 eprints-terms.*.utf8`; do 
-	echo "${url}"
 	user_agent
 	(bing_search "${url}" &)
 	(google_search "${url}" &)
@@ -337,7 +332,6 @@ search_for_software () {
 
 	for word in `cat ${CACHEDIR}/*-subjects-wordlist| shuf | tail -20`; do 
 	    sleep $INTERSEARCHPAUSE
-	    echo "${word}"
 	    (bing_search "${url}" "${word}" &)	
 	    (google_search "${url}" "${word}" &)			
 	    (sogou_search  "${url}" "${word}" &)
@@ -350,5 +344,7 @@ search_for_software () {
 
 download_seeds
 (search_for_urls&)
+sleep $INTERSEARCHPAUSE
 (search_for_oai &)
+sleep $INTERSEARCHPAUSE
 (search_for_software &)

@@ -344,7 +344,7 @@ search_for_software () {
 
 download_seeds
 (search_for_urls&)
-sleep $INTERSEARCHPAUSE
+sleep $INTRASEARCHPAUSE
 (search_for_oai &)
-sleep $INTERSEARCHPAUSE
+sleep $INTRASEARCHPAUSE
 (search_for_software &)

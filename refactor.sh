@@ -5,7 +5,7 @@
 export CACHEDIR=./cache
 export BUILDDIR=./build
 INTERSEARCHPAUSE=600
-INTRASEARCHPAUSE=20
+INTRASEARCHPAUSE=19
 
 ##################################################
 #USERAGENT string and cookie jat randomisation
@@ -45,7 +45,7 @@ user_agent () {
     FULL="USERAGENT${NUM1}${NUM2}"
     
     USERAGENT="${!FULL}"
-    COOKIEJAR="${BUILDDIR}"/cookiejar${NUM1}${NUM2}.cookie
+    COOKIEJAR="${BUILDDIR}"/cookiejar${NUM1}${NUM2}.${1}.cookie
 
 }
 
@@ -100,7 +100,8 @@ google_search () {
 	exit 1;
     fi
     
-    echo searching "${BASEURL}"
+    user_agent "google"
+#    echo searching "${BASEURL}"
 
     #check to make sure we've not done this one before.
     if [ -f "${CACHEBASE}.0.result" ];
@@ -156,8 +157,9 @@ bing_search () {
 	echo "Error: bing_search called without args"
 	exit 1;
     fi
-    
-    echo searching "${BASEURL}"
+ 
+    user_agent "bing"
+#    echo searching "${BASEURL}"
 
     #check to make sure we've not done this one before.
     if [ -f "${CACHEBASE}.1.result" ];
@@ -204,7 +206,8 @@ sogou_search () {
 	exit 1;
     fi
     
-    echo searching "${BASEURL}"
+    user_agent "sogou"
+#    echo searching "${BASEURL}"
 
     #check to make sure we've not done this one before.
     if [ -f "${CACHEBASE}.1.result" ];
@@ -289,7 +292,6 @@ download_seeds() {
 search_for_urls () {
 
     for url in `cat urls.utf8`; do 
-	user_agent
 	(bing_search "${url}" &)
 	(google_search "${url}" &)
 	(sogou_search  "${url}" &)

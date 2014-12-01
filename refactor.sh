@@ -5,7 +5,7 @@
 export CACHEDIR=./cache
 export BUILDDIR=./build
 INTERSEARCHPAUSE=600
-INTRASEARCHPAUSE=19
+INTRASEARCHPAUSE=60
 
 ##################################################
 #USERAGENT string and cookie jat randomisation
@@ -343,6 +343,7 @@ search_for_software () {
 
 
 download_seeds
+
 (search_for_urls&)
 sleep $INTRASEARCHPAUSE
 (search_for_oai &)

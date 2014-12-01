@@ -309,7 +309,6 @@ search_for_urls () {
 search_for_oai () {
 
     for url in `cat oai-terms.utf8`; do 
-	user_agent
 	(bing_search "${url}" &)
 	(google_search "${url}" &)
 	(sogou_search  "${url}" &)
@@ -327,7 +326,6 @@ search_for_oai () {
 search_for_software () {
 
     for url in `cat ojs-terms.*.utf8 islandora-terms.*.utf8 etd-db-terms.*.utf8 vital-terms.*.utf8 dspace-terms.*.utf8 eprints-terms.*.utf8`; do 
-	user_agent
 	(bing_search "${url}" &)
 	(google_search "${url}" &)
 	(sogou_search  "${url}" &)

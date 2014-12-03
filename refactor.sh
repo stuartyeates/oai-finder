@@ -4,7 +4,7 @@
 # global options
 export CACHEDIR=./cache
 export BUILDDIR=./build
-INTERSEARCHPAUSE=600
+INTERSEARCHPAUSE=1200
 INTRASEARCHPAUSE=60
 
 ##################################################

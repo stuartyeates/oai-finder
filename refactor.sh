@@ -291,12 +291,12 @@ download_seeds() {
 
 search_for_urls () {
 
-    for url in `cat urls.utf8`; do 
+    for url in `cat urls.utf| sort | uniq`; do 
 	(bing_search "${url}" &)
 	(google_search "${url}" &)
 	(sogou_search  "${url}" &)
 
-	for word in `cat ${CACHEDIR}/*-subjects-wordlist| shuf | tail -10`; do 
+	for word in `cat ${CACHEDIR}/*-subjects-wordlist| sort | uniq| shuf | tail -10`; do 
 	    sleep $INTERSEARCHPAUSE
 	    (bing_search "${url}" "${word}" &)	
 	    (google_search "${url}" "${word}" &)			
@@ -308,12 +308,12 @@ search_for_urls () {
 
 search_for_oai () {
 
-    for url in `cat oai-terms.utf8`; do 
+    for url in `cat oai-terms.utf8| sort | uniq`; do 
 	(bing_search "${url}" &)
 	(google_search "${url}" &)
 	(sogou_search  "${url}" &)
 
-	for word in `cat ${CACHEDIR}/*-subjects-wordlist| shuf | tail -20`; do 
+	for word in `cat ${CACHEDIR}/*-subjects-wordlist| sort | uniq| shuf | tail -20`; do 
 	    sleep $INTERSEARCHPAUSE
 	    (bing_search "${url}" "${word}" &)	
 	    (google_search "${url}" "${word}" &)			
@@ -325,12 +325,12 @@ search_for_oai () {
 
 search_for_software () {
 
-    for url in `cat ojs-terms.*.utf8 islandora-terms.*.utf8 etd-db-terms.*.utf8 vital-terms.*.utf8 dspace-terms.*.utf8 eprints-terms.*.utf8`; do 
+    for url in `cat ojs-terms.*.utf8 islandora-terms.*.utf8 etd-db-terms.*.utf8 vital-terms.*.utf8 dspace-terms.*.utf8 eprints-terms.*.utf8| sort | uniq`; do 
 	(bing_search "${url}" &)
 	(google_search "${url}" &)
 	(sogou_search  "${url}" &)
 
-	for word in `cat ${CACHEDIR}/*-subjects-wordlist| shuf | tail -20`; do 
+	for word in `cat ${CACHEDIR}/*-subjects-wordlist| sort | uniq| shuf | tail -20`; do 
 	    sleep $INTERSEARCHPAUSE
 	    (bing_search "${url}" "${word}" &)	
 	    (google_search "${url}" "${word}" &)			

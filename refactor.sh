@@ -291,7 +291,7 @@ download_seeds() {
 
 search_for_urls () {
 
-    for url in `cat urls.utf| sort | uniq`; do 
+    for url in `cat urls.utf8| sort | uniq`; do 
 	(bing_search "${url}" &)
 	(google_search "${url}" &)
 	(sogou_search  "${url}" &)

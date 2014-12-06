@@ -291,7 +291,7 @@ download_seeds() {
 
 search_for_urls () {
 
-    for url in `cat urls.utf8| sort | uniq`; do 
+    for url in `cat urls.utf8| sort | uniq| shuf`; do 
 	(bing_search "${url}" &)
 	(google_search "${url}" &)
 	(sogou_search  "${url}" &)
@@ -308,7 +308,7 @@ search_for_urls () {
 
 search_for_oai () {
 
-    for url in `cat oai-terms.utf8| sort | uniq`; do 
+    for url in `cat oai-terms.utf8| sort | uniq| shuf`; do 
 	(bing_search "${url}" &)
 	(google_search "${url}" &)
 	(sogou_search  "${url}" &)
@@ -326,7 +326,7 @@ search_for_oai () {
 search_for_software () {
 
 #    for url in `cat ojs-terms.*.utf8 islandora-terms.*.utf8 etd-db-terms.*.utf8 vital-terms.*.utf8 dspace-terms.*.utf8 eprints-terms.*.utf8 greenstone-terms.*.utf8| sort | uniq`; do 
-    for url in `cat greenstone-terms.en.utf8 | sort | uniq`; do 
+    for url in `cat greenstone-terms.en.utf8 | sort | uniq| shuf `; do 
 	(bing_search "${url}" &)
 	(google_search "${url}" &)
 	(sogou_search  "${url}" &)

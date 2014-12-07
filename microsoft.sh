@@ -1,3 +1,0 @@
-#!/bin/bash
-touch .microsoft.cookies
-wget --page-requisites --load-cookies .microsoft.cookies --save-cookies  .microsoft.cookies --keep-session-cookies --no-clobber --restrict-file-names=windows --default-page=index.php --user-agent="Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36" -e robots=off --ignore-length --wait 150 --force-directories --directory-prefix=build/downloads --input-file=build/microsoft.urls

@@ -325,8 +325,7 @@ search_for_oai () {
 
 search_for_software () {
 
-#    for url in `cat ojs-terms.*.utf8 islandora-terms.*.utf8 etd-db-terms.*.utf8 vital-terms.*.utf8 dspace-terms.*.utf8 eprints-terms.*.utf8 greenstone-terms.*.utf8| sort | uniq`; do 
-    for url in `cat greenstone-terms.en.utf8 | sort | uniq| shuf `; do 
+    for url in `cat ojs-terms.*.utf8 islandora-terms.*.utf8 etd-db-terms.*.utf8 vital-terms.*.utf8 dspace-terms.*.utf8 eprints-terms.*.utf8 greenstone-terms.*.utf8| sort | uniq`; do 
 	(bing_search "${url}" &)
 	(google_search "${url}" &)
 	(sogou_search  "${url}" &)
@@ -359,8 +358,8 @@ download_seeds
 
 
 
-#(search_for_urls&)
+(search_for_urls&)
 #sleep $INTRASEARCHPAUSE
-#(search_for_oai &)
+(search_for_oai &)
 #sleep $INTRASEARCHPAUSE
 (search_for_software &)

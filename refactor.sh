@@ -6,6 +6,7 @@ export CACHEDIR=./cache
 export BUILDDIR=./build
 INTERSEARCHPAUSE=1600
 INTRASEARCHPAUSE=60
+PERTURB=10
 
 ##################################################
 #USERAGENT string and cookie jat randomisation
@@ -296,7 +297,7 @@ search_for_urls () {
 	(google_search "${url}" &)
 	(sogou_search  "${url}" &)
 
-	for word in `cat ${CACHEDIR}/*-subjects-wordlist| sort | uniq| shuf | tail -10`; do 
+	for word in `cat ${CACHEDIR}/*-subjects-wordlist| sort | uniq| shuf | tail -${PERTURB}`; do 
 	    sleep $INTERSEARCHPAUSE
 	    (bing_search "${url}" "${word}" &)	
 	    (google_search "${url}" "${word}" &)			
@@ -313,7 +314,7 @@ search_for_oai () {
 	(google_search "${url}" &)
 	(sogou_search  "${url}" &)
 
-	for word in `cat ${CACHEDIR}/*-subjects-wordlist| sort | uniq| shuf | tail -20`; do 
+	for word in `cat ${CACHEDIR}/*-subjects-wordlist| sort | uniq| shuf | tail -${PERTURB}`; do 
 	    sleep $INTERSEARCHPAUSE
 	    (bing_search "${url}" "${word}" &)	
 	    (google_search "${url}" "${word}" &)			
@@ -330,7 +331,23 @@ search_for_software () {
 	(google_search "${url}" &)
 	(sogou_search  "${url}" &)
 
-	for word in `cat ${CACHEDIR}/*-subjects-wordlist| sort | uniq| shuf | tail -20`; do 
+	for word in `cat ${CACHEDIR}/*-subjects-wordlist| sort | uniq| shuf | tail  -${PERTURB}`; do 
+	    sleep $INTERSEARCHPAUSE
+	    (bing_search "${url}" "${word}" &)	
+	    (google_search "${url}" "${word}" &)			
+	    (sogou_search  "${url}" "${word}" &)
+	done
+    done
+}
+
+search_for_software2 () {
+
+    for url in `cat ojs-terms.*.utf8 islandora-terms.*.utf8 etd-db-terms.*.utf8 vital-terms.*.utf8 dspace-terms.*.utf8 eprints-terms.*.utf8 greenstone-terms.*.utf8| sort | uniq`; do 
+	(bing_search "${url}" &)
+	(google_search "${url}" &)
+	(sogou_search  "${url}" &)
+
+	for word in `cat repository-terms.*.utf8| sort | uniq| shuf | tail -${PERTURB}`; do 
 	    sleep $INTERSEARCHPAUSE
 	    (bing_search "${url}" "${word}" &)	
 	    (google_search "${url}" "${word}" &)			
@@ -352,14 +369,16 @@ refresh_directories () {
     mkdir ${BUILDDIR}
 }
 
-refresh_directories
+#refresh_directories
 
 download_seeds
 
 
 
 (search_for_urls&)
-#sleep $INTRASEARCHPAUSE
+sleep $INTRASEARCHPAUSE
 (search_for_oai &)
-#sleep $INTRASEARCHPAUSE
+sleep $INTRASEARCHPAUSE
 (search_for_software &)
+sleep $INTRASEARCHPAUSE
+(search_for_software2 &)

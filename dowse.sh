@@ -41,41 +41,29 @@ for url in `cat ${BUILDDIR}/raw_urls`; do
 	    then
 		echo ${url} | sed 's|\(/[oO][Jj][Ss]\).*|\1|' >>   ${GUESSES}
 	    else 
-		if [[ $url =~ .*/community-list ]]
+		if [[ $url =~ .*/cgi-bin/library.cgi.* ]]
 		then
-#		    echo ${url}
-#		    echo ${url} | sed 's|\(^.*\)/community-list|\1|'
-		    echo ${url} | sed 's|\(^.*\)/community-list|\1|' >>   ${GUESSES}
-		    
-		else 
-		    if [[ $url =~ .*/cgi-bin/library.cgi.* ]]
-		    then
 #		    echo ${url}
 #		    echo ${url} | sed 's|\(.*/cgi-bin\).*|\1/oaiserver.cgi?verb=Identify|'
 		    echo ${url} | sed 's|\(.*/cgi-bin\).*|\1/oaiserver.cgi?verb=Identify|' >>   ${GUESSES}
+		    
+		else 
+		    if [[ $url =~ .*/handle/[0-9]+/[0-9].* ||  $url =~ .*/xmlui.* || $url =~ .*/advanced-search.* || $url =~ .*/community-list.*  || $url =~ .*/jspui.*  || $url =~ .*/xmlui.* ]]
+		    then
+			echo ${url}
+			echo ${url} | sed 's@/\(handle\|xmlui\|advanced-search\|community-list\|xmlui\|jspui\).*@/oai/request?verb=Identify@'
+			echo ${url} | sed 's@/\(handle\|xmlui\|advanced-search\|community-list\|xmlui\|jspui\).*@/oai/request?verb=Identify@' >>   ${GUESSES}
+			echo ${url} | sed 's@/\(handle\|xmlui\|advanced-search\|community-list\|xmlui\|jspui\).*@/dspace-oai/request?verb=Identify@' >>   ${GUESSES}
+			
 			
 		    else 
 			if [[ $url =~ .*/[oO][Jj][Ss].* ]]
 			then
 			    echo ${url} | sed 's|\(/[oO][Jj][Ss]\).*|\1|' >>   ${GUESSES}
-			    
-			    
-			else 
-			    if [[ $url =~ .*/[oO][Jj][Ss].* ]]
-			    then
-				echo ${url} | sed 's|\(/[oO][Jj][Ss]\).*|\1|' >>   ${GUESSES}
-				
-				
-			    else 
-				if [[ $url =~ .*/[oO][Jj][Ss].* ]]
-				then
-				    echo ${url} | sed 's|\(/[oO][Jj][Ss]\).*|\1|' >>   ${GUESSES}
-				    
-				fi
-				
-			    fi
-			    
+			else
+			    echo ${url}
 			fi
+			
 			
 		    fi
 		    

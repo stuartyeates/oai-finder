@@ -48,12 +48,12 @@ for url in `cat ${BUILDDIR}/raw_urls`; do
 		    echo ${url} | sed 's|\(.*/cgi-bin\).*|\1/oaiserver.cgi?verb=Identify|' >>   ${GUESSES}
 		    
 		else 
-		    if [[ $url =~ .*/handle/[0-9]+/[0-9].* ||  $url =~ .*/xmlui.* || $url =~ .*/advanced-search.* || $url =~ .*/community-list.*  || $url =~ .*/jspui.*  || $url =~ .*/xmlui.* ]]
+		    if [[ $url =~ .*/handle/[0-9]+/[0-9].* ||  $url =~ .*/xmlui.* || $url =~ .*/advanced-search.* || $url =~ .*/community-list.*  || $url =~ .*/jspui.*  || $url =~ .*/browse.* ]]
 		    then
 			echo ${url}
-			echo ${url} | sed 's@/\(handle\|xmlui\|advanced-search\|community-list\|xmlui\|jspui\).*@/oai/request?verb=Identify@'
-			echo ${url} | sed 's@/\(handle\|xmlui\|advanced-search\|community-list\|xmlui\|jspui\).*@/oai/request?verb=Identify@' >>   ${GUESSES}
-			echo ${url} | sed 's@/\(handle\|xmlui\|advanced-search\|community-list\|xmlui\|jspui\).*@/dspace-oai/request?verb=Identify@' >>   ${GUESSES}
+			echo ${url} | sed 's@/\(handle\|xmlui\|advanced-search\|community-list\|browse\|jspui\).*@/oai/request?verb=Identify@'
+			echo ${url} | sed 's@/\(handle\|xmlui\|advanced-search\|community-list\|browse\|jspui\).*@/oai/request?verb=Identify@' >>   ${GUESSES}
+			echo ${url} | sed 's@/\(handle\|xmlui\|advanced-search\|community-list\|browse\|jspui\).*@/dspace-oai/request?verb=Identify@' >>   ${GUESSES}
 			
 			
 		    else 

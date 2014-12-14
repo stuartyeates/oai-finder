@@ -28,6 +28,12 @@ for url in `cat ${BUILDDIR}/raw_urls`; do
 	echo "${url}?verb=Identify" >>  ${GUESSES}
     fi
 
+    if [[ $url =~ .*/index.php/[^/]+/journal=.* ]]
+    then
+	echo OJSRAW  ${url} | sed 's|\(/index.php/[^/]*/\)journal=\([^\&]\)|\1?journal=\1\&page=oai?verb=Identify|' 
+	echo ${url} | sed 's|\(/index.php/[^/]*/\)journal=\([^\&]\)|\1?journal=\1\&page=oai?verb=Identify|' >>   ${GUESSES}
+	echo ${url} | sed 's|\(/index.php/\).*|\1|' >>  ${EXPLORE}
+    else
     if [[ $url =~ .*/index.php/[^/]+/.* ]]
     then
 	echo ${url} | sed 's|\(/index.php/[^/]*/\).*|\1oai?verb=Identify|' >>   ${GUESSES}
@@ -36,41 +42,36 @@ for url in `cat ${BUILDDIR}/raw_urls`; do
 	if [[ $url =~ .*/[oO][Jj][Ss]/.* ]]
 	then
 	    echo ${url} | sed 's|\(/[oO][Jj][Ss]/\).*|\1|' >>   ${EXPLORE}
+	    echo ${url} | sed 's|\(/[oO][Jj][Ss]\).*|\1|' >>   ${GUESSES}
 	else 
-	    if [[ $url =~ .*/[oO][Jj][Ss].* ]]
+	    if [[ $url =~ .*/cgi-bin/.* ]]
 	    then
-		echo ${url} | sed 's|\(/[oO][Jj][Ss]\).*|\1|' >>   ${GUESSES}
+		echo ${url}
+		echo GSDL ${url} | sed 's|\(.*/cgi-bin\).*|\1/oaiserver.cgi?verb=Identify|'
+		echo ${url} | sed 's|\(.*/cgi-bin\).*|\1/oaiserver.cgi?verb=Identify|' >>   ${GUESSES}
+		
 	    else 
-		if [[ $url =~ .*/cgi-bin/library.cgi.* ]]
+		if [[ $url =~ .*/handle/[0-9]+/[0-9].* ||  $url =~ .*/xmlui.* || $url =~ .*/advanced-search.* || $url =~ .*/community-list.*  || $url =~ .*/jspui.*  || $url =~ .*/browse.* ]]
 		then
-#		    echo ${url}
-#		    echo ${url} | sed 's|\(.*/cgi-bin\).*|\1/oaiserver.cgi?verb=Identify|'
-		    echo ${url} | sed 's|\(.*/cgi-bin\).*|\1/oaiserver.cgi?verb=Identify|' >>   ${GUESSES}
+		    echo ${url}
+		    echo DSPACE ${url} | sed 's@/\(handle\|xmlui\|advanced-search\|community-list\|browse\|jspui\).*@/oai/request?verb=Identify@'
+		    echo DSPACE ${url} | sed 's@/\(handle\|xmlui\|advanced-search\|community-list\|browse\|jspui\).*@/dspace-oai/request?verb=Identify@' >>   ${GUESSES}
+		    echo ${url} | sed 's@/\(handle\|xmlui\|advanced-search\|community-list\|browse\|jspui\).*@/oai/request?verb=Identify@' >>   ${GUESSES}
+		    echo ${url} | sed 's@/\(handle\|xmlui\|advanced-search\|community-list\|browse\|jspui\).*@/dspace-oai/request?verb=Identify@' >>   ${GUESSES}
+		    
 		    
 		else 
-		    if [[ $url =~ .*/handle/[0-9]+/[0-9].* ||  $url =~ .*/xmlui.* || $url =~ .*/advanced-search.* || $url =~ .*/community-list.*  || $url =~ .*/jspui.*  || $url =~ .*/browse.* ]]
+		    if [[ $url =~ .*/[oO][Jj][Ss].* ]]
 		    then
+			echo ${url} | sed 's|\(/[oO][Jj][Ss]\).*|\1|' >>   ${GUESSES}
+		    else
 			echo ${url}
-			echo ${url} | sed 's@/\(handle\|xmlui\|advanced-search\|community-list\|browse\|jspui\).*@/oai/request?verb=Identify@'
-			echo ${url} | sed 's@/\(handle\|xmlui\|advanced-search\|community-list\|browse\|jspui\).*@/oai/request?verb=Identify@' >>   ${GUESSES}
-			echo ${url} | sed 's@/\(handle\|xmlui\|advanced-search\|community-list\|browse\|jspui\).*@/dspace-oai/request?verb=Identify@' >>   ${GUESSES}
-			
-			
-		    else 
-			if [[ $url =~ .*/[oO][Jj][Ss].* ]]
-			then
-			    echo ${url} | sed 's|\(/[oO][Jj][Ss]\).*|\1|' >>   ${GUESSES}
-			else
-			    echo ${url}
-			fi
-			
-			
 		    fi
 		    
 		fi
 		
 	    fi
-	    
+	    fi
 	    
 	fi
     fi

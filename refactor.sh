@@ -256,6 +256,7 @@ download_seeds() {
 	cat "${CACHEDIR}/zh-subjects" | sed 's|<script>[^<]*</script>||g' | sed 's|<[^>]*>||g' | tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' | tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '..' | grep -F -x -v -f "${CACHEDIR}/en-subjects-wordlist">  "${CACHEDIR}/zh-subjects-wordlist"
     fi
 
+# none of these saved to the filesystem
 #    if [ ! -f "${CACHEDIR}/ko-subjects-wordlist" ]; then
 #	curl "http://ko.wikipedia.org/wiki/%ED%95%99%EB%AC%B8_%EB%B6%84%EC%95%BC_%EB%AA%A9%EB%A1%9D"  --output "${CACHEDIR}/ko-subjects"
 #	cat "${CACHEDIR}/ko-subjects" | tr '\012' ' ' | sed 's|<script>[^<]*</script>||g' | sed 's|<[^>]*>||g' | tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' | tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '..' >  "${CACHEDIR}/ko-subjects-wordlist"
@@ -267,21 +268,22 @@ download_seeds() {
 	cat "${CACHEDIR}/pt-subjects" | tr '\012' ' ' | sed 's|<[^>]*>||g' | tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' | tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '..' | grep -F -x -v -f "${CACHEDIR}/en-subjects-wordlist" >  "${CACHEDIR}/pt-subjects-wordlist"
     fi
 
-
-    if [ ! -f "${CACHEDIR}/hi-subjects-wordlist" ]; then
-	curl "http://hi.wikipedia.org/wiki/%E0%A4%B6%E0%A5%88%E0%A4%95%E0%A5%8D%E0%A4%B7%E0%A4%A3%E0%A4%BF%E0%A4%95_%E0%A4%B5%E0%A4%BF%E0%A4%B7%E0%A4%AF%E0%A5%8B%E0%A4%82_%E0%A4%95%E0%A5%80_%E0%A4%B8%E0%A5%82%E0%A4%9A%E0%A5%80"  --output "${CACHEDIR}/hi-subjects"
-	cat "${CACHEDIR}/hi-subjects" | sed 's|<[^>]*>||g' | tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' | tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '..' | grep -F -x -v -f "${CACHEDIR}/en-subjects-wordlist" >  "${CACHEDIR}/hi-subjects-wordlist"
-    fi
+# none of these saved to the filesystem
+#    if [ ! -f "${CACHEDIR}/hi-subjects-wordlist" ]; then
+#	curl "http://hi.wikipedia.org/wiki/%E0%A4%B6%E0%A5%88%E0%A4%95%E0%A5%8D%E0%A4%B7%E0%A4%A3%E0%A4%BF%E0%A4%95_%E0%A4%B5%E0%A4%BF%E0%A4%B7%E0%A4%AF%E0%A5%8B%E0%A4%82_%E0%A4%95%E0%A5%80_%E0%A4%B8%E0%A5%82%E0%A4%9A%E0%A5%80"  --output "${CACHEDIR}/hi-subjects"
+#	cat "${CACHEDIR}/hi-subjects" | sed 's|<[^>]*>||g' | tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' | tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '..' | grep -F -x -v -f "${CACHEDIR}/en-subjects-wordlist" >  "${CACHEDIR}/hi-subjects-wordlist"
+#    fi
 
     if [ ! -f "${CACHEDIR}/tl-subjects-wordlist" ]; then
 	curl "http://tl.wikipedia.org/wiki/Talaan_ng_mga_disiplinang_pang-akademiya"  --output "${CACHEDIR}/tl-subjects"
 	cat "${CACHEDIR}/tl-subjects" | sed 's|<[^>]*>||g' | tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' | tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '..' | grep -F -x -v -f "${CACHEDIR}/en-subjects-wordlist" >  "${CACHEDIR}/tl-subjects-wordlist"
     fi
 
-    if [ ! -f "${CACHEDIR}/th-subjects-wordlist" ]; then
-	curl "http://th.wikipedia.org/wiki/%E0%B8%A3%E0%B8%B2%E0%B8%A2%E0%B8%8A%E0%B8%B7%E0%B9%88%E0%B8%AD%E0%B8%AA%E0%B8%B2%E0%B8%82%E0%B8%B2%E0%B8%A7%E0%B8%B4%E0%B8%8A%E0%B8%B2"  --output "${CACHEDIR}/th-subjects"
-	cat "${CACHEDIR}/th-subjects" | sed 's|<[^>]*>||g' | tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' | tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '..' | grep -F -x -v -f "${CACHEDIR}/en-subjects-wordlist" >  "${CACHEDIR}/th-subjects-wordlist"
-    fi
+# none of these saved to the filesystem
+#    if [ ! -f "${CACHEDIR}/th-subjects-wordlist" ]; then
+#	curl "http://th.wikipedia.org/wiki/%E0%B8%A3%E0%B8%B2%E0%B8%A2%E0%B8%8A%E0%B8%B7%E0%B9%88%E0%B8%AD%E0%B8%AA%E0%B8%B2%E0%B8%82%E0%B8%B2%E0%B8%A7%E0%B8%B4%E0%B8%8A%E0%B8%B2"  --output "${CACHEDIR}/th-subjects"
+#	cat "${CACHEDIR}/th-subjects" | sed 's|<[^>]*>||g' | tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' | tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '..' | grep -F -x -v -f "${CACHEDIR}/en-subjects-wordlist" >  "${CACHEDIR}/th-subjects-wordlist"
+#    fi
 
     if [ ! -f "${CACHEDIR}/es-subjects-wordlist" ]; then
 	curl "http://es.wikipedia.org/wiki/Anexo:Disciplinas_acad%C3%A9micas"  --output "${CACHEDIR}/es-subjects"

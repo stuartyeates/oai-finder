@@ -19,7 +19,7 @@ if [ -f ./${EXPLORE} ]; then
 fi
 
 
-for url in `cat ${BUILDDIR}/raw_urls`; do 
+for url in `cat ${BUILDDIR}/raw_urls | sed 's/\?.*//' | sort | uniq`; do 
 
     #basic OAI options:
     if [[ $url == *verb\=Identify ]];  

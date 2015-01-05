@@ -1,3 +1,6 @@
+#!/bin/bash
+# A command to download related ojs websites, incase we have found 
+# only one journal in a multi-site install
 
 for url in `cat build/explore  | sort | uniq`; 
 do  

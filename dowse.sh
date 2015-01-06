@@ -1,10 +1,13 @@
-#!/bin/bash
+#!/bin/bash 
 CACHEDIR=./cache
 BUILDDIR=./build
 
 GUESSES=${BUILDDIR}/guesses1
 GUESSES2=${BUILDDIR}/guesses2
 EXPLORE=${BUILDDIR}/explore
+UNCLAIMED=${BUILDDIR}/unclaimed
+
+shopt -s nocasematch
 
 if [ -f ./${GUESSES} ]; then
     mv ./${GUESSES} ./${GUESSES}-$(date -d "today" +"%Y%m%d%H%M%s")
@@ -19,37 +22,55 @@ if [ -f ./${EXPLORE} ]; then
 fi
 
 
-for url in `cat ${BUILDDIR}/raw_urls | sed 's/\&.*//' | sed 's/\?.*//' | sort | uniq`; do 
+for url in `cat ${BUILDDIR}/raw_urls | sed 's/\&.*//' | sed 's/\?.*//' | grep -v '.jpg$' | grep -v '.gif$'| grep -v '.png$' |grep -v blogspot | sort | uniq`; do 
 
     #basic OAI options:
-    if [[ $url == *verb\=Identify ]];  
+    if [[ ${url} == *verb\=Identify ]];  
     then
 	echo "${url}" >>  ${GUESSES}
-    elif [[ $url == */oai ]]; 
+    elif [[ ${url} == */oai ]]; 
     then
 	echo "${url}?verb=Identify" >>  ${GUESSES}
 	echo "${url}/request?verb=Identify" >>  ${GUESSES}
     fi
     
     # OJS options
-    if [[ $url == */oai/request ]]
+    if [[ ${url} == */oai/request ]]
     then
 	echo "${url}?verb=Identify" >>  ${GUESSES}
-    elif [[ $url =~ .*/index.php/[^/]+/journal=.* ]]
+    elif [[ ${url} =~ /index.php/[^/]+/journal= ]]
     then
 	echo OJSRAW  ${url} | sed 's|\(/index.php/[^/]*/\)journal=\([^\&]\)|\1?journal=\1\&page=oai?verb=Identify|' 
 	echo ${url} | sed 's|\(/index.php/[^/]*/\)journal=\([^\&]\)|\1?journal=\1\&page=oai?verb=Identify|' >>   ${GUESSES}
 	echo ${url} | sed 's|\(/index.php/\).*|\1|' >>  ${EXPLORE}
-    elif [[ $url =~ .*/index.php/[^/]+/.* ]]
+    elif [[ ${url} =~ /lib/pkp/ ]]
     then
-	echo ${url} | sed 's|\(/index.php/[^/]*/\).*|\1oai?verb=Identify|' >>   ${GUESSES}
-	echo ${url} | sed 's|\(/index.php/\).*|\1|' >>  ${EXPLORE}
-    elif [[ $url =~ .*/[oO][Jj][Ss]/.* ]]
+	echo ${url} | sed 's|lib/pkp/.*||' >>  ${EXPLORE}
+    elif [[ ${url} =~ /index.php  ]]
     then
-	echo ${url} | sed 's|\(/[oO][Jj][Ss]/\).*|\1|' >>   ${EXPLORE}
+	echo ${url} | sed 's|\(/index.php\).*|\1/oai?verb=Identify|' >>   ${GUESSES}
+	echo ${url} | sed 's|\(/index.php\).*|\1|' >>  ${EXPLORE}
+    elif [[ ${url} =~ ojs ]]
+    then
+	echo ${url} | sed 's|\(ojs\).*|\1|' >>   ${EXPLORE}
+    elif [[ ${url} =~ /public/journal ]]
+    then
+	echo ${url} | sed 's|public/journal.*||' >>   ${EXPLORE}
+    elif [[ ${url} =~ plugins/themes ]]
+    then
+	echo ${url} | sed 's|plugins/themes.*||' >>   ${EXPLORE}
+    elif [[ ${url} =~ /article/view ]]
+    then
+	echo ${url} | sed 's|/article/view.*|/oai?verb=Identify|' >>    ${GUESSES}
+    elif [[ ${url} =~ /styles/rightSidebar.css ]]
+    then
+	echo ${url} | sed 's|styles/rightSidebar.css.*||' >>    ${EXPLORE}
+    elif [[ ${url} =~ gateway/plugin/WebFeedGatewayPlugin ]]
+    then
+	echo ${url} | sed 's|gateway/plugin/WebFeedGatewayPlugin.*||' >>    ${EXPLORE}
 
     #Greenstone options
-    elif [[ $url =~ .*/cgi-bin/.* ]]
+    elif [[ ${url} =~ /cgi-bin/ ]]
     then
 	echo ${url}
 	echo GSDL ${url} | sed 's|\(.*/cgi-bin\).*|\1/oaiserver.cgi?verb=Identify|'
@@ -57,7 +78,7 @@ for url in `cat ${BUILDDIR}/raw_urls | sed 's/\&.*//' | sed 's/\?.*//' | sort | 
 	echo ${url} | sed 's|\(.*/cgi-bin\).*|\1/oaiserver.cgi?verb=Identify|' >>   ${GUESSES}
 	echo ${url} | sed 's|\(.*/cgi-bin\).*|\1/oaiserver?verb=Identify|' >>   ${GUESSES}
 	
-    elif [[ $url =~ .*/gsdl/.* ]]
+    elif [[ ${url} =~ /gsdl/ ]]
     then
 	echo ${url}
 	echo GSDL ${url} | sed 's|\(.*/gsdl\).*|\1/cgi-bin/oaiserver.cgi?verb=Identify|'
@@ -67,7 +88,7 @@ for url in `cat ${BUILDDIR}/raw_urls | sed 's/\&.*//' | sed 's/\?.*//' | sort | 
 	
 
     #dspace options
-    elif [[ $url =~ .*/handle/[0-9]+/[0-9].* ||  $url =~ .*/xmlui.* || $url =~ .*/advanced-search.* || $url =~ .*/community-list.*  || $url =~ .*/jspui.*  || $url =~ .*/browse.* ]]
+    elif [[ ${url} =~ /handle/[0-9]+/[0-9] || ${url} =~ /xmlui || ${url} =~ /advanced-search || ${url} =~ /community-list || ${url} =~ /jspui || ${url} =~ .*/browse.* ]]
     then
 	echo ${url}
 	echo DSPACE ${url} | sed 's@/\(handle\|xmlui\|advanced-search\|community-list\|browse\|jspui\).*@/oai/request?verb=Identify@'
@@ -76,14 +97,14 @@ for url in `cat ${BUILDDIR}/raw_urls | sed 's/\&.*//' | sed 's/\?.*//' | sort | 
 	echo ${url} | sed 's@/\(handle\|xmlui\|advanced-search\|community-list\|browse\|jspui\).*@/dspace-oai/request?verb=Identify@' >>   ${GUESSES}
 	
     #vital options
-    elif [[ $url =~ .*/vital/.* ]]
+    elif [[ ${url} =~ /vital/ ]]
     then
 	echo ${url}
 	echo VITAL ${url} | sed 's|\(/vital\).*|\1/oai/provider?verb=Identify|'
 	echo VITAL ${url} | sed 's|\(/vital\).*|\1/oai/provider?verb=Identify|' >>   ${GUESSES}
 
     #etd-db options
-    elif [[ $url =~ .*/[Ee][Tt][dD]-[Dd][Bb]/.* ]]
+    elif [[ ${url} =~  /etd-db/  ]]
     then
 	echo ${url}
 	echo VITAL ${url} | sed 's|\(/[Ee][Tt][dD]-[Dd][Bb]\).*|\1/NDLTD-OAI/oai.pl?verb=Identify|'
@@ -102,9 +123,12 @@ for url in `cat ${BUILDDIR}/raw_urls | sed 's/\&.*//' | sed 's/\?.*//' | sort | 
 
     else
 	echo UNCLAIMED: ${url}
+	echo ${url} >> ${UNCLAIMED}
+	if [[ 1 == 0 ]]; 
+	then
 	base=`echo  ${url} | sed 's|/[^/]*$|/|' | sed 's|\?.*||'`
 	echo BASE ${base}
-	while [[ $base =~ http://[^/]+/.* ]]; do	    
+	while [[  $base =~ http://[^/]+/.* ]]; do	    
 	    echo BASE ${base}
 	    echo GUESS ${base} | sed 's|$|?verb=Identify|'
 	    echo ${base} | sed 's|$|?verb=Identify|' >>   ${GUESSES}
@@ -128,7 +152,7 @@ for url in `cat ${BUILDDIR}/raw_urls | sed 's/\&.*//' | sed 's/\?.*//' | sort | 
 	    newbase=`echo  ${base} | sed 's|/[^/]*/$|/|'`
 	    base=$newbase
 	done
-
+	fi
 
     #eprints options
     #I'm struggling to find eprint-specific URL patterns

@@ -5,6 +5,7 @@ BUILDDIR=./build
 GUESSES=${BUILDDIR}/guesses1
 GUESSES2=${BUILDDIR}/guesses2
 EXPLORE=${BUILDDIR}/explore
+EXPLORE2=${BUILDDIR}/explore2
 UNCLAIMED=${BUILDDIR}/unclaimed
 
 shopt -s nocasematch
@@ -46,13 +47,6 @@ for url in `cat ${BUILDDIR}/raw_urls | sed 's/\&.*//' | sed 's/\?.*//' | grep -v
     elif [[ ${url} =~ /lib/pkp/ ]]
     then
 	echo ${url} | sed 's|lib/pkp/.*||' >>  ${EXPLORE}
-    elif [[ ${url} =~ /index.php  ]]
-    then
-	echo ${url} | sed 's|\(/index.php\).*|\1/oai?verb=Identify|' >>   ${GUESSES}
-	echo ${url} | sed 's|\(/index.php\).*|\1|' >>  ${EXPLORE}
-    elif [[ ${url} =~ ojs ]]
-    then
-	echo ${url} | sed 's|\(ojs\).*|\1|' >>   ${EXPLORE}
     elif [[ ${url} =~ /public/journal ]]
     then
 	echo ${url} | sed 's|public/journal.*||' >>   ${EXPLORE}
@@ -62,12 +56,25 @@ for url in `cat ${BUILDDIR}/raw_urls | sed 's/\&.*//' | sed 's/\?.*//' | grep -v
     elif [[ ${url} =~ /article/view ]]
     then
 	echo ${url} | sed 's|/article/view.*|/oai?verb=Identify|' >>    ${GUESSES}
+    elif [[ ${url} =~ /issue/archive ]]
+    then
+	echo ${url} | sed 's|/issue/archive.*|/oai?verb=Identify|' >>    ${GUESSES}
+    elif [[ ${url} =~ /article/view ]]
+    then
+	echo ${url} | sed 's|/article/view.*|/oai?verb=Identify|' >>    ${GUESSES}
     elif [[ ${url} =~ /styles/rightSidebar.css ]]
     then
 	echo ${url} | sed 's|styles/rightSidebar.css.*||' >>    ${EXPLORE}
     elif [[ ${url} =~ gateway/plugin/WebFeedGatewayPlugin ]]
     then
 	echo ${url} | sed 's|gateway/plugin/WebFeedGatewayPlugin.*||' >>    ${EXPLORE}
+    elif [[ ${url} =~ /index.php  ]]
+    then
+	echo ${url} | sed 's|\(/index.php\).*|\1/oai?verb=Identify|' >>   ${GUESSES}
+	echo ${url} | sed 's|\(/index.php\).*|\1|' >>  ${EXPLORE}
+    elif [[ ${url} =~ ojs ]]
+    then
+	echo ${url} | sed 's|\(ojs\).*|\1|' >>   ${EXPLORE}
 
     #Greenstone options
     elif [[ ${url} =~ /cgi-bin/ ]]
@@ -153,15 +160,17 @@ for url in `cat ${BUILDDIR}/raw_urls | sed 's/\&.*//' | sed 's/\?.*//' | grep -v
 	    base=$newbase
 	done
 	fi
-
+	echo done
     #eprints options
-    #I'm struggling to find eprint-specific URL patterns
-        
+    #Im struggling to find eprint-specific URL patterns
+        # policy.html
+# perl/users/home" /cgi/latest_tool?output=RSS2 /cgi/oai2
    fi
 
 done
 
 
-cat ${GUESSES} | sort | uniq -c > ${GUESSES2}
+cat ${GUESSES} | sort | uniq > ${GUESSES2}
+cat ${EXPLORE} | sort | uniq > ${EXPLORE2}
 
-wc ${GUESSES} ${GUESSES2}
+wc ${GUESSES} ${GUESSES2} ${EXPLORE} ${EXPLORE2}  ${UNCLAIMED}

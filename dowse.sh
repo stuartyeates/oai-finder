@@ -108,7 +108,7 @@ for url in `cat ${BUILDDIR}/raw_urls | sed 's/\&.*//' | sed 's/\?.*//' | grep -v
     then
 	echo ${url}
 	echo VITAL ${url} | sed 's|\(/vital\).*|\1/oai/provider?verb=Identify|'
-	echo VITAL ${url} | sed 's|\(/vital\).*|\1/oai/provider?verb=Identify|' >>   ${GUESSES}
+	echo ${url} | sed 's|\(/vital\).*|\1/oai/provider?verb=Identify|' >>   ${GUESSES}
 
     #etd-db options
     elif [[ ${url} =~  /etd-db/  ]]

@@ -51,7 +51,7 @@ function calc_issn_checksum {
     return 0
 }
 
-if [ false  ]; then
+if [ false == true ]; then
 #
     echo 
     echo valid ISSNs:

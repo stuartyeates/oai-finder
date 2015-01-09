@@ -6,7 +6,7 @@ for url in `cat build/explore  | sed 's|^\(.*\)//\([^/]*\)/\(.*\)$|http://\2/\nh
 do  
 #    (wget "${url}" --no-clobber  --wait=5 --restrict-file-names=windows --directory-prefix=build/ojs --force-directories  --recursive --level=2 --convert-links --span-hosts --quiet &); 
     echo doing ${url}
-    (wget "${url}"  --recursive --level=1 --restrict-file-names=windows --protocol-directories --directory-prefix=build/ojs --force-directories --no-clobber --convert-links --span-hosts -e robots=off --quiet --wait=1 --random-wait --timeout=9 -R mpg,mpeg,au,mp4,pdf,jpg,jpeg,png,gif,doc,docx,css,js --quota=1m --quota= --no-check-certificate &); 
+    (wget "${url}"  --recursive --level=1 --restrict-file-names=windows --protocol-directories --directory-prefix=build/ojs --force-directories --no-clobber --convert-links --span-hosts -e robots=off --quiet --wait=1 --random-wait --timeout=9 -R mpg,mpeg,au,mp4,pdf,jpg,jpeg,png,gif,doc,docx,css,js --quota=1m --no-check-certificate &); 
     sleep 10; 
     ps auxwww | grep wget | wc --lines
     df .

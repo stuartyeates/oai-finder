@@ -2,7 +2,7 @@
 # A command to download related ojs websites, incase we have found 
 # only one journal in a multi-site install
 
-for url in `cat build/explore  | sort | uniq`; 
+for url in `cat build/explore  | sort | uniq | shuf`; 
 do  
 #    (wget "${url}" --no-clobber  --wait=5 --restrict-file-names=windows --directory-prefix=build/ojs --force-directories  --recursive --level=2 --convert-links --span-hosts --quiet &); 
     echo doing ${url}

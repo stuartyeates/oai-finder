@@ -8,4 +8,5 @@ do
     echo doing ${url}
     (wget "${url}"  --recursive --level=1 --restrict-file-names=windows --directory-prefix=build/ojs --force-directories --no-clobber --convert-links --span-hosts -e robots=off --quiet --wait=1 --random-wait --timeout=9 -R mpg,mpeg,au,mp4,pdf,jpg,jpeg,png,gif,doc,docx &); 
     sleep 30; 
+    ps auxwww | grep wget | wc --lines
 done

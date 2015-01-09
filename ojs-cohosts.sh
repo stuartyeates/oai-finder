@@ -2,7 +2,7 @@
 # A command to download related ojs websites, incase we have found 
 # only one journal in a multi-site install
 
-for url in `cat build/explore  | sed 's|^\(.*\)//\([^/]*\)/\(.*\)$|http://\2/\nhttp://\2/\3\nhttps://\2/\nhttps://\2/\3\n|' | sort | uniq | shuf`; 
+for url in `cat build/explore  | grep -v ftp.free.fr | grep -v github.com | sed 's|^\(.*\)//\([^/]*\)/\(.*\)$|http://\2/\nhttp://\2/\3\nhttps://\2/\nhttps://\2/\3\n|' | sort | uniq | shuf`; 
 do  
 #    (wget "${url}" --no-clobber  --wait=5 --restrict-file-names=windows --directory-prefix=build/ojs --force-directories  --recursive --level=2 --convert-links --span-hosts --quiet &); 
     echo doing ${url}

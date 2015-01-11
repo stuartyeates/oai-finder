@@ -1,0 +1,66 @@
+#!/bin/bash
+#a daemon for finding OAI servers on the internet
+
+DAEMONNAME="oaifinder"
+
+PREFIX=$PWD
+DATADIR=${PREFIX}/var/lib/${DAEMONNAME}
+CONFIGDIR=${PREFIX}/etc/${DAEMONNAME}
+LOGDIR=${PREFIX}/var/log/${DAEMONNAME}
+TMPDIR=${PREFIX}/tmp/${DAEMONNAME}
+
+yell() { echo "$0: $*" >&2; }
+die() { yell "$*"; exit 111; }
+
+# if there's a local config file, source it 
+if [ ! -d "${CONFIGDIR}" ]; then
+    mkdir -p "${CONFIGDIR}" || die "cannot create ${CONFIGDIR}"
+fi
+if [  -e "${CONFIGDIR}/${DAEMONNAME}.conf" ]; then
+   source  "${CONFIGDIR}/${DAEMONNAME}.conf" 
+fi
+
+# make sure the other directories exis
+if [ ! -d "${DATADIR}" ]; then
+    mkdir -p "${DATADIR}" || die "cannot create ${DATADIR}"
+fi
+if [ ! -d "${LOGDIR}" ]; then
+    mkdir -p "${LOGDIR}" || die "cannot create ${LOGDIR}"
+fi
+if [ ! -d "${TMPDIR}" ]; then
+    mkdir -p "${TMPDIR}" || die "cannot create ${TMPDIR}"
+fi
+
+
+
+#max temp size in bytes 
+MAXTMPSIZE=32000000
+# are we accessing the search engine
+DOSEARCH="true"
+# are we checking urls
+DOCHECK="true"
+
+# seconds to pause for at startup before starting work
+STARTUPPAUSE=12
+# pause between searches
+CYCLEPAUSE=6
+
+
+#perform startup activities
+###########################
+rm -rf ${TMPDIR}/${DAEMONNAME}*
+sleep ${STARTUPPAUSE}
+
+while true; do
+
+if [ "$DOSEARCH" ]; then
+    echo doing the search
+fi
+
+
+if [ "$DOCHECK" ]; then
+    echo doing the check
+fi
+
+sleep ${CYCLEPAUSE}
+done

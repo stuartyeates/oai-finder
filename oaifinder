@@ -3,8 +3,9 @@
 
 DAEMONNAME="oaifinder"
 
-PREFIX=$PWD
+PREFIX=$PWD/oaifinder-files/
 DATADIR=${PREFIX}/var/lib/${DAEMONNAME}
+CACHEDIR=${DATADIR}/cache
 CONFIGDIR=${PREFIX}/etc/${DAEMONNAME}
 LOGDIR=${PREFIX}/var/log/${DAEMONNAME}
 TMPDIR=${PREFIX}/tmp/${DAEMONNAME}
@@ -30,6 +31,9 @@ fi
 if [ ! -d "${TMPDIR}" ]; then
     mkdir -p "${TMPDIR}" || die "cannot create ${TMPDIR}"
 fi
+if [ ! -d "${CACHEDIR}" ]; then
+    mkdir -p "${CACHEDIR}" || die "cannot create ${CACHEDIR}"
+fi
 
 
 
@@ -50,6 +54,25 @@ CYCLEPAUSE=6
 ###########################
 rm -rf ${TMPDIR}/${DAEMONNAME}*
 sleep ${STARTUPPAUSE}
+
+
+#load normally cached files
+###########################
+if [ ! -f "${CACHEDIR}/en-subjects-wordlist" ]; then
+    curl "http://en.wikipedia.org/wiki/Outline_of_academic_disciplines"  --output "${CACHEDIR}/en-subjects"
+    cat "${CACHEDIR}/en-subjects" | sed 's|<[^>]*>||g' |tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr "'" "\012" |  tr 'A-Z'  'a-z' |  sort | uniq | grep -v '[0-9]' | grep '....' >  "${CACHEDIR}/en-subjects-wordlist"
+fi
+
+if [ ! -f "${CACHEDIR}/country-names-word-list" ]; then
+    curl "http://en.wikipedia.org/wiki/List_of_countries_and_dependencies_and_their_capitals_in_native_languages"  --output - > "${CACHEDIR}/country-names"
+    curl "http://en.wikipedia.org/wiki/List_of_adjectivals_and_demonyms_for_subcontinental_regions"  --output - >> "${CACHEDIR}/country-names"
+    curl "http://en.wikipedia.org/wiki/List_of_adjectival_and_demonymic_forms_for_countries_and_nations"  --output - >> "${CACHEDIR}/country-names"
+    curl "http://en.wikipedia.org/wiki/List_of_Latin_names_of_regions"  --output - >> "${CACHEDIR}/country-names"
+    curl "http://en.wikipedia.org/wiki/List_of_official_languages_by_state"  --output - >> "${CACHEDIR}/country-names"
+    curl "http://en.wikipedia.org/wiki/List_of_largest_languages_without_official_status"  --output - >> "${CACHEDIR}/country-names"
+    cat "${CACHEDIR}/country-names" | sed 's|<script>[^<]*</script>||g' | sed 's|<[^>]*>||g' | tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' | tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '..' | grep -F -x -v -f "${CACHEDIR}/en-subjects-wordlist" >  "${CACHEDIR}/country-names-wordlist"
+    fi
+
 
 while true; do
 

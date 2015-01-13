@@ -112,6 +112,24 @@ if [ ! -f "${CACHEDIR}/country-names-word-list" ]; then
 while true; do
 
 if [ "$DOSEARCH" ]; then
+    
+    for term in `cat search-terms/*.utf8|  grep '.'| sort | uniq| shuf | head -1`; do 
+	bing_search "${term}" 
+	google_search "${term}"
+	sogou_search  "${term}"
+
+	for word1 in `cat ${CACHEDIR}/*-wordlist| grep '.' | sort | uniq | shuf | head -1`; do 
+	    bing_search "${term}" "${word1}"
+	    google_search "${term}" "${word1}"
+	    sogou_search  "${term}" "${word1}"
+
+	    for word2 in `cat ${CACHEDIR}/*-wordlist| grep '.' | sort | uniq | shuf | head -1`; do 
+		bing_search "${term}" "${word1}" "${word2}"
+		google_search "${term}" "${word1}" "${word2}"
+		sogou_search  "${term}" "${word1}" "${word2}"
+	    done
+    done
+
     echo doing the search
 fi
 

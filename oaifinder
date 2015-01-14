@@ -1,5 +1,7 @@
 #!/bin/bash
 #a daemon for finding OAI servers on the internet
+set -x # turn on debugging
+#set -e # exit bas on first uncaught error
 
 DAEMONNAME="oaifinder"
 
@@ -8,7 +10,6 @@ DATADIR=${PREFIX}/var/lib/${DAEMONNAME}
 CACHEDIR=${DATADIR}/cache
 CONFIGDIR=${PREFIX}/etc/${DAEMONNAME}
 LOGDIR=${PREFIX}/var/log/${DAEMONNAME}
-TMPDIR=${PREFIX}/tmp/${DAEMONNAME}
 
 yell() { echo "$0: $*" >&2; }
 die() { yell "$*"; exit 111; }
@@ -28,13 +29,13 @@ fi
 if [ ! -d "${LOGDIR}" ]; then
     mkdir -p "${LOGDIR}" || die "cannot create ${LOGDIR}"
 fi
-if [ ! -d "${TMPDIR}" ]; then
-    mkdir -p "${TMPDIR}" || die "cannot create ${TMPDIR}"
-fi
 if [ ! -d "${CACHEDIR}" ]; then
     mkdir -p "${CACHEDIR}" || die "cannot create ${CACHEDIR}"
 fi
 
+#create a random tmp directory for this instance of the script.
+mkdir -p ${PREFIX}/tmp/
+TMPDIR=`mktemp -d ${PREFIX}/tmp.XXXXXXX` || die "cannot create TMPDIR"
 
 
 #max temp size in bytes 
@@ -48,95 +49,166 @@ DOCHECK="true"
 STARTUPPAUSE=12
 # pause between searches
 CYCLEPAUSE=6
+# pause between pages in a search
+SEARCHPAUSE=10
 
 
 #perform startup activities
 ###########################
-rm -rf ${TMPDIR}/${DAEMONNAME}*
 sleep ${STARTUPPAUSE}
 
 
 #load normally cached files
 ###########################
-if [ ! -f "${CACHEDIR}/en-subjects-wordlist" ]; then
-    curl "http://en.wikipedia.org/wiki/Outline_of_academic_disciplines"  --output "${CACHEDIR}/en-subjects"
-    cat "${CACHEDIR}/en-subjects" | sed 's|<[^>]*>||g' |tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr "'" "\012" |  tr 'A-Z'  'a-z' |  sort | uniq | grep -v '[0-9]' | grep '....' >  "${CACHEDIR}/en-subjects-wordlist"
-fi
 
-if [ ! -f "${CACHEDIR}/fr-subjects-wordlist" ]; then
-    curl "http://fr.wikipedia.org/wiki/Liste_des_disciplines_scientifiques"  --output "${CACHEDIR}/fr-subjects"
-    cat "${CACHEDIR}/fr-subjects" | sed 's|<[^>]*>||g' |tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012'| tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' | tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '....' | grep -F -x -v -f "${CACHEDIR}/en-subjects-wordlist" >  "${CACHEDIR}/fr-subjects-wordlist"
-fi
+load_cached_files () {
 
-if [ ! -f "${CACHEDIR}/ar-subjects-wordlist" ]; then
-    curl "http://ar.wikipedia.org/wiki/%D9%85%D9%84%D8%AD%D9%82:%D9%82%D8%A7%D8%A6%D9%85%D8%A9_%D8%A7%D9%84%D8%AA%D8%AE%D8%B5%D8%B5%D8%A7%D8%AA_%D8%A7%D9%84%D8%A3%D9%83%D8%A7%D8%AF%D9%8A%D9%85%D9%8A%D8%A9"  --output "${CACHEDIR}/ar-subjects"
-    cat "${CACHEDIR}/ar-subjects" | sed 's|<[^>]*>||g' |tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' |tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '....' | grep -F -x -v -f "${CACHEDIR}/en-subjects-wordlist">  "${CACHEDIR}/ar-subjects-wordlist"
-fi
-
-if [ ! -f "${CACHEDIR}/ja-subjects-wordlist" ]; then
-    curl "http://ja.wikipedia.org/wiki/%E5%AD%A6%E5%95%8F%E3%81%AE%E4%B8%80%E8%A6%A7"  --output "${CACHEDIR}/ja-subjects"
-    cat "${CACHEDIR}/ja-subjects" | sed 's|<[^>]*>||g' | tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' | tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '..' | grep -F -x -v -f "${CACHEDIR}/en-subjects-wordlist">  "${CACHEDIR}/ja-subjects-wordlist"
-fi
-
-if [ ! -f "${CACHEDIR}/zh-subjects-wordlist" ]; then
-    curl "http://zh.wikipedia.org/wiki/%E5%AD%B8%E7%A7%91%E5%88%97%E8%A1%A8"  --output "${CACHEDIR}/zh-subjects"
-    cat "${CACHEDIR}/zh-subjects" | sed 's|<script>[^<]*</script>||g' | sed 's|<[^>]*>||g' | tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' | tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '..' | grep -F -x -v -f "${CACHEDIR}/en-subjects-wordlist">  "${CACHEDIR}/zh-subjects-wordlist"
-fi
-
-if [ ! -f "${CACHEDIR}/pt-subjects-wordlist" ]; then
-    curl "http://pt.wikipedia.org/wiki/Lista_de_disciplinas_acad%C3%AAmicas"  --output "${CACHEDIR}/pt-subjects"
-    cat "${CACHEDIR}/pt-subjects" | tr '\012' ' ' | sed 's|<[^>]*>||g' | tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' | tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '..' | grep -F -x -v -f "${CACHEDIR}/en-subjects-wordlist" >  "${CACHEDIR}/pt-subjects-wordlist"
-fi
-
-if [ ! -f "${CACHEDIR}/tl-subjects-wordlist" ]; then
+    if [ ! -f "${CACHEDIR}/en-subjects-wordlist" ]; then
+	curl "http://en.wikipedia.org/wiki/Outline_of_academic_disciplines"  --output "${CACHEDIR}/en-subjects"
+	cat "${CACHEDIR}/en-subjects" | sed 's|<[^>]*>||g' |tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr "'" "\012" |  tr 'A-Z'  'a-z' |  sort | uniq | grep -v '[0-9]' | grep '....' >  "${CACHEDIR}/en-subjects-wordlist"
+    fi
+    
+    if [ ! -f "${CACHEDIR}/fr-subjects-wordlist" ]; then
+	curl "http://fr.wikipedia.org/wiki/Liste_des_disciplines_scientifiques"  --output "${CACHEDIR}/fr-subjects"
+	cat "${CACHEDIR}/fr-subjects" | sed 's|<[^>]*>||g' |tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012'| tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' | tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '....' | grep -F -x -v -f "${CACHEDIR}/en-subjects-wordlist" >  "${CACHEDIR}/fr-subjects-wordlist"
+    fi
+    
+    if [ ! -f "${CACHEDIR}/ar-subjects-wordlist" ]; then
+	curl "http://ar.wikipedia.org/wiki/%D9%85%D9%84%D8%AD%D9%82:%D9%82%D8%A7%D8%A6%D9%85%D8%A9_%D8%A7%D9%84%D8%AA%D8%AE%D8%B5%D8%B5%D8%A7%D8%AA_%D8%A7%D9%84%D8%A3%D9%83%D8%A7%D8%AF%D9%8A%D9%85%D9%8A%D8%A9"  --output "${CACHEDIR}/ar-subjects"
+	cat "${CACHEDIR}/ar-subjects" | sed 's|<[^>]*>||g' |tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' |tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '....' | grep -F -x -v -f "${CACHEDIR}/en-subjects-wordlist">  "${CACHEDIR}/ar-subjects-wordlist"
+    fi
+    
+    if [ ! -f "${CACHEDIR}/ja-subjects-wordlist" ]; then
+	curl "http://ja.wikipedia.org/wiki/%E5%AD%A6%E5%95%8F%E3%81%AE%E4%B8%80%E8%A6%A7"  --output "${CACHEDIR}/ja-subjects"
+	cat "${CACHEDIR}/ja-subjects" | sed 's|<[^>]*>||g' | tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' | tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '..' | grep -F -x -v -f "${CACHEDIR}/en-subjects-wordlist">  "${CACHEDIR}/ja-subjects-wordlist"
+    fi
+    
+    if [ ! -f "${CACHEDIR}/zh-subjects-wordlist" ]; then
+	curl "http://zh.wikipedia.org/wiki/%E5%AD%B8%E7%A7%91%E5%88%97%E8%A1%A8"  --output "${CACHEDIR}/zh-subjects"
+	cat "${CACHEDIR}/zh-subjects" | sed 's|<script>[^<]*</script>||g' | sed 's|<[^>]*>||g' | tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' | tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '..' | grep -F -x -v -f "${CACHEDIR}/en-subjects-wordlist">  "${CACHEDIR}/zh-subjects-wordlist"
+    fi
+    
+    if [ ! -f "${CACHEDIR}/pt-subjects-wordlist" ]; then
+	curl "http://pt.wikipedia.org/wiki/Lista_de_disciplinas_acad%C3%AAmicas"  --output "${CACHEDIR}/pt-subjects"
+	cat "${CACHEDIR}/pt-subjects" | tr '\012' ' ' | sed 's|<[^>]*>||g' | tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' | tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '..' | grep -F -x -v -f "${CACHEDIR}/en-subjects-wordlist" >  "${CACHEDIR}/pt-subjects-wordlist"
+    fi
+    
+    if [ ! -f "${CACHEDIR}/tl-subjects-wordlist" ]; then
     curl "http://tl.wikipedia.org/wiki/Talaan_ng_mga_disiplinang_pang-akademiya"  --output "${CACHEDIR}/tl-subjects"
     cat "${CACHEDIR}/tl-subjects" | sed 's|<[^>]*>||g' | tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' | tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '..' | grep -F -x -v -f "${CACHEDIR}/en-subjects-wordlist" >  "${CACHEDIR}/tl-subjects-wordlist"
-fi
-
-if [ ! -f "${CACHEDIR}/es-subjects-wordlist" ]; then
-    curl "http://es.wikipedia.org/wiki/Anexo:Disciplinas_acad%C3%A9micas"  --output "${CACHEDIR}/es-subjects"
-    cat "${CACHEDIR}/es-subjects" | sed 's|<[^>]*>||g' | tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' | tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '..' | grep -F -x -v -f "${CACHEDIR}/en-subjects-wordlist" >  "${CACHEDIR}/es-subjects-wordlist"
-fi
-
-if [ ! -f "${CACHEDIR}/country-names-word-list" ]; then
-    curl "http://en.wikipedia.org/wiki/List_of_countries_and_dependencies_and_their_capitals_in_native_languages"  --output - > "${CACHEDIR}/country-names"
-    curl "http://en.wikipedia.org/wiki/List_of_adjectivals_and_demonyms_for_subcontinental_regions"  --output - >> "${CACHEDIR}/country-names"
-    curl "http://en.wikipedia.org/wiki/List_of_adjectival_and_demonymic_forms_for_countries_and_nations"  --output - >> "${CACHEDIR}/country-names"
-    curl "http://en.wikipedia.org/wiki/List_of_Latin_names_of_regions"  --output - >> "${CACHEDIR}/country-names"
-    curl "http://en.wikipedia.org/wiki/List_of_official_languages_by_state"  --output - >> "${CACHEDIR}/country-names"
-    curl "http://en.wikipedia.org/wiki/List_of_largest_languages_without_official_status"  --output - >> "${CACHEDIR}/country-names"
-    cat "${CACHEDIR}/country-names" | sed 's|<script>[^<]*</script>||g' | sed 's|<[^>]*>||g' | tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' | tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '..' | grep -F -x -v -f "${CACHEDIR}/en-subjects-wordlist" >  "${CACHEDIR}/country-names-wordlist"
     fi
+    
+    if [ ! -f "${CACHEDIR}/es-subjects-wordlist" ]; then
+	curl "http://es.wikipedia.org/wiki/Anexo:Disciplinas_acad%C3%A9micas"  --output "${CACHEDIR}/es-subjects"
+	cat "${CACHEDIR}/es-subjects" | sed 's|<[^>]*>||g' | tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' | tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '..' | grep -F -x -v -f "${CACHEDIR}/en-subjects-wordlist" >  "${CACHEDIR}/es-subjects-wordlist"
+    fi
+    
+    if [ ! -f "${CACHEDIR}/country-names-wordlist" ]; then
+	curl "http://en.wikipedia.org/wiki/List_of_countries_and_dependencies_and_their_capitals_in_native_languages"  --output - > "${CACHEDIR}/country-names"
+	curl "http://en.wikipedia.org/wiki/List_of_adjectivals_and_demonyms_for_subcontinental_regions"  --output - >> "${CACHEDIR}/country-names"
+	curl "http://en.wikipedia.org/wiki/List_of_adjectival_and_demonymic_forms_for_countries_and_nations"  --output - >> "${CACHEDIR}/country-names"
+	curl "http://en.wikipedia.org/wiki/List_of_Latin_names_of_regions"  --output - >> "${CACHEDIR}/country-names"
+	curl "http://en.wikipedia.org/wiki/List_of_official_languages_by_state"  --output - >> "${CACHEDIR}/country-names"
+	curl "http://en.wikipedia.org/wiki/List_of_largest_languages_without_official_status"  --output - >> "${CACHEDIR}/country-names"
+	cat "${CACHEDIR}/country-names" | sed 's|<script>[^<]*</script>||g' | sed 's|<[^>]*>||g' | tr '[:punct:][:space:][:digit:][:cntrl:]' '\012' | tr ' -"()\[\],.?!:\t|^<>/*;$\\{}' '\012' | tr "'" "\012" |  tr 'A-Z' 'a-z' |  sort | uniq | grep -v '[0-9]' | grep '..' | grep -F -x -v -f "${CACHEDIR}/en-subjects-wordlist" >  "${CACHEDIR}/country-names-wordlist"
+    fi
+}
 
+SEARCHURL_0=
+SEARCHURL_1=
+SEARCHURL_2=
+SEARCHURL_3=
+SEARCHURL_4=
+SEARCHURL_5=
+SEARCHURL_6=
+SEARCHURL_7=
+SEARCHURL_8=
+SEARCHURL_9=
+SEARCHURL_10=
+SEARCHURL_11=
+SEARCHURL_12=
+SEARCHURL_13=
+SEARCHURL_14=
+SEARCHURL_15=
+SEARCHURL_16=
+SEARCHURL_17=
+SEARCHURL_18=
+SEARCHURL_19=
+
+# call with 1-4 args to compose and populate search urls
+pop_search_urls_google () {
+    BASEURL="uninitialised"
+    
+    if [  "$1" ]
+    then
+	if [  "$2" ]
+	then
+	    if [  "$3" ]
+	    then
+		if [  "$4" ]
+		then
+		    BASEURL="http://www.google.co.nz/search?q=${1}+${2}+${3}+${4}&filter=0&num=50"
+		else
+		    BASEURL="http://www.google.co.nz/search?q=${1}+${2}+${3}&filter=0&num=50"
+		fi
+	    else
+		BASEURL="http://www.google.co.nz/search?q=${1}+${2}&filter=0&num=50"
+	    fi
+	else
+	    BASEURL="http://www.google.co.nz/search?q=${1}&filter=0&num=50"
+	fi
+    else
+	die "Error: pop_search_urls_google called with inappropiate args"
+    fi
+    
+    counter=0
+    for n in 0 50 100 150 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950 ; do
+	NAME=SEARCHURL_${counter}
+	export SEARCHURL_${counter}="${BASEURL}&start=${n}"
+	((counter++))
+    done
+    
+    return 0;
+}
+
+do_search () {
+    TMPFILE=`mktemp ${TMPDIR}/urls.XXXXXXXXXX` || die "unable to create temporary file"
+    for n in 0 1; do
+#    for n in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 ; do
+	URL=SEARCHURL_${n}
+	curl "${!URL}" -s  --user-agent "Mozilla/4.0" |   tr '"<>()%, ' '\012' | tr "'" '\012' | sed 's/http/\nhttp/' |sed 's/=related:/\n/' | grep '^\(http\|[a-z]+\.[a-z]+/\)' | grep -Ev 'google.com|msn.com|ae.webradar.me|ameinfo.com|arab.jinbo.net|sogou.com|live.com|googleusercontent.com|google.co.nz'  |sort | uniq >> ${TMPFILE}
+	sleep ${SEARCHPAUSE}
+    done
+}
+
+
+load_cached_files
 
 while true; do
 
-if [ "$DOSEARCH" ]; then
-    
-    for term in `cat search-terms/*.utf8|  grep '.'| sort | uniq| shuf | head -1`; do 
-	bing_search "${term}" 
-	google_search "${term}"
-	sogou_search  "${term}"
-
-	for word1 in `cat ${CACHEDIR}/*-wordlist| grep '.' | sort | uniq | shuf | head -1`; do 
-	    bing_search "${term}" "${word1}"
-	    google_search "${term}" "${word1}"
-	    sogou_search  "${term}" "${word1}"
-
-	    for word2 in `cat ${CACHEDIR}/*-wordlist| grep '.' | sort | uniq | shuf | head -1`; do 
-		bing_search "${term}" "${word1}" "${word2}"
-		google_search "${term}" "${word1}" "${word2}"
-		sogou_search  "${term}" "${word1}" "${word2}"
+    if [ "$DOSEARCH" ]; then
+	
+	for term in `cat search-terms/*.utf8|  grep '.'| sort | uniq| shuf | head -1`; do 
+	    pop_search_urls_google "${term}"
+	    do_search
+	    
+	    for word1 in `cat ${CACHEDIR}/*-wordlist| grep '.' | sort | uniq | shuf | head -1`; do 
+		pop_search_urls_google "${term}" "${word1}"
+		do_search
+		
+		for word2 in `cat ${CACHEDIR}/*-wordlist| grep '.' | sort | uniq | shuf | head -1`; do 
+		    pop_search_urls_google "${term}" "${word1}" "${word2}"
+		    do_search
+		done
 	    done
-    done
+	done
+    fi
+    
+    
+    if [ "$DOCHECK" ]; then
+	echo doing the check
+    fi
+    
+    sleep ${CYCLEPAUSE};
 
-    echo doing the search
-fi
-
-
-if [ "$DOCHECK" ]; then
-    echo doing the check
-fi
-
-sleep ${CYCLEPAUSE}
-done
+	done

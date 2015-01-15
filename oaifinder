@@ -147,15 +147,15 @@ pop_search_urls_google () {
 	    then
 		if [  "$4" ]
 		then
-		    BASEURL="http://www.google.co.nz/search?q=${1}+${2}+${3}+${4}&filter=0&num=50"
+		    BASEURL="http://www.google.co.nz/search?q=${1}+${2}+${3}+${4}+filetype:html&filter=0&num=50"
 		else
-		    BASEURL="http://www.google.co.nz/search?q=${1}+${2}+${3}&filter=0&num=50"
+		    BASEURL="http://www.google.co.nz/search?q=${1}+${2}+${3}+filetype:html&filter=0&num=50"
 		fi
 	    else
-		BASEURL="http://www.google.co.nz/search?q=${1}+${2}&filter=0&num=50"
+		BASEURL="http://www.google.co.nz/search?q=${1}+${2}+filetype:html&filter=0&num=50"
 	    fi
 	else
-	    BASEURL="http://www.google.co.nz/search?q=${1}&filter=0&num=50"
+	    BASEURL="http://www.google.co.nz/search?q=${1}+filetype:html&filter=0&num=50"
 	fi
     else
 	die "Error: pop_search_urls_google called with inappropiate args"
@@ -187,7 +187,7 @@ load_cached_files
 while true; do
 
     if [ "$DOSEARCH" ]; then
-	
+	#first we query the search engines...
 	for term in `cat search-terms/*.utf8|  grep '.'| sort | uniq| shuf | head -1`; do 
 	    pop_search_urls_google "${term}"
 	    do_search
@@ -202,6 +202,9 @@ while true; do
 		done
 	    done
 	done
+
+	cat "${TMPDIR}/urls.*" | sort | uniq >>
+
     fi
     
     

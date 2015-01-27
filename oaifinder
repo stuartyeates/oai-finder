@@ -11,6 +11,9 @@ CACHEDIR=${DATADIR}/cache
 CONFIGDIR=${PREFIX}/etc/${DAEMONNAME}
 LOGDIR=${PREFIX}/var/log/${DAEMONNAME}
 
+URLLOG=${LOGDIR}/urls-$(date -d "today" +"%Y%m%d")
+LOG=${LOGDIR}/oaifinder-$(date -d "today" +"%Y%m%d").log
+
 yell() { echo "$0: $*" >&2; }
 die() { yell "$*"; exit 111; }
 
@@ -35,8 +38,8 @@ fi
 
 #create a random tmp directory for this instance of the script.
 mkdir -p ${PREFIX}/tmp/
-TMPDIR=`mktemp -d ${PREFIX}/tmp.XXXXXXX` || die "cannot create TMPDIR"
-
+TMPDIR=`mktemp -d ${PREFIX}/tmp/tmp.XXXXXXX` || die "cannot create TMPDIR"
+mkdir -p ${TMPDIR}
 
 #max temp size in bytes 
 MAXTMPSIZE=32000000
@@ -173,14 +176,14 @@ pop_search_urls_google () {
 
 do_search () {
     TMPFILE=`mktemp ${TMPDIR}/urls.XXXXXXXXXX` || die "unable to create temporary file"
+
     for n in 0 1; do
 #    for n in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 ; do
-	URL=SEARCHURL_${n}
-	curl "${!URL}" -s  --user-agent "Mozilla/4.0" |   tr '"<>()%, ' '\012' | tr "'" '\012' | sed 's/http/\nhttp/' |sed 's/=related:/\n/' | grep '^\(http\|[a-z]+\.[a-z]+/\)' | grep -Ev 'google.com|msn.com|ae.webradar.me|ameinfo.com|arab.jinbo.net|sogou.com|live.com|googleusercontent.com|google.co.nz'  |sort | uniq >> ${TMPFILE}
+	URL="SEARCHURL_${n}"
+	curl "${!URL}" -s  --user-agent "Mozilla/4.0" |   tr '"<>()%, ' '\012' | tr "'" '\012' | sed 's/http/\nhttp/g' | sed 's/&amp;/\n&amp;/g' |sed 's/=related:/\n/g' | grep '^\(http\|[a-z]+\.[a-z]+/\)' | sort | uniq >> ${TMPFILE}
 	sleep ${SEARCHPAUSE}
     done
 }
-
 
 load_cached_files
 
@@ -192,26 +195,26 @@ while true; do
 	    pop_search_urls_google "${term}"
 	    do_search
 	    
-	    for word1 in `cat ${CACHEDIR}/*-wordlist| grep '.' | sort | uniq | shuf | head -1`; do 
+	    for word1 in `cat ${CACHEDIR}/*-wordlist| grep '.' | sort | uniq | shuf | head -2`; do 
 		pop_search_urls_google "${term}" "${word1}"
 		do_search
 		
-		for word2 in `cat ${CACHEDIR}/*-wordlist| grep '.' | sort | uniq | shuf | head -1`; do 
-		    pop_search_urls_google "${term}" "${word1}" "${word2}"
-		    do_search
-		done
+#		for word2 in `cat ${CACHEDIR}/*-wordlist| grep '.' | sort | uniq | shuf | head -1`; do 
+#		    pop_search_urls_google "${term}" "${word1}" "${word2}"
+#		    do_search
+#		done
 	    done
 	done
 
-	cat "${TMPDIR}/urls.*" | sort | uniq >>
-
+	cat "${TMPDIR}"/urls.* | sort | uniq >> ${URLLOG}
+#	rm "${TMPDIR}"/urls.*
     fi
-    
     
     if [ "$DOCHECK" ]; then
 	echo doing the check
     fi
     
     sleep ${CYCLEPAUSE};
-
-	done
+    exit 0
+    
+done

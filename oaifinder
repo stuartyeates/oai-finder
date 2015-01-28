@@ -11,9 +11,6 @@ CACHEDIR=${DATADIR}/cache
 CONFIGDIR=${PREFIX}/etc/${DAEMONNAME}
 LOGDIR=${PREFIX}/var/log/${DAEMONNAME}
 
-GUESSES=${TMPDIR}/guesses
-EXPLORE=${TMPDIR}/explore
-
 URLLOG=${LOGDIR}/urls-$(date -d "today" +"%Y%m%d")
 LOG=${LOGDIR}/oaifinder-$(date -d "today" +"%Y%m%d").log
 
@@ -43,6 +40,11 @@ fi
 mkdir -p ${PREFIX}/tmp/
 TMPDIR=`mktemp -d ${PREFIX}/tmp/tmp.XXXXXXX` || die "cannot create TMPDIR"
 mkdir -p ${TMPDIR}
+
+GUESSES=${TMPDIR}/guesses
+EXPLORE=${TMPDIR}/explore
+
+
 
 #max temp size in bytes 
 MAXTMPSIZE=32000000
@@ -313,7 +315,7 @@ do_dowse () {
 	else
 	    echo UNCLAIMED: ${url}
 	    echo ${url} >> ${UNCLAIMED}
-	    if [[ 1 == 0 ]]; 
+	    if [[ 1 == 1 ]]; 
 	    then
 		base=`echo  ${url} | sed 's|/[^/]*$|/|' | sed 's|\?.*||'`
 		echo BASE ${base}
@@ -350,12 +352,14 @@ do_dowse () {
 
 
 do_download () {
-    for url in `cat ${GUESSES} | sort | uniq`; do 
-	RESULT=`curl --silent  "${url}" `
-	RETURNVALUE=$?
 
-	echo ${RETURNVALUE} ${url}
+    touch ${DATADIR}/urls_downloaded
+    for url in `comm -1 ${DATADIR}/urls_downloaded ${GUESSES} | sort | uniq`; do 
+	#RESULT=`curl --silent  "${url}" `
+	RETURNVALUE=$?
 	
+	echo ${RETURNVALUE} ${url}
+	echo ${url} >>  ${DATADIR}/urls_downloaded
     done
 
 }

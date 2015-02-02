@@ -1,6 +1,6 @@
 #!/bin/bash
 #a daemon for finding OAI servers on the internet
-set -x # turn on debugging
+#set -x # turn on debugging
 #set -e # exit bas on first uncaught error
 
 DAEMONNAME="oaifinder"
@@ -59,6 +59,8 @@ STARTUPPAUSE=12
 CYCLEPAUSE=6
 # pause between pages in a search
 SEARCHPAUSE=10
+
+NUMBEROFURLSTOCHECK=500
 
 
 #perform startup activities
@@ -313,8 +315,7 @@ do_dowse () {
         # perl/users/home" /cgi/latest_tool?output=RSS2 /cgi/oai2
 	    
 	else
-	    echo UNCLAIMED: ${url}
-	    echo ${url} >> ${UNCLAIMED}
+	    echo UNCLAIMED ${url}
 	    if [[ 1 == 1 ]]; 
 	    then
 		base=`echo  ${url} | sed 's|/[^/]*$|/|' | sed 's|\?.*||'`
@@ -354,12 +355,20 @@ do_dowse () {
 do_download () {
 
     touch ${DATADIR}/urls_downloaded
-    for url in `comm -1 ${DATADIR}/urls_downloaded ${GUESSES} | sort | uniq`; do 
-	#RESULT=`curl --silent  "${url}" `
-	RETURNVALUE=$?
+    for url in `comm -1 ${DATADIR}/urls_downloaded ${GUESSES} | sort | uniq | shuf |head --lines=${NUMBEROFURLSTOCHECK}`; do
+	RESULT=`curl --silent  "${url}" `
 	
-	echo ${RETURNVALUE} ${url}
+	if [[ $? == 0 ]];
+	then
+	    echo ${RESULT} | grep "\(www.openarchives.org/OAI/2.0/\|OAI-PMH\|repositoryName\|repositoryIdentifier\)" >> /dev/null
+	    if [[ $? == 0 ]];
+	    then
+		echo OAI FOUND ! ${url}
+		echo ${url} >>  ${DATADIR}/oai_endpoints_found
+	    fi
+	fi
 	echo ${url} >>  ${DATADIR}/urls_downloaded
+	sleep 1
     done
 
 }

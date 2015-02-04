@@ -60,7 +60,7 @@ CYCLEPAUSE=6
 # pause between pages in a search
 SEARCHPAUSE=10
 
-NUMBEROFURLSTOCHECK=500
+NUMBEROFURLSTOCHECK=50000
 
 
 #perform startup activities
@@ -196,8 +196,10 @@ load_cached_files
 
 do_winnow_urls () {
     touch ${DATADIR}/urls_tried
-    cat ${TMPDIR}/urls.* | grep -Ev 'google.com|msn.com|ae.webradar.me|ameinfo.com|arab.jinbo.net|sogou.com|live.com|googleusercontent.com|google.|blogspot.' > ${TMPDIR}/candidates
+    cat ${TMPDIR}/urls.* | grep -Ev 'webcache.googleusercontent.com|google.com|msn.com|ae.webradar.me|ameinfo.com|arab.jinbo.net|sogou.com|live.com|googleusercontent.com|google.|blogspot.' | sort > ${TMPDIR}/candidates
+    sort -o ${DATADIR}/urls_tried ${DATADIR}/urls_tried
     comm -1 ${DATADIR}/urls_tried  ${TMPDIR}/candidates >  ${TMPDIR}/successful_candidates
+    cat ${TMPDIR}/successful_candidates >> ${DATADIR}/urls_tried
 }
 
 
@@ -355,6 +357,8 @@ do_dowse () {
 do_download () {
 
     touch ${DATADIR}/urls_downloaded
+    sort -o ${GUESSES} ${GUESSES}
+    sort -o ${DATADIR}/urls_downloaded ${DATADIR}/urls_downloaded
     for url in `comm -1 ${DATADIR}/urls_downloaded ${GUESSES} | sort | uniq | shuf |head --lines=${NUMBEROFURLSTOCHECK}`; do
 	RESULT=`curl --silent  "${url}" `
 	

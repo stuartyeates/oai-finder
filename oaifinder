@@ -360,7 +360,8 @@ do_download () {
     sort -o ${GUESSES} ${GUESSES}
     sort -o ${DATADIR}/urls_downloaded ${DATADIR}/urls_downloaded
     for url in `comm -1 ${DATADIR}/urls_downloaded ${GUESSES} | sort | uniq | shuf |head --lines=${NUMBEROFURLSTOCHECK}`; do
-	RESULT=`curl --silent  "${url}" `
+	echo downloading: ${url}
+	RESULT=`curl --silent --max-time 5  "${url}" `
 	
 	if [[ $? == 0 ]];
 	then
@@ -372,7 +373,7 @@ do_download () {
 	    fi
 	fi
 	echo ${url} >>  ${DATADIR}/urls_downloaded
-	sleep 1
+#	sleep 1
     done
 
 }
@@ -388,7 +389,8 @@ while true; do
 
     if [ "$DOSEARCH" ]; then
 	#first we query the search engines...
-	for term in `cat search-terms/*.utf8|  grep '.'| sort | uniq| shuf | head -1`; do 
+#	for term in `cat search-terms/*.utf8|  grep '.'| sort | uniq| shuf | head -1`; do 
+	for term in `cat search-terms/ojs-terms.en.utf8|  grep '.'| sort | uniq| shuf | head -1`; do 
 	    pop_search_urls_google "${term}"
 	    do_search
 	    

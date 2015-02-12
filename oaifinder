@@ -1,4 +1,4 @@
-#!/bin/bash
+2#!/bin/bash
 #a daemon for finding OAI servers on the internet
 #set -x # turn on debugging
 #set -e # exit bas on first uncaught error
@@ -42,6 +42,7 @@ TMPDIR=`mktemp -d ${PREFIX}/tmp/tmp.XXXXXXX` || die "cannot create TMPDIR"
 mkdir -p ${TMPDIR}
 
 GUESSES=${TMPDIR}/guesses
+GUESSES2=${TMPDIR}/guesses2
 EXPLORE=${TMPDIR}/explore
 
 
@@ -181,11 +182,48 @@ pop_search_urls_google () {
     return 0;
 }
 
+pop_search_urls_google () {
+    BASEURL="uninitialised"
+
+    if [  "$1" ]
+    then
+	if [  "$2" ]
+	then
+	    if [  "$3" ]
+	    then
+		if [  "$4" ]
+		then
+		    BASEURL="http://www.bing.com/search?q=${1} ${2} ${3} ${4}&filter=0&count=50"
+		else
+		    BASEURL="http://www.bing.com/search?q=${1} ${2} ${3}&filter=0&count=50"
+		fi
+	    else
+		BASEURL="http://www.bing.com/search?q=${1} ${2}&filter=0&count=50"
+	    fi
+	else
+	    BASEURL="http://www.bing.com/search?q=${1}&filter=0&count=50"
+	fi
+    else
+	echo "Error: bing_search called without args"
+	exit 1;
+    fi
+ 
+    counter=0
+    for n in 1 51 101 151 201 251 301 351 401 451 501 551 601 651 701 751 801 851 901 951 ; do
+	NAME=SEARCHURL_${counter}
+	export SEARCHURL_${counter}="${BASEURL}&first=${n}"
+	((counter++))
+    done;
+    fi
+}
+
+
+
 do_search () {
     TMPFILE=`mktemp ${TMPDIR}/urls.XXXXXXXXXX` || die "unable to create temporary file"
 
-    for n in 0 1; do
-#    for n in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 ; do
+#    for n in 0 1; do
+    for n in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 ; do
 	URL="SEARCHURL_${n}"
 	curl "${!URL}" -s  --user-agent "Mozilla/4.0" |   tr '"<>()%, ' '\012' | tr "'" '\012' | sed 's/http/\nhttp/g' | sed 's/&amp;/\n&amp;/g' | sed 's/+.*//g' | sed 's/=related:/\n/g' | grep '^\(http\|[a-z]+\.[a-z]+/\)' | sort | uniq >> ${TMPFILE}
 	sleep ${SEARCHPAUSE}
@@ -325,23 +363,23 @@ do_dowse () {
 		while [[  $base =~ http://[^/]+/.* ]]; do	    
 		    echo BASE ${base}
 		    echo GUESS ${base} | sed 's|$|?verb=Identify|'
-		    echo ${base} | sed 's|$|?verb=Identify|' >>   ${GUESSES}
-		    echo ${base} | sed 's|$|/?verb=Identify|' >>   ${GUESSES}
-		    echo ${base} | sed 's|$|oai?verb=Identify|' >>   ${GUESSES}
-		    echo ${base} | sed 's|$|oai2?verb=Identify|' >>   ${GUESSES}
-		    echo ${base} | sed 's|$|oai.php?verb=Identify|' >>   ${GUESSES}
-		    echo ${base} | sed 's|$|oai2.php?verb=Identify|' >>   ${GUESSES}
-		    echo ${base} | sed 's|$|OAI2.0?verb=Identify|' >>   ${GUESSES}
-		    echo ${base} | sed 's|$|cgi/oai2?verb=Identify|' >>   ${GUESSES}
-		    echo ${base} | sed 's|$|perl/oai2?verb=Identify|' >>   ${GUESSES}
-		    echo ${base} | sed 's|$|OAI?verb=Identify|' >>   ${GUESSES}
-		    echo ${base} | sed 's|$|servlets/OAIDataProvider?verb=Identify|' >>   ${GUESSES}
-		    echo ${base} | sed 's|$|oaiprovider?verb=Identify|' >>   ${GUESSES}
-		    echo ${base} | sed 's|$|provider?verb=Identify|' >>   ${GUESSES}
-		    echo ${base} | sed 's|$|oai.aspx?verb=Identify|' >>   ${GUESSES}
-		    echo ${base} | sed 's|$|sobekcm_oai.aspx?verb=Identify|' >>   ${GUESSES}
-		    echo ${base} | sed 's|$|oai2d.py/?verb=Identify|' >>   ${GUESSES}
-		    echo ${base} | sed 's|$|infolib/oai_repository/repository?verb=Identify|' >>   ${GUESSES}
+		    echo ${base} | sed 's|$|?verb=Identify|' >>   ${GUESSES2}
+		    echo ${base} | sed 's|$|/?verb=Identify|' >>   ${GUESSES2}
+		    echo ${base} | sed 's|$|oai?verb=Identify|' >>   ${GUESSES2}
+		    echo ${base} | sed 's|$|oai2?verb=Identify|' >>   ${GUESSES2}
+		    echo ${base} | sed 's|$|oai.php?verb=Identify|' >>   ${GUESSES2}
+		    echo ${base} | sed 's|$|oai2.php?verb=Identify|' >>   ${GUESSES2}
+		    echo ${base} | sed 's|$|OAI2.0?verb=Identify|' >>   ${GUESSES2}
+		    echo ${base} | sed 's|$|cgi/oai2?verb=Identify|' >>   ${GUESSES2}
+		    echo ${base} | sed 's|$|perl/oai2?verb=Identify|' >>   ${GUESSES2}
+		    echo ${base} | sed 's|$|OAI?verb=Identify|' >>   ${GUESSES2}
+		    echo ${base} | sed 's|$|servlets/OAIDataProvider?verb=Identify|' >>   ${GUESSES2}
+		    echo ${base} | sed 's|$|oaiprovider?verb=Identify|' >>   ${GUESSES2}
+		    echo ${base} | sed 's|$|provider?verb=Identify|' >>   ${GUESSES2}
+		    echo ${base} | sed 's|$|oai.aspx?verb=Identify|' >>   ${GUESSES2}
+		    echo ${base} | sed 's|$|sobekcm_oai.aspx?verb=Identify|' >>   ${GUESSES2}
+		    echo ${base} | sed 's|$|oai2d.py/?verb=Identify|' >>   ${GUESSES2}
+		    echo ${base} | sed 's|$|infolib/oai_repository/repository?verb=Identify|' >>   ${GUESSES2}
 		    
 		    newbase=`echo  ${base} | sed 's|/[^/]*/$|/|'`
 		    base=$newbase
@@ -393,16 +431,24 @@ while true; do
 	for term in `cat search-terms/ojs-terms.en.utf8|  grep '.'| sort | uniq| shuf | head -1`; do 
 	    pop_search_urls_google "${term}"
 	    do_search
+	    pop_search_urls_bing   "${term}"
+	    do_search
 	    
 	    for word1 in `cat ${CACHEDIR}/*-wordlist| grep '.' | sort | uniq | shuf | head -2`; do 
 		pop_search_urls_google "${term}" "${word1}"
+		do_search
+		pop_search_urls_bing   "${term}" "${word1}"
 		do_search
 		
 		for word2 in `cat ${CACHEDIR}/*-wordlist| grep '.' | sort | uniq | shuf | head -1`; do 
 		    pop_search_urls_google "${term}" "${word2}"
 		    do_search
+		    pop_search_urls_bing    "${term}" "${word2}"
+		    do_search
 
 		    pop_search_urls_google "${term}" "${word1}" "${word2}"
+		    do_search
+		    pop_search_urls_bing   "${term}" "${word1}" "${word2}"
 		    do_search
 		done
 	    done

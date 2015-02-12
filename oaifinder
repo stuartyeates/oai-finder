@@ -1,4 +1,4 @@
-2#!/bin/bash
+#!/bin/bash
 #a daemon for finding OAI servers on the internet
 #set -x # turn on debugging
 #set -e # exit bas on first uncaught error
@@ -182,7 +182,7 @@ pop_search_urls_google () {
     return 0;
 }
 
-pop_search_urls_google () {
+pop_search_urls_bing () {
     BASEURL="uninitialised"
 
     if [  "$1" ]
@@ -214,7 +214,6 @@ pop_search_urls_google () {
 	export SEARCHURL_${counter}="${BASEURL}&first=${n}"
 	((counter++))
     done;
-    fi
 }
 
 

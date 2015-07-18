@@ -233,7 +233,7 @@ load_cached_files
 
 do_winnow_urls () {
     touch ${DATADIR}/urls_tried
-    cat ${TMPDIR}/urls.* | grep -Ev 'webcache.googleusercontent.com|google.com|msn.com|ae.webradar.me|ameinfo.com|arab.jinbo.net|sogou.com|live.com|googleusercontent.com|google.|blogspot.' | sort > ${TMPDIR}/candidates
+    cat ${TMPDIR}/../*/urls.* | grep -Ev 'webcache.googleusercontent.com|google.com|msn.com|ae.webradar.me|ameinfo.com|arab.jinbo.net|sogou.com|live.com|googleusercontent.com|google.|blogspot.' | sort > ${TMPDIR}/candidates
     sort -o ${DATADIR}/urls_tried ${DATADIR}/urls_tried
     comm -1 ${DATADIR}/urls_tried  ${TMPDIR}/candidates >  ${TMPDIR}/successful_candidates
     cat ${TMPDIR}/successful_candidates >> ${DATADIR}/urls_tried
@@ -394,7 +394,9 @@ do_dowse () {
 do_download () {
 
     touch ${DATADIR}/urls_downloaded
+    cat ${GUESSES2} >> ${GUESSES}
     sort -o ${GUESSES} ${GUESSES}
+    sort -o ${GUESSES2} ${GUESSES2}
     sort -o ${DATADIR}/urls_downloaded ${DATADIR}/urls_downloaded
     for url in `comm -1 ${DATADIR}/urls_downloaded ${GUESSES} | sort | uniq | shuf |head --lines=${NUMBEROFURLSTOCHECK}`; do
 	echo downloading: ${url}
@@ -410,6 +412,10 @@ do_download () {
 	    fi
 	fi
 	echo ${url} >>  ${DATADIR}/urls_downloaded
+
+	TMPFILE=`mktemp ${TMPDIR}/urls.XXXXXXXXXX` || die "unable to create temporary file"
+	echo ${RESULT}  |   tr '"<>()%, ' '\012' | tr "'" '\012' | sed 's/http/\nhttp/g' | sed 's/&amp;/\n&amp;/g' | sed 's/+.*//g' | sed 's/=related:/\n/g' | grep '^\(http\|[a-z]+\.[a-z]+/\)' | sort | uniq >> ${TMPFILE}
+
 #	sleep 1
     done
 
@@ -426,8 +432,8 @@ while true; do
 
     if [ "$DOSEARCH" ]; then
 	#first we query the search engines...
-#	for term in `cat search-terms/*.utf8|  grep '.'| sort | uniq| shuf | head -1`; do 
-	for term in `cat search-terms/ojs-terms.en.utf8|  grep '.'| sort | uniq| shuf | head -1`; do 
+	for term in `cat search-terms/*.utf8|  grep '.'| sort | uniq| shuf | head -1`; do 
+#	for term in `cat search-terms/ojs-terms.en.utf8|  grep '.'| sort | uniq| shuf | head -1`; do 
 	    pop_search_urls_google "${term}"
 	    do_search
 	    pop_search_urls_bing   "${term}"

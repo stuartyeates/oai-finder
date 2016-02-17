@@ -58,9 +58,8 @@ while getopts "a:e:1:2:3:r:d:f:" opt; do
 done
 
 if [[ "" == $RUNDIR ]] ; then
-    echo rundir not set
     mkdir -p $DATADIR/runs/
-    RUNDIR=`mktemp -d ${DATADIR}/runs/run.XXXXXXX` || die "cannot create RUNDIR in ${DATADIR}"
+    RUNDIR=`mktemp -d ${DATADIR}/runs/run.XXXXXXXXXXXXXXXX` || die "cannot create RUNDIR in ${DATADIR}"
 fi
 
 echo DATADIR=$DATADIR

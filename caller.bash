@@ -63,10 +63,11 @@ if [[ "" == $RUNDIR ]] ; then
 fi
 
 CACHEDIR=${DATADIR}/cache
+mkdir -p ${CACHEDIR}
 
-echo DATADIR=$DATADIR
-echo RUNDIR=$RUNDIR
-echo CACHEDIR=$CACHEDIR
+echo DATADIR=${DATADIR}
+echo RUNDIR=${RUNDIR}
+echo CACHEDIR=${CACHEDIR}
 
 
 #create USERAGENT string and a cookiejar for this run.
@@ -195,25 +196,25 @@ engine_google2 () {
       echo "searching from prevoious";
  }
 
-main() {
-    case "${ALGO}" in
-        SEED) seed_files
-              ;;
-        FIELD_SEARCH) search_by_field
-	      ;;
-        SOFTWARE_SEARCH) search_by_software
-	      ;;
-        URL_SEARCH) search_from_url
-	      ;;
-        EXTEND) search_from_previous
-	      ;;
+  main() {
+      seed_files
+      
+      case "${ALGO}" in
+          FIELD_SEARCH) search_by_field
+			;;
+          SOFTWARE_SEARCH) search_by_software
+			   ;;
+          URL_SEARCH) search_from_url
+		      ;;
+          EXTEND) search_from_previous
+		  ;;
 	DEFAULT) search_by_software
-              ;;
+		 ;;
         *) exit 1;
 	   ;;
-   esac
-exit 0;
-}
+      esac
+      exit 0;
+  }
 
 main
  

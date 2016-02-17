@@ -69,3 +69,30 @@ echo RUNDIR=$RUNDIR
 
 CACHEDIR=${DATADIR}/cache
 
+#create USERAGENT string and a cookiejar for this run.
+USERAGENT=
+COOKIEJAR=
+
+#create a cookie jar
+user_agent_and_cookie_jar () {
+    NUM1=${RANDOM}
+    let "NUM1 %=2"
+    NUM2=${RANDOM}
+    let "NUM2 %=10"
+    FULL="USERAGENT${NUM1}${NUM2}"
+    
+    USERAGENT="`shuf USERAGENTS | head -1`"
+    COOKIEJAR="${BUILDDIR}"/cookiejar${RANDOM}.$$.cookie
+
+}
+
+user_agent_and_cookie_jar;
+
+echo ${RANDOM}
+echo $USERAGENT
+echo ${RANDOM}
+echo ${COOKIEJAR}
+
+
+
+

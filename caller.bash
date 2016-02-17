@@ -87,14 +87,9 @@ user_agent_and_cookie_jar () {
 
 }
 
-user_agent_and_cookie_jar;
+#user_agent_and_cookie_jar;
 
-echo ${RANDOM}
-echo $USERAGENT
-echo ${RANDOM}
-echo ${COOKIEJAR}
-
-engine_google () {
+engine_google2 () {
     #make sure our cache directory is created
     mkdir -p "${CACHEDIR}/google/"
     
@@ -133,28 +128,13 @@ engine_google () {
     
 }
 
-main() {
-    case "${ALGO}" in
-        SEED) seed_files
-              ;;
-        FIELD_SEARCH) search_by_field
-			   ;;
-        SOFTWARE_SEARCH) search_by_software
-			 ;;
-        URL_SEARCH) search_from_url
-		;;
-        EXTEND) search_from_previous
-		;;
-	DEFAULT)
-            *) search_by_software
-            ;;
-   esac
-exit 0;
-}
+ seed_files () {
+     echo "seed files;"
+     }
 
  
  search_by_field () {
-     echo "searching by field";
+     echo "searching by field ";
  }
 
  search_by_software () {
@@ -168,3 +148,26 @@ exit 0;
   search_from_previous () {
       echo "searching from prevoious";
  }
+
+main() {
+    case "${ALGO}" in
+        SEED) seed_files
+              ;;
+        FIELD_SEARCH) search_by_field
+	      ;;
+        SOFTWARE_SEARCH) search_by_software
+	      ;;
+        URL_SEARCH) search_from_url
+	      ;;
+        EXTEND) search_from_previous
+	      ;;
+	DEFAULT) search_by_software
+              ;;
+        *) exit 1;
+	   ;;
+   esac
+exit 0;
+}
+
+main
+ 

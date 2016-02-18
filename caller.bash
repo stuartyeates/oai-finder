@@ -184,22 +184,30 @@ engine_google2 () {
      echo "searching by field ";
  }
  
-PERTURB=10
+PERTURB=3
 
  search_by_software () {
      echo "searching by software";
-     for software in `cat search-terms/ojs-terms.*.utf8 search-terms/islandora-terms.*.utf8 search-terms/etd-db-terms.*.utf8 search-terms/vital-terms.*.utf8 search-terms/dspace-terms.*.utf8 search-terms/eprints-terms.*.utf8 search-terms/greenstone-terms.*.utf8| sort | uniq| shuf`; do
-	 echo $software
+     for FIRST in `cat search-terms/ojs-terms.*.utf8 search-terms/islandora-terms.*.utf8 search-terms/etd-db-terms.*.utf8 search-terms/vital-terms.*.utf8 search-terms/dspace-terms.*.utf8 search-terms/eprints-terms.*.utf8 search-terms/greenstone-terms.*.utf8| sort | uniq| shuf`; do
+	 echo $FIRST
 #	(bing_search "${url}" &)
 #	(google_search "${url}" &)
 #	(sogou_search  "${url}" &)
 	 
-	for word in `cat ${CACHEDIR}/*-subjects-wordlist| sort | uniq| shuf | tail  -${PERTURB}`; do 
+	for SECOND in `cat ${CACHEDIR}/*-subjects-wordlist| sort | uniq| shuf | tail  -${PERTURB}`; do 
 #	    sleep $INTERSEARCHPAUSE
-	    echo $software  -- $word
+	    echo $FIRST -- $SECOND
 #	    (bing_search "${url}" "${word}" &)	
 #	    (google_search "${url}" "${word}" &)			
 #	    (sogou_search  "${url}" "${word}" &)
+	 
+	for THIRD in `cat ${CACHEDIR}/*-subjects-wordlist| sort | uniq| shuf | tail  -${PERTURB}`; do 
+#	    sleep $INTERSEARCHPAUSE
+	    echo $FIRST -- $SECOND -- $THIRD
+#	    (bing_search "${url}" "${word}" &)	
+#	    (google_search "${url}" "${word}" &)			
+#	    (sogou_search  "${url}" "${word}" &)
+	done
 	done
     done
 

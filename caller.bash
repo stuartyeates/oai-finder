@@ -196,7 +196,7 @@ PERTURB=10
 	 
 	for word in `cat ${CACHEDIR}/*-subjects-wordlist| sort | uniq| shuf | tail  -${PERTURB}`; do 
 #	    sleep $INTERSEARCHPAUSE
-	    echo $word
+	    echo $software  -- $word
 #	    (bing_search "${url}" "${word}" &)	
 #	    (google_search "${url}" "${word}" &)			
 #	    (sogou_search  "${url}" "${word}" &)

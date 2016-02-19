@@ -89,7 +89,7 @@ user_agent_and_cookie_jar () {
 
 #user_agent_and_cookie_jar;
 
-INTRASEARCHPAUSE=400
+INTRASEARCHPAUSE=40
 
 engine_google () {
     #make sure our cache directory is created

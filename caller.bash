@@ -89,7 +89,9 @@ user_agent_and_cookie_jar () {
 
 #user_agent_and_cookie_jar;
 
-engine_google2 () {
+INTRASEARCHPAUSE=400
+
+engine_google () {
     #make sure our cache directory is created
     mkdir -p "${CACHEDIR}/google/"
     
@@ -116,13 +118,12 @@ engine_google2 () {
 
     #check to make sure we've not done this one before.
     if [ -f "${CACHEBASE}.0.result" ];
-    then
-	echo "File "${CACHEBASE}.0.result" exists."
+    then	echo "File "${CACHEBASE}.0.result" exists."
     else
 	for n in 0 50 100 150 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950 ; do
 	    sleep $INTRASEARCHPAUSE
 	    echo doing "${BASEURL}" ${n}
-	    curl --max-time 30  --cookie-jar "${COOKIEJAR}.google" --dump-header "${CACHEBASE}.${n}.header" --output "${CACHEBASE}.${n}.result" --stderr "${CACHEBASE}.${n}.logging" --referer "http://www.google.com/" --verbose -A "${USERAGENT}" --url "${BASEURL}&start=${n}"
+	    echo curl --max-time 30  --cookie-jar "${COOKIEJAR}.google" --dump-header "${CACHEBASE}.${n}.header" --output "${CACHEBASE}.${n}.result" --stderr "${CACHEBASE}.${n}.logging" --referer "http://www.google.com/" --verbose -A "${USERAGENT}" --url "${BASEURL}&start=${n}"
 	done;
     fi
     
@@ -185,32 +186,33 @@ engine_google2 () {
  }
  
 PERTURB=3
+INTRAPAUSE=6600
 
  search_by_software () {
      echo "searching by software";
      for FIRST in `cat search-terms/ojs-terms.*.utf8 search-terms/islandora-terms.*.utf8 search-terms/etd-db-terms.*.utf8 search-terms/vital-terms.*.utf8 search-terms/dspace-terms.*.utf8 search-terms/eprints-terms.*.utf8 search-terms/greenstone-terms.*.utf8| sort | uniq| shuf`; do
 	 echo $FIRST
 #	(bing_search "${url}" &)
-#	(google_search "${url}" &)
+	(engine_google &)
 #	(sogou_search  "${url}" &)
 	 
 	for SECOND in `cat ${CACHEDIR}/*-subjects-wordlist| sort | uniq| shuf | tail  -${PERTURB}`; do 
-#	    sleep $INTERSEARCHPAUSE
+	    sleep $INTERSEARCHPAUSE
 	    echo $FIRST -- $SECOND
 #	    (bing_search "${url}" "${word}" &)	
-#	    (google_search "${url}" "${word}" &)			
-#	    (sogou_search  "${url}" "${word}" &)
-	 
-	for THIRD in `cat ${CACHEDIR}/*-subjects-wordlist| sort | uniq| shuf | tail  -${PERTURB}`; do 
-#	    sleep $INTERSEARCHPAUSE
+	    (google_search &)			
+	    #	    (sogou_search  "${url}" "${word}" &)
+	    
+	    for THIRD in `cat ${CACHEDIR}/*-subjects-wordlist| sort | uniq| shuf | tail  -${PERTURB}`; do 
+	    sleep $INTERSEARCHPAUSE
 	    echo $FIRST -- $SECOND -- $THIRD
-#	    (bing_search "${url}" "${word}" &)	
-#	    (google_search "${url}" "${word}" &)			
-#	    (sogou_search  "${url}" "${word}" &)
+	    #	    (bing_search "${url}" "${word}" &)	
+	    (google_search &)			
+	    #	    (sogou_search  "${url}" "${word}" &)
+	    done
 	done
-	done
-    done
-
+     done
+     
  }
 
  search_from_url () {
@@ -222,8 +224,9 @@ PERTURB=3
  }
 
   main() {
+      user_agent_and_cookie_jar
       seed_files
-      
+
       case "${ALGO}" in
           FIELD_SEARCH) search_by_field
 			;;

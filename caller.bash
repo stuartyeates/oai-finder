@@ -191,7 +191,7 @@ INTRAPAUSE=6600
 
  search_by_software () {
      echo "searching by software";
-     for FIRST in `cat search-terms/ojs-terms.*.utf8 search-terms/islandora-terms.*.utf8 search-terms/etd-db-terms.*.utf8 search-terms/vital-terms.*.utf8 search-terms/dspace-terms.*.utf8 search-terms/eprints-terms.*.utf8 search-terms/greenstone-terms.*.utf8| sort | uniq| shuf | head -1`; do
+     for FIRST in `cat search-terms/ojs-terms.*.utf8 search-terms/islandora-terms.*.utf8 search-terms/etd-db-terms.*.utf8 search-terms/vital-terms.*.utf8 search-terms/dspace-terms.*.utf8 search-terms/eprints-terms.*.utf8 search-terms/greenstone-terms.*.utf8| sort | uniq| shuf`; do
 	 echo $FIRST
 #	(bing_search "${url}" &)
 	(engine_google &)
@@ -201,7 +201,8 @@ INTRAPAUSE=6600
 	    sleep $INTRAPAUSE
 	    echo $FIRST -- $SECOND
 #	    (bing_search "${url}" "${word}" &)	
-	    (engine_google &)			
+#	    (engine_google &)			
+	    $0 
 	    #	    (sogou_search  "${url}" "${word}" &)
 	    
 	    for THIRD in `cat ${CACHEDIR}/*-subjects-wordlist| sort | uniq| shuf | tail  -${PERTURB}`; do 

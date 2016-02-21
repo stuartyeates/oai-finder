@@ -101,14 +101,14 @@ engine_google () {
 	then
 	    if [  "$THIRD" ]
 	    then
-		BASEURL="http://www.google.co.nz/search?q=${1}+${2}+${3}&filter=0&num=50"
+		BASEURL="https://www.google.co.nz/search?q=${1}+${2}+${3}&filter=0&num=50"
 		CACHEBASE="${CACHEDIR}/google/${1}+${2}+${3}"
 	    else
-		BASEURL="http://www.google.co.nz/search?q=${1}+${2}&filter=0&num=50"
+		BASEURL="https://www.google.co.nz/search?q=${1}+${2}&filter=0&num=50"
 		CACHEBASE="${CACHEDIR}/google/${1}+${2}"
 	    fi
 	else
-	    BASEURL="http://www.google.co.nz/search?q=${1}&filter=0&num=50"
+	    BASEURL="https://www.google.co.nz/search?q=${1}&filter=0&num=50"
 	    CACHEBASE="${CACHEDIR}/google/${1}"
 	fi
     else
@@ -191,10 +191,11 @@ INTRAPAUSE=6600
 
  search_by_software () {
      echo "searching by software";
-     for FIRST in `cat search-terms/ojs-terms.*.utf8 search-terms/islandora-terms.*.utf8 search-terms/etd-db-terms.*.utf8 search-terms/vital-terms.*.utf8 search-terms/dspace-terms.*.utf8 search-terms/eprints-terms.*.utf8 search-terms/greenstone-terms.*.utf8| sort | uniq| shuf`; do
-	 echo $FIRST
-#	(bing_search "${url}" &)
-	(engine_google &)
+     for FIRST1 in `cat search-terms/ojs-terms.*.utf8 search-terms/islandora-terms.*.utf8 search-terms/etd-db-terms.*.utf8 search-terms/vital-terms.*.utf8 search-terms/dspace-terms.*.utf8 search-terms/eprints-terms.*.utf8 search-terms/greenstone-terms.*.utf8| sort | uniq| shuf`; do
+	 echo $FIRST1
+	 #	(bing_search "${url}" &)
+	 FIRST=${FIRST1}
+	(engine_google ${FIRST} &)
 #	(sogou_search  "${url}" &)
 	 
 	for SECOND in `cat ${CACHEDIR}/*-subjects-wordlist| sort | uniq| shuf | tail  -${PERTURB}`; do 

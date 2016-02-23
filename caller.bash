@@ -189,14 +189,14 @@ engine_sogou () {
 	then
 	    if [  "$3" ]
 	    then
-		BASEURL="http://www.sogou.com/search?q=${1} ${2} ${3}"
+		BASEURL="https://www.sogou.com/web?query=${1}+${2}+${3}"
 		CACHEBASE="${CACHEDIR}/sogou/${1}+${2}+${3}"
 	    else
-		BASEURL="http://www.sogou.com/search?q=${1} ${2}"
+		BASEURL="https://www.sogou.com/web?query=${1}+${2}"
 		CACHEBASE="${CACHEDIR}/sogou/${1}+${2}"
 	    fi
 	else
-	    BASEURL="http://www.sogou.com/search?q=${1}"
+	    BASEURL="https://www.sogou.com/web?query=${1}"
 	    CACHEBASE="${CACHEDIR}/sogou/${1}"
 	fi
     else

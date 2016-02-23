@@ -87,14 +87,16 @@ user_agent_and_cookie_jar () {
 
 }
 
-#user_agent_and_cookie_jar;
 
 INTRASEARCHPAUSE=40
 
 engine_google () {
     #make sure our cache directory is created
     mkdir -p "${CACHEDIR}/google/"
-    
+
+    # create a persona
+    user_agent_and_cookie_jar
+
     if [  "$FIRST" ]
     then
 	if [  "$SECOND" ]
@@ -120,7 +122,7 @@ engine_google () {
     if [ -f "${CACHEBASE}.0.result" ];
     then	echo "File "${CACHEBASE}.0.result" exists."
     else
-	for n in 0 50 100 ; do
+	for n in 0 50 ; do
 	#for n in 0 50 100 150 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950 ; do
 	    sleep $INTRASEARCHPAUSE
 	    echo doing "${BASEURL}" ${n}
@@ -130,7 +132,96 @@ engine_google () {
     
 }
 
- seed_files () {
+engine_bing () {
+    #make sure our cache directory is created
+    mkdir -p "${CACHEDIR}/bing/"
+
+    # create a persona
+    user_agent_and_cookie_jar
+
+    if [  "$1" ]
+    then
+	if [  "$2" ]
+	then
+	    if [  "$3" ]
+	    then
+		BASEURL="http://www.bing.com/search?q=${1} ${2} ${3}&filter=0&count=50"
+		CACHEBASE="${CACHEDIR}/bing/${1}+${2}+${3}"
+	    else
+		BASEURL="http://www.bing.com/search?q=${1} ${2}&filter=0&count=50"
+		CACHEBASE="${CACHEDIR}/bing/${1}+${2}"
+	    fi
+	else
+	    BASEURL="http://www.bing.com/search?q=${1}&filter=0&count=50"
+	    CACHEBASE="${CACHEDIR}/bing/${1}"
+	fi
+    else
+	echo "Error: bing_search called without args"
+	exit 1;
+    fi
+    
+    
+    #check to make sure we've not done this one before.
+    if [ -f "${CACHEBASE}.1.result" ];
+    then
+	echo "File "${CACHEBASE}.1.result" exists."
+    else
+	#for n in 1 51 101 151 201 251 301 351 401 451 501 551 601 651 701 751 801 851 901 951 ; do
+	for n in 1 51
+	    sleep $INTRASEARCHPAUSE
+	    echo doing "${BASEURL}" ${n}
+	    curl --max-time 30  --cookie-jar "${COOKIEJAR}.bing" --dump-header "${CACHEBASE}.${n}.header" --output "${CACHEBASE}.${n}.result" --stderr "${CACHEBASE}.${n}.logging" --referer "http://www.bing.com/" --verbose -A "${USERAGENT}" --url "${BASEURL}&first=${n}"
+	done;
+    fi
+}
+
+
+engine_sogou () {
+    #make sure our cache directory is created
+    mkdir -p "${CACHEDIR}/sogou/"
+
+    # create a persona
+    user_agent_and_cookie_jar
+
+    if [  "$1" ]
+    then
+	if [  "$2" ]
+	then
+	    if [  "$3" ]
+	    then
+		BASEURL="http://www.sogou.com/search?q=${1} ${2} ${3}"
+		CACHEBASE="${CACHEDIR}/sogou/${1}+${2}+${3}"
+	    else
+		BASEURL="http://www.sogou.com/search?q=${1} ${2}"
+		CACHEBASE="${CACHEDIR}/sogou/${1}+${2}"
+	    fi
+	else
+	    BASEURL="http://www.sogou.com/search?q=${1}"
+	    CACHEBASE="${CACHEDIR}/sogou/${1}"
+	fi
+    else
+	echo "Error: sogou_search called without args"
+	exit 1;
+    fi
+    
+    #check to make sure we've not done this one before.
+    if [ -f "${CACHEBASE}.1.result" ];
+    then
+	echo "File "${CACHEBASE}.1.result" exists."
+    else
+	for n in 1 2 ; do
+	#for n in 1 2 3 4 5 6 7 8 9  ; do
+	    sleep $INTRASEARCHPAUSE
+	    echo doing "${BASEURL}" ${n}
+	    curl --max-time 30  --cookie-jar "${COOKIEJAR}.sogou" --dump-header "${CACHEBASE}.${n}.header" --output "${CACHEBASE}.${n}.result" --stderr "${CACHEBASE
+}.${n}.logging" --referer "http://www.sogou.com/" --verbose -A "${USERAGENT}" --url "${BASEURL}&page=${n}"
+	done;
+    fi
+}
+
+
+
+seed_files () {
      echo "seeding files;"
 
      #create a list of all domains, so that we can search them separately
@@ -186,32 +277,36 @@ engine_google () {
      echo "searching by field ";
  }
  
-PERTURB=2
+PERTURB1=2
+PERTURB2=2
 INTRAPAUSE=6600
 
  search_by_software () {
      echo "searching by software";
      for FIRST1 in `cat search-terms/ojs-terms.*.utf8 search-terms/islandora-terms.*.utf8 search-terms/etd-db-terms.*.utf8 search-terms/vital-terms.*.utf8 search-terms/dspace-terms.*.utf8 search-terms/eprints-terms.*.utf8 search-terms/greenstone-terms.*.utf8| sort | uniq| shuf`; do
 	 echo $FIRST1
-	 #	(bing_search "${url}" &)
 	 FIRST=${FIRST1}
-	(engine_google ${FIRST} &)
-#	(sogou_search  "${url}" &)
+	 (engine_google ${FIRST}&)
+	 (engine_bing ${FIRST}&)
+	 (engine_sogou ${FIRST}&)
 	 
-	for SECOND in `cat ${CACHEDIR}/*-subjects-wordlist| sort | uniq| shuf | tail  -${PERTURB}`; do 
+	for SECOND2 in `cat ${CACHEDIR}/*-subjects-wordlist| sort | uniq| shuf | tail  -${PERTURB1}`; do 
 	    sleep $INTRAPAUSE
-	    echo $FIRST -- $SECOND
-#	    (bing_search "${url}" "${word}" &)	
-#	    (engine_google &)			
-	    $0 
-	    #	    (sogou_search  "${url}" "${word}" &)
-	    
-	    for THIRD in `cat ${CACHEDIR}/*-subjects-wordlist| sort | uniq| shuf | tail  -${PERTURB}`; do 
+	    echo $FIRST1 -- $SECOND2
+	    SECOND=${SECOND2}
+	    (engine_google ${FIRST} ${SECOND} &)
+	    (engine_bing ${FIRST} ${SECOND}&)
+	    (engine_sogou ${FIRST} ${SECOND}&) 
+
+	    for THIRD3 in `cat ${CACHEDIR}/*-subjects-wordlist| sort | uniq| shuf | tail  -${PERTURB2}`; do 
 	    sleep $INTRAPAUSE
-	    echo $FIRST -- $SECOND -- $THIRD
-	    #	    (bing_search "${url}" "${word}" &)	
-	    (engine_google &)			
-	    #	    (sogou_search  "${url}" "${word}" &)
+	    THIRD=${THIRD3}
+	    echo $FIRST1 -- $SECOND2 -- ${THIRD3}
+
+	    (engine_google ${FIRST} ${SECOND} ${THIRD} &)
+	    (engine_bing ${FIRST} ${SECOND} ${THIRD} &)
+	    (engine_sogou ${FIRST} ${SECOND} ${THIRD} &) 
+
 	    done
 	done
      done
@@ -237,6 +332,10 @@ INTRAPAUSE=6600
 			   ;;
           URL_SEARCH) search_from_url
 		      ;;
+	  SPECIAL_SEARCHES) search_reverse
+			;;
+	  MIRROR_SPECIALS) mirror
+			   ;;
           EXTEND) search_from_previous
 		  ;;
 	DEFAULT) search_by_software

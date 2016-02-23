@@ -167,7 +167,7 @@ engine_bing () {
 	echo "File "${CACHEBASE}.1.result" exists."
     else
 	#for n in 1 51 101 151 201 251 301 351 401 451 501 551 601 651 701 751 801 851 901 951 ; do
-	for n in 1 51
+	for n in 1 51 ; do 
 	    sleep $INTRASEARCHPAUSE
 	    echo doing "${BASEURL}" ${n}
 	    curl --max-time 30  --cookie-jar "${COOKIEJAR}.bing" --dump-header "${CACHEBASE}.${n}.header" --output "${CACHEBASE}.${n}.result" --stderr "${CACHEBASE}.${n}.logging" --referer "http://www.bing.com/" --verbose -A "${USERAGENT}" --url "${BASEURL}&first=${n}"
@@ -286,7 +286,7 @@ INTRAPAUSE=6600
      for FIRST1 in `cat search-terms/ojs-terms.*.utf8 search-terms/islandora-terms.*.utf8 search-terms/etd-db-terms.*.utf8 search-terms/vital-terms.*.utf8 search-terms/dspace-terms.*.utf8 search-terms/eprints-terms.*.utf8 search-terms/greenstone-terms.*.utf8| sort | uniq| shuf`; do
 	 echo $FIRST1
 	 FIRST=${FIRST1}
-	 (engine_google ${FIRST}&)
+	 #(engine_google ${FIRST}&)
 	 (engine_bing ${FIRST}&)
 	 (engine_sogou ${FIRST}&)
 	 
@@ -294,7 +294,7 @@ INTRAPAUSE=6600
 	    sleep $INTRAPAUSE
 	    echo $FIRST1 -- $SECOND2
 	    SECOND=${SECOND2}
-	    (engine_google ${FIRST} ${SECOND} &)
+	    #(engine_google ${FIRST} ${SECOND} &)
 	    (engine_bing ${FIRST} ${SECOND}&)
 	    (engine_sogou ${FIRST} ${SECOND}&) 
 
@@ -303,7 +303,7 @@ INTRAPAUSE=6600
 	    THIRD=${THIRD3}
 	    echo $FIRST1 -- $SECOND2 -- ${THIRD3}
 
-	    (engine_google ${FIRST} ${SECOND} ${THIRD} &)
+	    #(engine_google ${FIRST} ${SECOND} ${THIRD} &)
 	    (engine_bing ${FIRST} ${SECOND} ${THIRD} &)
 	    (engine_sogou ${FIRST} ${SECOND} ${THIRD} &) 
 

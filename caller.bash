@@ -213,8 +213,7 @@ engine_sogou () {
 	#for n in 1 2 3 4 5 6 7 8 9  ; do
 	    sleep $INTRASEARCHPAUSE
 	    echo doing "${BASEURL}" ${n}
-	    curl --max-time 30  --cookie-jar "${COOKIEJAR}.sogou" --dump-header "${CACHEBASE}.${n}.header" --output "${CACHEBASE}.${n}.result" --stderr "${CACHEBASE
-}.${n}.logging" --referer "http://www.sogou.com/" --verbose -A "${USERAGENT}" --url "${BASEURL}&page=${n}"
+	    curl --max-time 30  --cookie-jar "${COOKIEJAR}.sogou" --dump-header "${CACHEBASE}.${n}.header" --output "${CACHEBASE}.${n}.result" --stderr "${CACHEBASE}.${n}.logging" --referer "http://www.sogou.com/" --verbose -A "${USERAGENT}" --url "${BASEURL}&page=${n}"
 	done;
     fi
 }

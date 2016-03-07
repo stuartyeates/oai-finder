@@ -1,5 +1,10 @@
 Union list of OAI feeds
 
+The goal is to create literally a union list of OAI feeds, dependent only on
+the technical correctness of the OAI feed.
+
+Members:
+
 1 Open Directory of Open Access Repositories OpenDOAR http://www.opendoar.org/
 2 Registry of Open Access Repositories http://roar.eprints.org/
 3 Direoctory of open Access Journals DOAJ https://doaj.org/

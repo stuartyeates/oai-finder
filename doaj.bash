@@ -17,11 +17,9 @@ function doaj () {
 	if [ $? -ne 0 ]
 	then
 	    break;
-	fi
-	
+	fi	
     done
-    
-    
+   
 }
 
 

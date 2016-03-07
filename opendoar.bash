@@ -16,8 +16,7 @@ function opendoar () {
 
     #convert the XML file to a CSV, with just the URLs plus the repositry name
     xsltproc ./opendoar.xsl cache-dir/opendoar/opendoar.xml > ${OPENDOARCSVFILE}
-
-
+    
     #split the lines into feeds and hints
 
     #first nuke the old ones
@@ -29,7 +28,7 @@ function opendoar () {
     while read rUrl rOaiBaseUrl oUrl 
     do
 	if [ ! -z "${rOaiBaseUrl}" ]; then
-	    echo "${rOaiBaseUrl}" >> ${CACHE_DIR}/probably_oai_feeds
+	    echo "${rOaiBaseUrl}" >> ${CACHE_DIR}/probable_oai_feeds
 	else
 	    if [ ! -z "${rUrl}" ]; then
 		echo "${rUrl}" >> ${CACHE_DIR}/oai_feed_hints

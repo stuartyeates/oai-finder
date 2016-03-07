@@ -21,7 +21,7 @@ function opendoar () {
     #split the lines into feeds and hints
 
     #first nuke the old ones
-    rm ${CACHE_DIR}/probably_oai_feeds ${CACHE_DIR}/oai_feed_hints ${CACHE_DIR}/oai_feed_domains
+    rm -f ${CACHE_DIR}/probably_oai_feeds ${CACHE_DIR}/oai_feed_hints ${CACHE_DIR}/oai_feed_domains
     
     OLDIFS=$IFS
     IFS=,
@@ -30,15 +30,12 @@ function opendoar () {
     do
 	if [ ! -z "${rOaiBaseUrl}" ]; then
 	    echo "${rOaiBaseUrl}" >> ${CACHE_DIR}/probably_oai_feeds
-	    echo oai
 	else
 	    if [ ! -z "${rUrl}" ]; then
 		echo "${rUrl}" >> ${CACHE_DIR}/oai_feed_hints
-		echo hint
 	    else
 		if [ ! -z "${oUrl}" ]; then
 		    echo "${oUrl}" >> ${CACHE_DIR}/oai_feed_domains
-		    echo domain
 		fi
 	    fi
 	fi

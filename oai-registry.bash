@@ -4,11 +4,11 @@
 CACHE_DIR=./cache-dir/oai-registery/
 mkdir -p ${CACHE_DIR}
 
-OPENDOARJSONFILE=${CACHE_DIR}/oai-registry.html
+OAIREGISTRYHTML=${CACHE_DIR}/oai-registry.html
 
 function oai-registry () {
  
-    curl -X GET "https://www.openarchives.org/Register/BrowseSites"
+    curl -X GET "https://www.openarchives.org/Register/BrowseSites" --output ${OAIREGISTRYHTML}
 
 }
 

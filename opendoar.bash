@@ -13,7 +13,8 @@ function opendoar () {
 	 curl --max-time 300 --output "${OPENDOARXMLFILE}"  --referer "http://www.google.com/" --stderr "${CACHE_DIR}/main.log" --verbose  --url "http://opendoar.org/api13.php?all=y"
     fi
 
-    
+    #convert the XML file to a CSV, with just the URLs plus the repositry name
+    xsltproc ./opendoar.xsl cache-dir/opendoar/opendoar.xml 
     }
 
 

@@ -60,6 +60,12 @@ function match_with_sed () {
 	G1=$(echo "$rep" | sed 's|$|cgi/oai2|');
 	G2=$(echo "$rep" | sed 's|$|oai|');
 	G3=$(echo "$rep" | sed 's|$|oai/request|');
+	G4=$(echo "$rep" | sed 's|xmlui$|oai/request|');
+	G5=$(echo "$rep" | sed 's|dspace/$|dspace-oai/request|');
+	G6=$(echo "$rep" | sed 's|$|oai/driver|');
+	G7=$(echo "$rep" | sed 's|$|do/oai/|');
+	G8=$(echo "$rep" | sed 's|$|fedora/oai|');
+	G9=$(echo "$rep" | sed 's|$||');
 	
 	case $oai in
 	    $G1)
@@ -71,6 +77,24 @@ function match_with_sed () {
 	    $G3)
 		((G3count++))
 		;;
+	    $G4)
+		((G4count++))
+		;;
+	    $G5)
+		((G5count++))
+		;;
+	    $G6)
+		((G6count++))
+		;;
+	    $G7)
+		((G7count++))
+		;;
+	    $G8)
+		((G8count++))
+		;;
+	    $G9)
+		((G9count++))
+		;;
 	    *)	
 		echo $rep, $oai, $G1, $G2, $G3
 	    ;;
@@ -78,7 +102,7 @@ function match_with_sed () {
        
     done < ${PAIRSFILE}
     IFS=$OLDIFS
-    echo $G1count $G2count $G3count
+    echo $G1count, $G2count, $G3count, $G4count, $G5count, $G6count, $G7count, $G8count, $G9count,
     }
 
 opendoar;

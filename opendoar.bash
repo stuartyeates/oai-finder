@@ -59,11 +59,26 @@ function match_with_sed () {
     do
 	G1=$(echo "$rep" | sed 's|$|cgi/oai2|');
 	G2=$(echo "$rep" | sed 's|$|oai|');
-	G3=$(echo "$rep" | sed 's|$|cgi/oai2|');
-	echo $rep, $oai, $G1, $G2, $G3
+	G3=$(echo "$rep" | sed 's|$|oai/request|');
 	
+	case $oai in
+	    $G1)
+		((G1count++))
+		;;
+	    $G2)
+		((G2count++))
+		;;
+	    $G3)
+		((G3count++))
+		;;
+	    *)	
+		echo $rep, $oai, $G1, $G2, $G3
+	    ;;
+	esac
+       
     done < ${PAIRSFILE}
     IFS=$OLDIFS
+    echo $G1count $G2count $G3count
     }
 
 opendoar;

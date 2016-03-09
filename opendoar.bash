@@ -42,5 +42,14 @@ function opendoar () {
     IFS=$OLDIFS
 }
 
+PAIRSFILE=${CACHE_DIR}/pairs.csv
+
+
+function find_rep_oai_pairs (){
+  awk -F, '{if ( $2) { print $1, $2} }' <  ${OPENDOARCSVFILE} > ${PAIRSFILE}
+  
+}
+
 
 opendoar;
+find_rep_oai_pairs;

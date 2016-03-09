@@ -65,7 +65,7 @@ function match_with_sed () {
 	G6=$(echo "$rep" | sed 's|$|oai/driver|');
 	G7=$(echo "$rep" | sed 's|$|do/oai/|');
 	G8=$(echo "$rep" | sed 's|$|fedora/oai|');
-	G9=$(echo "$rep" | sed 's|$||');
+	G9=$(echo "$rep" | sed 's|$|/oai-pmh-repository.xml|');
 	
 	case $oai in
 	    $G1)
@@ -97,12 +97,13 @@ function match_with_sed () {
 		;;
 	    *)	
 		echo $rep, $oai, $G1, $G2, $G3
-	    ;;
+		((G0count++))
+ 		;;
 	esac
        
     done < ${PAIRSFILE}
     IFS=$OLDIFS
-    echo $G1count, $G2count, $G3count, $G4count, $G5count, $G6count, $G7count, $G8count, $G9count,
+    echo $G1count, $G2count, $G3count, $G4count, $G5count, $G6count, $G7count, $G8count, $G9count, $G0count
     }
 
 opendoar;

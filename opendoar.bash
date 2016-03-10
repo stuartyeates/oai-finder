@@ -184,7 +184,7 @@ function match_with_sed () {
        
     done < ${PAIRSFILE}
     IFS=$OLDIFS
-    echo $G1count, $G2count, $G3count, $G4count, $G5count, $G6count, $G7count, $G8count, $G9count, $G10count  $G11count, $G12count, $G13count, $G14count, $G15count, $G16count, $G17count, $G18count, $G19count, $G20count  $G21count, $G22count, $G23count, $G24count, $G25count, $G26count, $G27count, $G28count, $G29count,$G0count
+    echo $G1count, $G2count, $G3count, $G4count, $G5count, $G6count, $G7count, $G8count, $G9count, $G10count,  $G11count, $G12count, $G13count, $G14count, $G15count, $G16count, $G17count, $G18count, $G19count, $G20count  $G21count, $G22count, $G23count, $G24count, $G25count, $G26count, $G27count, $G28count, $G29count, $G0count
     }
 
 opendoar;

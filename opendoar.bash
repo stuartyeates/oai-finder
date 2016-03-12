@@ -177,7 +177,7 @@ function match_with_sed () {
 		((G29count++))
 		;;
 	    *)	
-		echo \"$rep\", \"$oai\", $G1, $G2, $G3
+		echo \"$rep\", \"$oai\"
 		((G0count++))
  		;;
 	esac

@@ -24,5 +24,13 @@ do
 		echo $ALIASHOST
 	    fi
 	fi
+	
+	OAIHOST=`echo oai.${HOST}`
+	host ${OAIHOST} 1>&2 > /dev/null
+	if [ "$?" -eq "0" ]; then
+	    ALIASHOST=`echo ${URL} | perl -p -e 's!(http|https)://([^/]+)/(.*)!\1://'"${OAIHOST}"'/\3!g'`
+	    echo $ALIASHOST
+	fi
+	
     fi
 done

@@ -1,5 +1,5 @@
 #!/bin/bash
-#script to create variants of he host part of the URL
+#script to create variants of the port part of the URL
 
 while read URL
 do

@@ -5,7 +5,7 @@ while read URL
 do
     if [ ! -z "${URL}" ]; then
 	echo ${URL}
-	echo ${URL} | perl -p -e  's!(http|https)://([^/]+):?([0-9]*)?/(.*)!protocol=\1 host=\2 port=\3 rest=\4!g'
+	#echo ${URL} | perl -p -e  's!(http|https)://([^/]+):?([0-9]*)?/(.*)!protocol=\1 host=\2 port=\3 rest=\4!g'
 	HOST=`echo ${URL} | perl -p -e  's!(http|https)://([^/]+):?([0-9]*)?/(.*)!\2!g'`
 	REST=`echo ${URL} | perl -p -e  's!(http|https)://([^/]+):?([0-9]*)?/(.*)!\4!g'`
 	echo https://${HOST}:443/${REST}

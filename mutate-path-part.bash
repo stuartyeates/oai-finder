@@ -7,7 +7,14 @@ do
 	while [[ "${URL}" =~  ^https?://[a-z0-9.]*/  ]]
 	do
 	    echo ${URL}
+	    if [[ "${URL}" =~  /$  ]]; then
+		echo ${URL} | sed 's|$|cgi/oai2|'
+	    fi
 	    URL=`echo $URL | sed 's![^/]*.$!!'`
+
+
+
+	    
 	done
 		
     fi

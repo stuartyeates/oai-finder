@@ -4,12 +4,10 @@
 while read URL
 do
     if [ ! -z "${URL}" ]; then
-	echo ${URL}
-
-	while [[ "${URL}" =~ "://[^/]+/" ]]
+	while [[ "${URL}" =~  ^https?://[a-z0-9.]*/  ]]
 	do
-	    URL=`echo $URL | sed 's!/.*!!'`
-	    echo ** ${URL}
+	    echo ${URL}
+	    URL=`echo $URL | sed 's![^/]*.$!!'`
 	done
 		
     fi

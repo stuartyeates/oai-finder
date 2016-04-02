@@ -28,7 +28,7 @@ do
 		echo ${URL} | sed 's|$|oai/request|' # dspace
 		echo ${URL} | sed 's|$|oai/scielo-oai.php|'
 		echo ${URL} | sed 's|$|oai2/oai2.php|'
-		echo ${URL} | sed 's|$|oai2d|'
+		echo ${URL} | sed 's|$|oai2d|'  # invenio
 		echo ${URL} | sed 's|$|oai2|'
 		echo ${URL} | sed 's|$|oaicat|'
 		echo ${URL} | sed 's|$|oaiextended/request|'
@@ -36,11 +36,19 @@ do
 		echo ${URL} | sed 's|$|oaiserver|'
 		echo ${URL} | sed 's|$|oai|'
 		echo ${URL} | sed 's|$|opac/mmd_api/oai-pmh/|'
-		echo ${URL} | sed 's|$|phpoai/oai2.php|'
+		echo ${URL} | sed 's|$|phpoai/oai2.php|'   # opus
 		echo ${URL} | sed 's|$|rest/oai|' #fedora 4
 		echo ${URL} | sed 's|$|sobekcm_oai.aspx|'
 		echo ${URL} | sed 's|$|ws/oai|'
 		echo ${URL} | sed 's|$|oai/oai.php|'
+		echo ${URL} | sed 's|$|opus4/oai|'   #  opus
+		echo ${URL} | sed 's|$|modules/xoonips/oai.php|'  # xoonips
+		echo ${URL} | sed 's|$|oai/scielo-oai.php|'   # scilo
+#		echo ${URL} | sed 's|$||'
+#		echo ${URL} | sed 's|$||'
+#		echo ${URL} | sed 's|$||'
+#		echo ${URL} | sed 's|$||'
+#		echo ${URL} | sed 's|$||'
 #		echo ${URL} | sed 's|$||'
 #		echo ${URL} | sed 's|$||'
 	    else

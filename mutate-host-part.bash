@@ -52,6 +52,10 @@ do
 	    ALIASHOST=`echo ${URL} | perl -p -e 's!(http|https)://([^/]+)/(.*)!\1://'"${OAIHOST}"'/\3!g'`
 	    echo $ALIASHOST
 	fi
-	
+
+	#special for openrepository.org hosted sites
+	ALIASHOST=`echo ${URL} | sed 's|http://\([^\.]*\)\.\([^/]*\)/.*|http://\1.\2/\1/oai/request|'`
+	echo $ALIASHOST
+		
     fi
 done

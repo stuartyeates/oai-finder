@@ -11,16 +11,19 @@ do
 		echo ${URL} | sed 's|$|casirgrid-oai/request|'
 		echo ${URL} | sed 's|$|cgi-bin/oai.cgi|'  # greenstone
 		echo ${URL} | sed 's|$|cgi-bin/oai.exe|' # greenstone
+		echo ${URL} | sed 's|$|cgi-bin/oai|' # greenstone
+		echo ${URL} | sed 's|$|cgi-bin/oaiserver.exe|' # greenstone
 		echo ${URL} | sed 's|$|cgi-bin/oaiserver.cgi|' # greenstone
 		echo ${URL} | sed 's|$|cgi-bin/oaiserver|' # greenstone
-		echo ${URL} | sed 's|$|cgi-bin/oai|' # greenstone
 		echo ${URL} | sed 's|$|cgi/oai2|'
 		echo ${URL} | sed 's|$|do.oai|'
 		echo ${URL} | sed 's|$|dspace-oai/request|' # dspace
 		echo ${URL} | sed 's|$|fedora/oai|' #fedora 3
 		echo ${URL} | sed 's|$|greenstone/cgi-bin/oaiserver.cgi|' # greenstone
+		echo ${URL} | sed 's|$|greenstone/cgi-bin/oaiserver.exe|' # greenstone
 		echo ${URL} | sed 's|$|greenstone/cgi-bin/oaiserver|' # greenstone
 		echo ${URL} | sed 's|$|gsdl/cgi-bin/oaiserver.cgi|' # greenstone
+		echo ${URL} | sed 's|$|gsdl/cgi-bin/oaiserver.exe|' # greenstone
 		echo ${URL} | sed 's|$|gsdl/cgi-bin/oaiserver|' # greenstone
 		echo ${URL} | sed 's|$|ir-oai/request|'
 		echo ${URL} | sed 's|$|modules/xoonips/oai.php|'  # xoonips

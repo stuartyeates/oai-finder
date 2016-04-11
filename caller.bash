@@ -6,7 +6,7 @@ PREFIX=$PWD/oaifinder-files/
 DATADIR=${PREFIX}/var/lib/${DAEMONNAME}
 RUNDIR=""
 SEEDONLY=""
-SINGLE=""
+SINGLE="TRUE"
 
 FIRST=""
 SECOND=""
@@ -122,8 +122,8 @@ engine_google () {
     if [ -f "${CACHEBASE}.0.result" ];
     then	echo "File "${CACHEBASE}.0.result" exists."
     else
-	for n in 0 50 ; do
-	#for n in 0 50 100 150 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950 ; do
+	#for n in 0 50 ; do
+	for n in 0 50 100 150 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950 ; do
 	    sleep $INTRASEARCHPAUSE
 	    echo doing "${BASEURL}" ${n}
 	    curl --max-time 30  --cookie-jar "${COOKIEJAR}.google" --dump-header "${CACHEBASE}.${n}.header" --output "${CACHEBASE}.${n}.result" --stderr "${CACHEBASE}.${n}.logging" --referer "http://www.google.com/" --verbose -A "${USERAGENT}" --url "${BASEURL}&start=${n}"
@@ -166,8 +166,8 @@ engine_bing () {
     then
 	echo "File "${CACHEBASE}.1.result" exists."
     else
-	#for n in 1 51 101 151 201 251 301 351 401 451 501 551 601 651 701 751 801 851 901 951 ; do
-	for n in 1 51 ; do 
+	for n in 1 51 101 151 201 251 301 351 401 451 501 551 601 651 701 751 801 851 901 951 ; do
+	#for n in 1 51 ; do 
 	    sleep $INTRASEARCHPAUSE
 	    echo doing "${BASEURL}" ${n}
 	    curl --max-time 30  --cookie-jar "${COOKIEJAR}.bing" --dump-header "${CACHEBASE}.${n}.header" --output "${CACHEBASE}.${n}.result" --stderr "${CACHEBASE}.${n}.logging" --referer "http://www.bing.com/" --verbose -A "${USERAGENT}" --url "${BASEURL}&first=${n}"
@@ -209,8 +209,8 @@ engine_sogou () {
     then
 	echo "File "${CACHEBASE}.1.result" exists."
     else
-	for n in 1 2 ; do
-	#for n in 1 2 3 4 5 6 7 8 9  ; do
+	#for n in 1 2 ; do
+	for n in 1 2 3 4 5 6 7 8 9  ; do
 	    sleep $INTRASEARCHPAUSE
 	    echo doing "${BASEURL}" ${n}
 	    curl --max-time 30  --cookie-jar "${COOKIEJAR}.sogou" --dump-header "${CACHEBASE}.${n}.header" --output "${CACHEBASE}.${n}.result" --stderr "${CACHEBASE}.${n}.logging" --referer "http://www.sogou.com/" --verbose -A "${USERAGENT}" --url "${BASEURL}&page=${n}"
@@ -280,12 +280,17 @@ PERTURB1=2
 PERTURB2=2
 INTRAPAUSE=6600
 
+COUNT=10000;
+if [[ ${SINGLE} == "TRUE" ]]; then
+    COUNT=1;
+fi
+
  search_by_software () {
      echo "searching by software";
-     for FIRST1 in `cat search-terms/ojs-terms.*.utf8 search-terms/islandora-terms.*.utf8 search-terms/etd-db-terms.*.utf8 search-terms/vital-terms.*.utf8 search-terms/dspace-terms.*.utf8 search-terms/eprints-terms.*.utf8 search-terms/greenstone-terms.*.utf8| sort | uniq| shuf`; do
+     for FIRST1 in `cat search-terms/ojs-terms.*.utf8 search-terms/islandora-terms.*.utf8 search-terms/etd-db-terms.*.utf8 search-terms/vital-terms.*.utf8 search-terms/dspace-terms.*.utf8 search-terms/eprints-terms.*.utf8 search-terms/greenstone-terms.*.utf8| sort | uniq| shuf| head -${COUNT}`; do
 	 echo $FIRST1
 	 FIRST=${FIRST1}
-	 #(engine_google ${FIRST}&)
+	 (engine_google ${FIRST}&)
 	 (engine_bing ${FIRST}&)
 	 (engine_sogou ${FIRST}&)
 	 
@@ -297,18 +302,10 @@ INTRAPAUSE=6600
 	    (engine_bing ${FIRST} ${SECOND}&)
 	    (engine_sogou ${FIRST} ${SECOND}&) 
 
-	    for THIRD3 in `cat ${CACHEDIR}/*-subjects-wordlist| sort | uniq| shuf | tail  -${PERTURB2}`; do 
-	    sleep $INTRAPAUSE
-	    THIRD=${THIRD3}
-	    echo $FIRST1 -- $SECOND2 -- ${THIRD3}
-
-	    #(engine_google ${FIRST} ${SECOND} ${THIRD} &)
-	    (engine_bing ${FIRST} ${SECOND} ${THIRD} &)
-	    (engine_sogou ${FIRST} ${SECOND} ${THIRD} &) 
-
-	    done
 	done
      done
+
+     
      
  }
 

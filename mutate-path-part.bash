@@ -1,11 +1,11 @@
 #!/bin/bash
 #script to create variants of the port part of the URL
 
-while read URL
+while read "URL"
 do
     if [ ! -z "${URL}" ]; then
 	echo ${URL}
-	while [[ "${URL}" =~  ^https?://[a-z0-9.]*/  ]]
+	while [[ "${URL}" =~  ^https?://[-a-z0-9.:]*/  ]]
 	do
 	    echo ${URL}
 	    if [[ "${URL}" =~  /$  ]]; then
@@ -50,6 +50,7 @@ do
 		echo ${URL} | sed 's|$|rest/oai|' #fedora 4
 		echo ${URL} | sed 's|$|sobekcm_oai.aspx|'
 		echo ${URL} | sed 's|$|ws/oai|'
+		echo ${URL} | sed 's|$|oai-pmh-repository/request|'   #omeka
 #		echo ${URL} | sed 's|$||'
 #		echo ${URL} | sed 's|$||'
 #		echo ${URL} | sed 's|$||'

@@ -1,14 +1,10 @@
 gsdl 
 oaiserver
-\"greenstone3.library\"
-\"library.cgi\"
-nzdl
-\"gsdl.cgi-bin.library.cgi\"
-\"browse+documents+by+Date+by+clicking+the+Dates+button\"
-\"Greenstone+version+number\"
-\"Greenstone+is+a+suite+of+software+which has the ability to serve digital library collections\"
+gsdl.cgi-bin.library.cgi
+browse+documents+by+Date+by+clicking+the+Dates+button
+Greenstone+is+a+suite+of+software+which has the ability to serve digital library collections
 gsdl+library.cgi
 gsdl+library
-"do+not+display+search+history"
-"ignore+word+endings"
+do+not+display+search+history
+ignore+word+endings
 your-own-baseURL-goes-here

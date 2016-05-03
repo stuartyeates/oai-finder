@@ -29,9 +29,9 @@ for first in `cat ${IN1DIR}/*| sort | uniq`; do
     
     echo '</p></div><div>' >> ${OUTPUTFILE}
 
-    echo '<p><a href="https://www.google.co.nz/search?q='${first}'+filetype:html&filter=0&count=50&">'${first}'</a></p><p>' >> ${OUTPUTFILE}
+    echo '<p><a href="https://www.google.co.nz/search?q='${first}'+filetype:html&filter=0&num=50&">'${first}'</a></p><p>' >> ${OUTPUTFILE}
     for second in `cat ${IN2DIR}| sort| uniq`; do
-	echo '<a href="https://www.google.co.nz/search?q='${first}+${second}'+filetype:html&filter=0&count=50">'${second}'</a>' >> ${OUTPUTFILE}
+	echo '<a href="https://www.google.co.nz/search?q='${first}+${second}'+filetype:html&filter=0&num=50">'${second}'</a>' >> ${OUTPUTFILE}
     done    
 
     echo '</p></div><div>' >> ${OUTPUTFILE}

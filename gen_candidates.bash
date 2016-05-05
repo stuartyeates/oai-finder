@@ -13,7 +13,7 @@ find ${FILES} -type f -exec cat \{\} \; | tr ' <>"' '\012' | sed 's/http/ http/g
 wc  ${BUILD}/raw_urls
 cat  ${BUILD}/raw_urls | grep -v '\(msn\.com\|bingj\.com\|wikipedia\.org\|\.live\.com\|twitter.com\|google\.com\|google\.co\.nz\|googleusercontent\.com\|\.blogspot\.\|clickserve\.dartsearch\.net\)' | grep -iv '\(\.js$\|\.css$\|\.gif$\|\.jpg$\|\.rss$\|\.atom$\|\.rss2$\)' > ${BUILD}/filtered_urls
 wc  ${BUILD}/filtered_urls
-cat ${BUILD}/filtered_urls | sed 's|/article/view/.*|/|' | sed 's|/handle/*|/|' | sed 's|/items/show/.*|/|' | sed 's|/exhibits/show/.*|/|' | sed 's|/islandora/object/.*|/islandora/object/|' | sed 's|/browse?.*|/browse?|'  | sed 's|/items/.*|/items/|'  | sed 's|/file/.*|/file/|' | sort | uniq > ${BUILD}/trimmed_urls
+cat ${BUILD}/filtered_urls | sed 's|/article/view/.*|/|' | sed 's|/handle/*|/|' |  sed 's|/exhibits/show/.*|/|' | sed 's|/islandora/object/.*|/islandora/object/|' | sed 's|/browse?.*|/browse?|'  | sed 's|/items/.*|/items/|'  | sed 's|/file/.*|/file/|' | sort | uniq > ${BUILD}/trimmed_urls
 wc  ${BUILD}/trimmed_urls
 
 cat  ${BUILD}/trimmed_urls | grep '/index.php' | sed 's|/index.php.*|/index.php|' | sort | uniq > ${BUILD}/ojs_installs

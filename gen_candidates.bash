@@ -14,11 +14,29 @@ cp ./raw_urls ${BUILD}
 wc  ${BUILD}/raw_urls
 cat  ${BUILD}/raw_urls | grep -v '\(msn\.com\|bingj\.com\|wikipedia\.org\|\.live\.com\|twitter.com\|google\.com\|google\.co\.nz\|googleusercontent\.com\|\.blogspot\.\|clickserve\.dartsearch\.net\|ebsco\.com\|baiducontent\.com\)' | grep -iv '\(\.js$\|\.css$\|\.gif$\|\.jpg$\|\.rss$\|\.atom$\|\.rss2$\|\.png$\)' > ${BUILD}/filtered_urls
 wc  ${BUILD}/filtered_urls
-cat ${BUILD}/filtered_urls | sed 's|/article/view/.*|/|' |sed 's|/issue/view/.*|/|' | sed 's|/handle/*|/|' |  sed 's|/exhibits/show/.*|/|' | sed 's|/islandora/object/.*|/islandora/object/|' | sed 's|/browse?.*|/browse?|'  | sed 's|/items/.*|/items/|'  | sed 's|/file/.*|/file/|' | sed 's|search.*||' |sort | uniq > ${BUILD}/trimmed_urls
+cat ${BUILD}/filtered_urls | sed 's|/article/view/.*|/|' |sed 's|/issue/view/.*|/|' | sed 's|/handle/*|/|' |  sed 's|/exhibits/show/.*|/|' | sed 's|/islandora/object/.*|/islandora/object/|' | sed 's|/browse?.*|/browse?|'  | sed 's|/items/.*|/items/|'  | sed 's|/file/.*|/file/|' | sed 's|search.*||' |sed 's|/[^/]*\.pdf||' |sort | uniq > ${BUILD}/trimmed_urls
 wc  ${BUILD}/trimmed_urls
 
 cat  ${BUILD}/trimmed_urls | grep '/index.php' | sed 's|/index.php.*|/index.php|' | sort | uniq > ${BUILD}/ojs_installs
 wc ${BUILD}/ojs_installs
 #wget --force-directories --input-file=build/ojs_installs --directory-prefix=~/cache-ojs
+
+cat  ${BUILD}/trimmed_urls | shuf |head -1000 | ../oai-union-list/mutate-path-part.bash | sort | uniq > ${BUILD}/expanded
+wc  ${BUILD}/expanded
+
+cat  ${BUILD}/expanded | shuf > ${BUILD}/shuffled
+cat  ${BUILD}/shuffled | head -1000 | tail -100 >  ${BUILD}/shuffled-01
+cat  ${BUILD}/shuffled | head -900 | tail -100 >  ${BUILD}/shuffled-02
+cat  ${BUILD}/shuffled | head -800 | tail -100 >  ${BUILD}/shuffled-03
+cat  ${BUILD}/shuffled | head -700 | tail -100 >  ${BUILD}/shuffled-04
+cat  ${BUILD}/shuffled | head -600 | tail -100 >  ${BUILD}/shuffled-05
+cat  ${BUILD}/shuffled | head -500 | tail -100 >  ${BUILD}/shuffled-06
+cat  ${BUILD}/shuffled | head -400 | tail -100 >  ${BUILD}/shuffled-07
+cat  ${BUILD}/shuffled | head -300 | tail -100 >  ${BUILD}/shuffled-08
+cat  ${BUILD}/shuffled | head -200 | tail -100 >  ${BUILD}/shuffled-09
+cat  ${BUILD}/shuffled | head -100 | tail -100 >  ${BUILD}/shuffled-10
+
+
+
 
 

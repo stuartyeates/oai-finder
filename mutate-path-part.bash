@@ -52,7 +52,7 @@ do
 		echo ${URL} | sed 's|$|ws/oai?verb=Identify|'
 		echo ${URL} | sed 's|$|oai-pmh-repository/request?verb=Identify|'   #omeka
 		echo ${URL} | sed 's|$|index/oai?verb=Identify|'   #omeka
-		echo ${URL} | sed 's|$|?page=oai&amp;verb=Identify|'   #ojs no mapping
+		echo ${URL} | sed 's|$|?page=oai\&amp;verb=Identify|'   #ojs no mapping
 #		echo ${URL} | sed 's|$||'
 #		echo ${URL} | sed 's|$||'
 #		echo ${URL} | sed 's|$||'

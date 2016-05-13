@@ -1,3 +1,11 @@
+site:.EDU
+site:.GOV
+site:.INT
+site:.MIL
+site:.NET
+site:.NGO
+site:.ORG
+site:.KRD
 site:.AC
 site:.AD
 site:.AE
@@ -61,7 +69,6 @@ site:.DM
 site:.DO
 site:.DZ
 site:.EC
-site:.EDU
 site:.EE
 site:.EG
 site:.ER
@@ -85,7 +92,6 @@ site:.GI
 site:.GL
 site:.GM
 site:.GN
-site:.GOV
 site:.GP
 site:.GQ
 site:.GR
@@ -105,7 +111,6 @@ site:.IE
 site:.IL
 site:.IM
 site:.IN
-site:.INT
 site:.IO
 site:.IQ
 site:.IR
@@ -143,7 +148,6 @@ site:.MD
 site:.ME
 site:.MG
 site:.MH
-site:.MIL
 site:.MK
 site:.ML
 site:.MM
@@ -163,10 +167,8 @@ site:.MZ
 site:.NA
 site:.NC
 site:.NE
-site:.NET
 site:.NF
 site:.NG
-site:.NGO
 site:.NI
 site:.NL
 site:.NO
@@ -175,7 +177,6 @@ site:.NR
 site:.NU
 site:.NZ
 site:.OM
-site:.ORG
 site:.PA
 site:.PE
 site:.PF
@@ -251,6 +252,5 @@ site:.WS
 site:.YE
 site:.YT
 site:.ZA
-site:.ZIP
 site:.ZM
 site:.ZW

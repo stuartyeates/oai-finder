@@ -8,7 +8,7 @@ IN2DIR2="./noise-terms/organisation-terms-en.utf8"
 
 
 
-for first in `cat ${IN1DIR}/*| sort | uniq`; do
+for first in `cat ${IN1DIR}/*`; do
     echo $first
     OUTPUTFILE=${HTMLDIR}/generated-${first}.html
 
@@ -16,14 +16,14 @@ for first in `cat ${IN1DIR}/*| sort | uniq`; do
     echo '<h1>'$first'</h1><div>' >> ${OUTPUTFILE}
 
     echo '<p><a href="http://www.bing.com/search?q='${first}'&filter=0&count=50">'${first} bing'</a></p><p>' >> ${OUTPUTFILE}
-    for second in `cat ${IN2DIR}| sort| uniq`; do
+    for second in `cat ${IN2DIR}`; do
 	echo '<a href="http://www.bing.com/search?q='${first}+${second}'&filter=0&count=50">'${second}'</a>' >> ${OUTPUTFILE}
     done
     
     echo '</p></div><div>' >> ${OUTPUTFILE}
 
     echo '<p><a href="https://www.google.co.nz/search?q='${first}'&filter=0&num=50&">'${first}' google</a></p><p>' >> ${OUTPUTFILE}
-    for second in `cat ${IN2DIR}| sort| uniq`; do
+    for second in `cat ${IN2DIR}`; do
 	echo '<a href="https://www.google.co.nz/search?q='${first}+${second}'&filter=0&num=50">'${second}'</a>' >> ${OUTPUTFILE}
     done    
 
@@ -46,3 +46,8 @@ done
 
 
 #http://www.bing.com/search?q=${1} ${2} ${3}&filter=0&count=50
+
+
+#for i in {15000..21000}; do echo http://cdm$i.contentdm.oclc.org/; done > html/cdm_urls
+# wget --input-file=html/cdm_urls --force-directories --directory-prefix=./cache-cdm-brute-force/ --wait=10 --convert-links --tries=2 --timeout=5
+

@@ -41,7 +41,7 @@ cat  ${BUILD}/shuffled | head -10000 | tail -10000 >  ${BUILD}/shuffled-10
 wc  ${BUILD}/*
 
 for file in ${BUILD}/shuffled-*; do
-    (check_urls.bash $file &);
+    (./check_urls.bash < $file &);
 done
 
 cat  ${BUILD}/trimmed_urls | grep -v contentdm.oclc.org/ | ../oai-union-list/mutate-path-part.bash | sort | uniq > ${BUILD}/normal_candidate_urls &

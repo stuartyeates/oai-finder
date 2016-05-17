@@ -20,13 +20,18 @@ cat  ${BUILD}/trimmed_urls | grep '/index.php' | sed 's|/index.php.*|/index.php|
 wc ${BUILD}/ojs_installs
 #wget --force-directories --input-file=build/ojs_installs --directory-prefix=~/cache-ojs
 
-cat  ${BUILD}/trimmed_urls | grep -v contentdm.oclc.org/ | shuf |head -1000 | ../oai-union-list/mutate-path-part.bash | sort | uniq > ${BUILD}/expanded
 
 cat  ${BUILD}/trimmed_urls | grep contentdm.oclc.org/ |sed  's|$|/oai/oai.php?verb=Identify|' > ${BUILD}/contentdm_candidate_urls
 
+cat  ${BUILD}/trimmed_urls | grep -v contentdm.oclc.org/ | shuf |head -1000 | ../oai-union-list/mutate-path-part.bash | sort | uniq > ${BUILD}/expanded
+cat  ${BUILD}/trimmed_urls | grep -v contentdm.oclc.org/ | ../oai-union-list/mutate-path-part.bash | sort | uniq > ${BUILD}/normal_candidate_urls; cp ${BUILD}/normal_candidate_urls ./expanded &
+
+cat logs/successes-* logs/* | sort | uniq > ${BUILD}/tried_urls
+comm -13 ${BUILD}/tried_urls ./expanded > ${BUILD}/untried_urls
+
+cat  ${BUILD}/untried_urls | shuf > ${BUILD}/shuffled
 
 
-cat  ./expanded | shuf > ${BUILD}/shuffled
 cat  ${BUILD}/shuffled | head -100000 | tail -10000 >  ${BUILD}/shuffled-01
 cat  ${BUILD}/shuffled | head -90000 | tail -10000 >  ${BUILD}/shuffled-02
 cat  ${BUILD}/shuffled | head -80000 | tail -10000 >  ${BUILD}/shuffled-03
@@ -44,7 +49,6 @@ for file in ${BUILD}/shuffled-*; do
     (./check_urls.bash < $file &);
 done
 
-cat  ${BUILD}/trimmed_urls | grep -v contentdm.oclc.org/ | ../oai-union-list/mutate-path-part.bash | sort | uniq > ${BUILD}/normal_candidate_urls &
 
 
 

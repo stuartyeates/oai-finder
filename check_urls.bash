@@ -21,7 +21,7 @@ do
     
 	echo ${url}
 	echo ${url} > ${result}
-	wget ${url} --output-file=${log} --verbose --output-document=${output} --timeout=10 --tries=3  --no-check-certificate
+	wget ${url} --output-file=${log} --verbose --output-document=${output} --timeout=20 --tries=3  --no-check-certificate
 	RESULT=$?
 	echo ${RESULT} >> ${result}
 	
@@ -41,6 +41,7 @@ do
 	    fi
 	    
 	fi
+	sleep 1
     fi
 	
 done

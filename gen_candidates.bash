@@ -51,6 +51,9 @@ for file in ${BUILD}/shuffled-*; do
     (./check_urls.bash < $file &);
 done
 
+# Wait for all parallel jobs to finish
+while [ 1 ]; do fg 2> /dev/null; [ $? == 1 ] && break; done
+
 
 
 

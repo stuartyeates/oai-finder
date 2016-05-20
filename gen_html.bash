@@ -3,6 +3,7 @@
 HTMLDIR=./html
 
 mv ${HTMLDIR} ${HTMLDIR}-old-$$
+mkdir -p  ${HTMLDIR}
 
 IN1DIR=./search-terms
 IN2DIR="./noise-terms/tlds-utf8 ./noise-terms/organisation-terms-en.utf8"
@@ -23,10 +24,9 @@ for first in `cat ${IN1DIR}/*`; do
     done
 
     #sneaky sideline, since bing has lots of hits and doesn't seem to mind log-rate automated queries
-    for second in `cat ./noise-terms/* | sort | uniq`; do
+    for second in `cat ./noise-terms/en-subjects-wordlist ./noise-terms/research-terms-en.utf8  | sort | uniq`; do
 	echo 'http://www.bing.com/search?q='${first}'+'${second}'&filter=0&count=50' >> ${BINGOUT}
     done
-    
     
     echo '</p></div><div>' >> ${OUTPUTFILE}
 
@@ -59,3 +59,12 @@ done
 #for i in {15000..21000}; do echo http://cdm$i.contentdm.oclc.org/; done > html/cdm_urls
 # wget --input-file=html/cdm_urls --force-directories --directory-prefix=./cache-cdm-brute-force/ --wait=10 --convert-links --tries=2 --timeout=5
 
+cat  ${BINGOUT} | sort | uniq | shuf  |sed 's|&quot;|"|g'| head -1000 > ${BINGOUT}-shuf
+#cat  ${BINGOUT} | sort | uniq |sed 's|&quot;||g' | shuf > ${BINGOUT}-shuf
+wget --user-agent="Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/49.0.2623.108 Chrome/49.0.2623.108 Safari/537.36" --no-clobber  --wait=47 --restrict-file-names=windows  --directory-prefix=./cache-bing-wget/ --force-directories  --no-check-certificate --input-file=${BINGOUT}-shuf &
+
+#for url in `cat ${BINGOUT}-shuf`; do
+#    echo DOING "${url}"
+#    firefox "${url}";
+#    sleep 2
+#done

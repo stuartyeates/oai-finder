@@ -43,7 +43,7 @@ cat  ${BUILD}/shuffled | head -30000 | tail -10000 >  ${BUILD}/shuffled-08
 cat  ${BUILD}/shuffled | head -20000 | tail -10000 >  ${BUILD}/shuffled-09
 cat  ${BUILD}/shuffled | head -10000 | tail -10000 >  ${BUILD}/shuffled-10
 
-cat ${BUILD}/contentdm_candidate_urls | shuf |head -100  >  ${BUILD}/shuffled-cdm
+cat ${BUILD}/contentdm_candidate_urls | shuf   >  ${BUILD}/shuffled-cdm
 
 wc  ${BUILD}/*
 

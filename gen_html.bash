@@ -2,11 +2,13 @@
 
 HTMLDIR=./html
 
+mv ${HTMLDIR} ${HTMLDIR}-old-$$
+
 IN1DIR=./search-terms
 IN2DIR="./noise-terms/tlds-utf8 ./noise-terms/organisation-terms-en.utf8"
 IN2DIR2="./noise-terms/organisation-terms-en.utf8"
 
-
+BINGOUT=${HTMLDIR}/bing_urls
 
 for first in `cat ${IN1DIR}/*`; do
     echo $first
@@ -19,6 +21,12 @@ for first in `cat ${IN1DIR}/*`; do
     for second in `cat ${IN2DIR}`; do
 	echo '<a href="http://www.bing.com/search?q='${first}+${second}'&filter=0&count=50">'${second}'</a>' >> ${OUTPUTFILE}
     done
+
+    #sneaky sideline, since bing has lots of hits and doesn't seem to mind log-rate automated queries
+    for second in `cat ./noise-terms/* | sort | uniq`; do
+	echo 'http://www.bing.com/search?q='${first}'+'${second}'&filter=0&count=50' >> ${BINGOUT}
+    done
+    
     
     echo '</p></div><div>' >> ${OUTPUTFILE}
 

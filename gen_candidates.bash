@@ -23,10 +23,10 @@ wc ${BUILD}/ojs_installs
 
 cat  ${BUILD}/trimmed_urls | grep contentdm.oclc.org/ |sed  's|$|/oai/oai.php?verb=Identify|' > ${BUILD}/contentdm_candidate_urls
 
-cat  ${BUILD}/trimmed_urls | grep -v contentdm.oclc.org/ | shuf |head -1000 | ../oai-union-list/mutate-path-part.bash | sort | uniq >> ${BUILD}/expanded
+cat  ${BUILD}/trimmed_urls | grep -v contentdm.oclc.org/ | shuf |head -5000 | ../oai-union-list/mutate-path-part.bash | sort | uniq >> ${BUILD}/expanded
 (cat  ${BUILD}/trimmed_urls | grep -v contentdm.oclc.org/ | ../oai-union-list/mutate-path-part.bash | sort | uniq > ${BUILD}/normal_candidate_urls; cp ${BUILD}/normal_candidate_urls ./expanded) &
 
-cat logs/successes-* logs/* | sort | uniq > ${BUILD}/tried_urls
+cat logs*/* | sort | uniq > ${BUILD}/tried_urls
 comm -13 ${BUILD}/tried_urls ./expanded > ${BUILD}/untried_urls
 
 cat  ${BUILD}/untried_urls | shuf > ${BUILD}/shuffled

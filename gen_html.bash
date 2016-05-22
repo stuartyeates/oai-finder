@@ -59,9 +59,9 @@ done
 #for i in {15000..21000}; do echo http://cdm$i.contentdm.oclc.org/; done > html/cdm_urls
 # wget --input-file=html/cdm_urls --force-directories --directory-prefix=./cache-cdm-brute-force/ --wait=10 --convert-links --tries=2 --timeout=5
 
-cat  ${BINGOUT} | sort | uniq | shuf  |sed 's|&quot;|"|g'| head -1000 > ${BINGOUT}-shuf
+cat  ${BINGOUT} | sort | uniq | shuf  |sed 's|&quot;|"|g'| head -10000 > ${BINGOUT}-shuf
 #cat  ${BINGOUT} | sort | uniq |sed 's|&quot;||g' | shuf > ${BINGOUT}-shuf
-wget --user-agent="Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/49.0.2623.108 Chrome/49.0.2623.108 Safari/537.36" --no-clobber  --wait=47 --restrict-file-names=windows  --directory-prefix=./cache-bing-wget/ --force-directories  --no-check-certificate --input-file=${BINGOUT}-shuf &
+wget --user-agent="Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/49.0.2623.108 Chrome/49.0.2623.108 Safari/537.36" --no-clobber  --wait=17 --restrict-file-names=windows  --directory-prefix=./cache-bing-wget/ --force-directories  --no-check-certificate --input-file=${BINGOUT}-shuf &
 
 #for url in `cat ${BINGOUT}-shuf`; do
 #    echo DOING "${url}"

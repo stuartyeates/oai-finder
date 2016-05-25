@@ -49,6 +49,7 @@ do
 		echo ${URL} | sed 's|$|phpoai/oai2.php?verb=Identify|'   # opus
 		echo ${URL} | sed 's|$|rest/oai?verb=Identify|' #fedora 4
 		echo ${URL} | sed 's|$|sobekcm_oai.aspx?verb=Identify|'
+		echo ${URL} | sed 's|$|-/oai?verb=Identify|'
 		echo ${URL} | sed 's|$|ws/oai?verb=Identify|'
 		echo ${URL} | sed 's|$|oai-pmh-repository/request?verb=Identify|'   #omeka
 		echo ${URL} | sed 's|$|index/oai?verb=Identify|'   #omeka

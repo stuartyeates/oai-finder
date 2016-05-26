@@ -61,7 +61,7 @@ done
 
 cat  ${BINGOUT} | sort | uniq | shuf  |sed 's|&quot;|"|g'| head -10000 > ${BINGOUT}-shuf
 #cat  ${BINGOUT} | sort | uniq |sed 's|&quot;||g' | shuf > ${BINGOUT}-shuf
-wget --user-agent="Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/49.0.2623.108 Chrome/49.0.2623.108 Safari/537.36" --no-clobber  --wait=17 --restrict-file-names=windows  --directory-prefix=./cache-bing-wget/ --force-directories  --no-check-certificate --input-file=${BINGOUT}-shuf &
+wget --user-agent="Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/49.0.2623.108 Chrome/49.0.2623.108 Safari/537.36" --no-clobber  --wait=4 --restrict-file-names=windows  --directory-prefix=./cache-bing-wget/ --force-directories  --no-check-certificate --input-file=${BINGOUT}-shuf &
 
 #for url in `cat ${BINGOUT}-shuf`; do
 #    echo DOING "${url}"

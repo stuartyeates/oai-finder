@@ -7,9 +7,7 @@ while read url
 do
     if [ -n "${url}" ] ;
     then
-	dir2=$(mktemp --directory ./tmp/tmp-XXXX)
-	dir1=$(mktemp --directory ${dir2}/XXXX)
-	dir=$(mktemp --directory ${dir1}/XXXX)
+	dir=$(mktemp --directory ./tmp/tmp-XXXX-XXXX-XXXX-XXXX)
 	#    mkdir -p ${dir}
 	
 	output=${dir}/output
@@ -31,6 +29,7 @@ do
 	if [ "${RESULT}" -eq "4"  ]
 	then
 		echo ${url} >> ${error}	    
+		rm -rf ${dir}
 	else
 	    if [ "${GREP1}" -eq "0"  ]
 	    then
@@ -38,6 +37,7 @@ do
 		#firefox "https://web.archive.org/save/${url}" &
 	    else
 		echo ${url} >> ${failure}
+		rm -rf ${dir}
 	    fi
 	    
 	fi

@@ -1,7 +1,0 @@
-#!/bin/bash
-
-for URL in `cat samples.url`; do
-    baseurl=`echo ${URL} | sed 's/\?.*$//'`
-    echo ${baseurl}
-done
-

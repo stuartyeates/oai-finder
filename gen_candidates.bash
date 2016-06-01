@@ -31,15 +31,36 @@ wc ${BUILD}/ojs_installs
 
 cat  ${BUILD}/trimmed_urls | grep -a contentdm.oclc.org/ |sed  's|$|/oai/oai.php?verb=Identify|' > ${BUILD}/contentdm_candidate_urls
 
-cat  ${BUILD}/trimmed_urls | shuf |head -5000 | ../oai-union-list/mutate-path-part.bash | sort | uniq >> ${BUILD}/expanded
+cat  ${BUILD}/trimmed_urls | shuf  | ../oai-union-list/mutate-path-part.bash | sort | uniq >> ${BUILD}/expanded
 
-(cat  ${BUILD}/trimmed_urls |  ../oai-union-list/mutate-path-part.bash | sort | uniq > ${BUILD}/normal_candidate_urls; cp ${BUILD}/normal_candidate_urls ./expanded) &
+cat  ${BUILD}/trimmed_urls |  ../oai-union-list/mutate-path-part.bash | sort | uniq > ${BUILD}/normal_candidate_urls
+cp ${BUILD}/normal_candidate_urls ./expanded
 
 cat logs*/* | sort | uniq > ${BUILD}/tried_urls
 comm -13 ${BUILD}/tried_urls ./expanded > ${BUILD}/untried_urls
 
-cat  ${BUILD}/untried_urls | shuf > ${BUILD}/shuffled
+cat  ${BUILD}/untried_urls | head -3000000 | shuf > ${BUILD}/shuffled
 
+cat  ${BUILD}/shuffled | head -4000000 | tail -100000 >  ${BUILD}/shuffled-40
+cat  ${BUILD}/shuffled | head -3900000 | tail -100000 >  ${BUILD}/shuffled-39
+cat  ${BUILD}/shuffled | head -3800000 | tail -100000 >  ${BUILD}/shuffled-38
+cat  ${BUILD}/shuffled | head -3700000 | tail -100000 >  ${BUILD}/shuffled-37
+cat  ${BUILD}/shuffled | head -3600000 | tail -100000 >  ${BUILD}/shuffled-36
+cat  ${BUILD}/shuffled | head -3500000 | tail -100000 >  ${BUILD}/shuffled-35
+cat  ${BUILD}/shuffled | head -3400000 | tail -100000 >  ${BUILD}/shuffled-34
+cat  ${BUILD}/shuffled | head -3300000 | tail -100000 >  ${BUILD}/shuffled-33
+cat  ${BUILD}/shuffled | head -3200000 | tail -100000 >  ${BUILD}/shuffled-32
+cat  ${BUILD}/shuffled | head -3100000 | tail -100000 >  ${BUILD}/shuffled-31
+cat  ${BUILD}/shuffled | head -3000000 | tail -100000 >  ${BUILD}/shuffled-30
+cat  ${BUILD}/shuffled | head -2900000 | tail -100000 >  ${BUILD}/shuffled-29
+cat  ${BUILD}/shuffled | head -2800000 | tail -100000 >  ${BUILD}/shuffled-28
+cat  ${BUILD}/shuffled | head -2700000 | tail -100000 >  ${BUILD}/shuffled-27
+cat  ${BUILD}/shuffled | head -2600000 | tail -100000 >  ${BUILD}/shuffled-26
+cat  ${BUILD}/shuffled | head -2500000 | tail -100000 >  ${BUILD}/shuffled-25
+cat  ${BUILD}/shuffled | head -2400000 | tail -100000 >  ${BUILD}/shuffled-24
+cat  ${BUILD}/shuffled | head -2300000 | tail -100000 >  ${BUILD}/shuffled-23
+cat  ${BUILD}/shuffled | head -2200000 | tail -100000 >  ${BUILD}/shuffled-22
+cat  ${BUILD}/shuffled | head -2100000 | tail -100000 >  ${BUILD}/shuffled-21
 cat  ${BUILD}/shuffled | head -2000000 | tail -100000 >  ${BUILD}/shuffled-20
 cat  ${BUILD}/shuffled | head -1900000 | tail -100000 >  ${BUILD}/shuffled-19
 cat  ${BUILD}/shuffled | head -1800000 | tail -100000 >  ${BUILD}/shuffled-18

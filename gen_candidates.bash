@@ -36,7 +36,7 @@ cat  ${BUILD}/trimmed_urls | shuf  | ../oai-union-list/mutate-path-part.bash | s
 cat  ${BUILD}/trimmed_urls |  ../oai-union-list/mutate-path-part.bash | sort | uniq > ${BUILD}/normal_candidate_urls
 cp ${BUILD}/normal_candidate_urls ./expanded
 
-cat logs*/* | sort | uniq > ${BUILD}/tried_urls
+cat logs*/succ* logs*/fail* logs*/error*  | sort | uniq > ${BUILD}/tried_urls
 comm -13 ${BUILD}/tried_urls ./expanded > ${BUILD}/untried_urls
 
 cat  ${BUILD}/untried_urls | head -3000000 | shuf > ${BUILD}/shuffled
@@ -90,6 +90,7 @@ wc  ${BUILD}/*
 
 for file in ${BUILD}/shuffled-*; do
     (./check_urls.bash < $file &);
+    sleep 1
 done
 
 # Wait for all parallel jobs to finish

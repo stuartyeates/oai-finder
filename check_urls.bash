@@ -7,7 +7,7 @@ while read url
 do
     if [ -n "${url}" ] ;
     then
-	dir=$(mktemp --directory ./tmp/tmp-XXXX-XXXX-XXXX-XXXX)
+	dir=$(mktemp --directory ./tmp/tmp-XXXXXXXXXXXXXXXX)
 	#    mkdir -p ${dir}
 	
 	output=${dir}/output
@@ -16,6 +16,7 @@ do
 	success=./logs/successes-$$
 	error=./logs/errors-$$
 	failure=./logs/failures-$$
+	moreurls=./logs/urls-$$
     
 	echo ${url}
 	echo ${url} > ${result}
@@ -25,6 +26,8 @@ do
 	
 	grep '\(<OAI-PMH\|http://www.openarchives.org/OAI/2.0/\|<baseURL\)' ${output} >> /dev/null
 	GREP1=$?
+
+	cat ${output} | tr ' <>()"\000\r\n' '\012' | tr " '" '\012' | grep '^\(https:\|http:\)//[-A-Z0-9a-z]*.[-A-Z0-9a-z.]*/' | sort | uniq >> ${moreurls}
 	
 	if [ "${RESULT}" -eq "4"  ]
 	then

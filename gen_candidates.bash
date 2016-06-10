@@ -84,12 +84,20 @@ cat  ${BUILD}/shuffled | head -100000 | tail -100000 | shuf >  ${BUILD}/shuffled
 
 wc  ${BUILD}/*
 
+
 #exit 1;
 
 for file in ${BUILD}/shuffled-*; do
     ./check_urls.bash < $file &
     sleep 1
 done
+
+cat logs*/s* | sort | uniq | shuf > ${BUILD}/good_repositories_so_far
+#wget --force-directories --input-file=${BUILD}/good_repositories_so_far --directory-prefix=./good_repos --tries=1 --timeout=20
+
+rm ./tmp_urls
+for file in logs/urls-*; do echo $file; cat $file | sort | uniq >> ./tmp_urls ; done
+cat  ./tmp_urls | sort | uniq > ./tmp_urls_sorted
 
 # Wait for all parallel jobs to finish
 while [ 1 ]; do fg 2> /dev/null; [ $? == 1 ] && break; done

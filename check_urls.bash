@@ -7,9 +7,8 @@ while read url
 do
     if [ -n "${url}" ] ;
     then
-	dir=$(mktemp --directory ./tmp/tmp-XXXXXXXXXXXXXXXX)
-	#    mkdir -p ${dir}
-	
+	dir=$(mktemp --directory /tmp/tmp-XXXXXXXXXXXXXXXX)
+		
 	output=${dir}/output
 	log=${dir}/logs
 	result=${dir}/result
@@ -24,7 +23,7 @@ do
 	RESULT=$?
 	echo ${RESULT} >> ${result}
 	
-	grep '\(<OAI-PMH\|http://www.openarchives.org/OAI/2.0/\|<baseURL\)' ${output} >> /dev/null
+	grep -i '\(<OAI-PMH\|http://www.openarchives.org/OAI/2.0/\|<baseURL\)' ${output} >> /dev/null
 	GREP1=$?
 
 	cat ${output} | tr ' <>()"\000\r\n' '\012' | tr " '" '\012' | grep '^\(https:\|http:\)//[-A-Z0-9a-z]*.[-A-Z0-9a-z.]*/' | sort | uniq >> ${moreurls}
@@ -32,7 +31,6 @@ do
 	if [ "${RESULT}" -eq "4"  ]
 	then
 		echo ${url} >> ${error}	    
-		rm -rf ${dir}
 	else
 	    if [ "${GREP1}" -eq "0"  ]
 	    then
@@ -40,10 +38,8 @@ do
 		#firefox "https://web.archive.org/save/${url}" &
 	    else
 		echo ${url} >> ${failure}
-		rm -rf ${dir}
 	    fi
-	    
 	fi
-    fi
-	
+	rm -rf ${dir}
+    fi	
 done

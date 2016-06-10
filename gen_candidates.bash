@@ -19,20 +19,9 @@ cat  ${BUILD}/raw_urls | grep -a -v '\(msn\.com\|bingj\.com\|wikipedia\.org\|\.l
 
 wc  ${BUILD}/filtered_urls
 
-cat ${BUILD}/filtered_urls | sed 's|/article/view/.*|/|' |sed 's|/issue/view/.*|/|' | sed 's|/handle/.*|/|' |  sed 's|/exhibits/show/.*|/|' | sed 's|/islandora/object/.*|/islandora/object/|' | sed 's|/browse?.*|/browse?|'  | sed 's|/items/.*||'  | sed 's|/file/.*|/file/|' | sed 's|search.*||'  | sed 's|/help/.*|/|' | sed 's|/gateway/plugin/.*|/|' | sed 's|/article/.*|/article/|' | sed 's|/\([0-9]\)*/\([0-9]\).*|/|g' | sed 's|/\([0-9]\)*/$|/|g' |sed 's|/bitstream/.*|/|' | sed 's|/browse.*|/|' | sed 's|/items/.*|/|' | sed 's|/issue/current.*|/|'| sed 's|/user/register.*|/|' | sed 's|/pages/view/.*|/|'| sed 's|/submission/.*|/|'| sed 's|/user/setLocale/.*|/|'| sed 's|/themes/.*|/|'| sed 's!/[^/]*\(\.js$\|\.css$\|\.gif$\|\.jpg$\|\.rss$\|\.atom$\|\.rss2$\|\.png$\|\.pdf\)!/!'| sed 's|/[^/]*\.css|/|' | sed 's|/view/author/.*|/|' | sed 's|/cdm/.*|/cdm/|' | sed 's|/results.php.*|/|' | sed 's|/login/.*|/|' | sed 's|/utils/ajaxhelper/.*|/|' | sed 's|/ui/custom/default/collection/.*|/|' | sed 's|/view/.*|/view/|' |sed 's|/library.cgi.*|/library.cgi|' | sed 's|/item/.*|/item/|' | sed 's|/node/.*|/node/|' | sed 's|/cgi-bin/library.*|/cgi-bin/library|' | sed 's|/utils/getstaticcontent/.*|/|' | sed 's|/cdmcustom/.*|/cdmcustom/|' | sed 's|/about/.*|/|'| sed 's|/vital/access/manager/.*|/vital/access/manager/|' | sed 's|/phpdoc/.*|/|' | sed 's|/forums/.*|/|' | sed 's|/CollectionViewPage.external.*|/|' | sed 's|VODID=.*||' | sed 's|\?verb=.*||' | sed 's|\.$||' | sed 's|/datastream/.*|/|' |  sed 's|/lib/pkp/|/|' | sed 's|/[0-9]*$|/|' | sed 's|/js/.*|/|' | sed 's|/plugins/.*|/|' | sed 's|/wp-.*|/|' |  sed 's|/dlibra.*|/dlibra|' | sed 's|/ETD-db/.*|/ETD-db/|' | sed 's|/etd-[-0-9/]*$||'|  sort | uniq > ${BUILD}/trimmed_urls
-
-wc  ${BUILD}/trimmed_urls
-
-cat  ${BUILD}/trimmed_urls | grep -a '/index.php' | sed 's|/index.php.*|/index.php|' | sort | uniq > ${BUILD}/ojs_installs
-wc ${BUILD}/ojs_installs
-#wget --force-directories --input-file=build/ojs_installs --directory-prefix=./cache-ojs4 --tries=1 --timeout=20
-
-cat  ${BUILD}/trimmed_urls | grep -a contentdm.oclc.org/ |sed  's|$|/oai/oai.php?verb=Identify|' > ${BUILD}/contentdm_candidate_urls
+cat ${BUILD}/filtered_urls | sed 's|/article/view/.*|/|' |sed 's|/issue/view/.*|/|' | sed 's|/handle/.*|/|' |  sed 's|/exhibits/show/.*|/|' | sed 's|/islandora/object/.*|/islandora/object/|' | sed 's|/browse?.*|/browse?|'  | sed 's|/items/.*||'  | sed 's|/file/.*|/file/|' | sed 's|search.*||'  | sed 's|/help/.*|/|' | sed 's|/gateway/plugin/.*|/|' | sed 's|/article/.*|/article/|' | sed 's|/\([0-9]\)*/\([0-9]\).*|/|g' | sed 's|/\([0-9]\)*/$|/|g' |sed 's|/bitstream/.*|/|' | sed 's|/browse.*|/|' | sed 's|/items/.*|/|' | sed 's|/issue/current.*|/|'| sed 's|/user/register.*|/|' | sed 's|/pages/view/.*|/|'| sed 's|/submission/.*|/|'| sed 's|/user/setLocale/.*|/|'| sed 's|/themes/.*|/|'| sed 's!/[^/]*\(\.js$\|\.css$\|\.gif$\|\.jpg$\|\.rss$\|\.atom$\|\.rss2$\|\.png$\|\.pdf\)!/!'| sed 's|/[^/]*\.css|/|' | sed 's|/view/author/.*|/|' | sed 's|/cdm/.*|/cdm/|' | sed 's|/results.php.*|/|' | sed 's|/login/.*|/|' | sed 's|/utils/ajaxhelper/.*|/|' | sed 's|/ui/custom/default/collection/.*|/|' | sed 's|/view/.*|/view/|' |sed 's|/library.cgi.*|/library.cgi|' | sed 's|/item/.*|/item/|' | sed 's|/node/.*|/node/|' | sed 's|/cgi-bin/library.*|/cgi-bin/library|' | sed 's|/utils/getstaticcontent/.*|/|' | sed 's|/cdmcustom/.*|/cdmcustom/|' | sed 's|/about/.*|/|'| sed 's|/vital/access/manager/.*|/vital/access/manager/|' | sed 's|/phpdoc/.*|/|' | sed 's|/forums/.*|/|' | sed 's|/CollectionViewPage.external.*|/|' | sed 's|VODID=.*||' | sed 's|\?verb=.*||' | sed 's|\.$||' | sed 's|/datastream/.*|/|' |  sed 's|/lib/pkp/|/|' | sed 's|/[0-9]*$|/|' | sed 's|/js/.*|/|' | sed 's|/plugins/.*|/|' | sed 's|/wp-.*|/|' |  sed 's|/dlibra.*|/dlibra|' | sed 's|/ETD-db/.*|/ETD-db/|' | sed 's|/etd-[-0-9/]*$||'| sed 's|/item_viewer.php/.*|/|' sort | uniq > ${BUILD}/trimmed_urls
 
 cat  ${BUILD}/trimmed_urls |  ../oai-union-list/mutate-path-part.bash | sort | uniq >> ${BUILD}/expanded
-
-#cat  ${BUILD}/trimmed_urls |  ../oai-union-list/mutate-path-part.bash | sort | uniq > ${BUILD}/normal_candidate_urls
-#cp ${BUILD}/normal_candidate_urls ./expanded
 
 cat logs*/succ* logs*/fail* logs*/error*  | sort | uniq > ${BUILD}/tried_urls
 comm -13 ${BUILD}/tried_urls ${BUILD}/expanded > ${BUILD}/untried_urls
@@ -80,7 +69,6 @@ cat  ${BUILD}/shuffled | head -300000 | tail -100000 | shuf >  ${BUILD}/shuffled
 cat  ${BUILD}/shuffled | head -200000 | tail -100000 | shuf >  ${BUILD}/shuffled-02
 cat  ${BUILD}/shuffled | head -100000 | tail -100000 | shuf >  ${BUILD}/shuffled-01
 
-#cat ${BUILD}/contentdm_candidate_urls | shuf   >  ${BUILD}/shuffled-cdm
 
 wc  ${BUILD}/*
 
@@ -92,11 +80,19 @@ for file in ${BUILD}/shuffled-*; do
     sleep 1
 done
 
+
+cat  ${BUILD}/trimmed_urls | grep -a '/index.php' | sed 's|/index.php.*|/index.php|' | sort | uniq > ${BUILD}/ojs_installs
+#wget --force-directories --input-file=build/ojs_installs --directory-prefix=./cache-ojs4 --tries=1 --timeout=20
+
+#cat  ${BUILD}/trimmed_urls | grep -a contentdm.oclc.org/ |sed  's|$|/oai/oai.php?verb=Identify|' > ${BUILD}/contentdm_candidate_urls
+#cat ${BUILD}/contentdm_candidate_urls | shuf   >  ${BUILD}/shuffled-cdm
+
+
 cat logs*/s* | sort | uniq | shuf > ${BUILD}/good_repositories_so_far
 #wget --force-directories --input-file=${BUILD}/good_repositories_so_far --directory-prefix=./good_repos --tries=1 --timeout=20
 
 rm ./tmp_urls
-for file in logs/urls-*; do echo $file; cat $file | sort | uniq >> ${BUILD}/tmp_urls ; done
+for file in logs*/urls-*; do echo $file; cat $file | sort | uniq >> ${BUILD}/tmp_urls ; done
 cat  ${BUILD}/tmp_urls | sort | uniq > ${BUILD}/tmp_urls_sorted
 
 # Wait for all parallel jobs to finish

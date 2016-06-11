@@ -19,7 +19,7 @@ do
     
 	echo ${url}
 	echo ${url} > ${result}
-	wget ${url} --output-file=${log} --verbose --output-document=${output} --timeout=20 --tries=1  --no-check-certificate
+	wget ${url} --output-file=${log} --verbose --output-document=${output} --timeout=40 --tries=1  --no-check-certificate
 	RESULT=$?
 	echo ${RESULT} >> ${result}
 	

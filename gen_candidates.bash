@@ -89,6 +89,23 @@ done
 cat logs*/s* | sort | uniq | shuf > ${BUILD}/good_repositories_so_far
 #wget --force-directories --input-file=${BUILD}/good_repositories_so_far --directory-prefix=./good_repos --tries=1 --timeout=20
 
+
+mkdir ./cache-doaj
+for count in $(seq 1 200); do
+    sleep 2
+    echo $i;
+    curl -X GET --header "Accept: application/json" "https://doaj.org/api/v1/search/journals/http?page=${count}&pageSize=100" --output "./cache-doaj/doaj.${count}"
+    if [ $? -ne 0 ]
+    then
+	break;
+    fi	
+done
+
+mkdir ./opendoar
+curl --max-time 300 --output "./opendoar/opendoar.xml"  --referer "http://www.google.com/"  --verbose  --url "http://opendoar.org/api13.php?all=y"
+
+
+
 rm ./tmp_urls
 for file in logs*/urls-*; do echo $file; cat $file | sort | uniq >> ${BUILD}/tmp_urls ; done
 cat  ${BUILD}/tmp_urls | sort | uniq > ${BUILD}/tmp_urls_sorted

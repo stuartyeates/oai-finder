@@ -1,73 +1,70 @@
 #!/bin/bash
 #script to create variants of the port part of the URL
 
+TMPIN=`mktemp /tmp/in.XXXXXXXXXXXXX`
+TMPOUT=`mktemp /tmp/out.XXXXXXXXXXXXX`
+
 while read "URL"
 do
     if [ ! -z "${URL}" ]; then
-	echo ${URL}
-	while [[ "${URL}" =~  ^https?://[-a-z0-9.:]*/  ]]
-	do
-	    echo ${URL}
-	    if [[ "${URL}" =~  /$  ]]; then
-		echo ${URL} | sed 's|$|casirgrid-oai/request?verb=Identify|'
-		echo ${URL} | sed 's|$|cgi-bin/oai.cgi?verb=Identify|'  # greenstone
-		echo ${URL} | sed 's|$|cgi-bin/oai.exe?verb=Identify|' # greenstone
-		echo ${URL} | sed 's|$|cgi-bin/oai?verb=Identify|' # greenstone
-		echo ${URL} | sed 's|$|cgi-bin/oaiserver.exe?verb=Identify|' # greenstone
-		echo ${URL} | sed 's|$|cgi-bin/oaiserver.cgi?verb=Identify|' # greenstone
-		echo ${URL} | sed 's|$|cgi-bin/oaiserver?verb=Identify|' # greenstone
-		echo ${URL} | sed 's|$|cgi/oai2?verb=Identify|'
-		echo ${URL} | sed 's|$|do.oai?verb=Identify|'
-		echo ${URL} | sed 's|$|dspace-oai/request?verb=Identify|' # dspace
-		echo ${URL} | sed 's|$|fedora/oai?verb=Identify|' #fedora 3
-		echo ${URL} | sed 's|$|greenstone/cgi-bin/oaiserver.cgi?verb=Identify|' # greenstone
-		echo ${URL} | sed 's|$|greenstone/cgi-bin/oaiserver.exe?verb=Identify|' # greenstone
-		echo ${URL} | sed 's|$|greenstone/cgi-bin/oaiserver?verb=Identify|' # greenstone
-		echo ${URL} | sed 's|$|gsdl/cgi-bin/oaiserver.cgi?verb=Identify|' # greenstone
-		echo ${URL} | sed 's|$|gsdl/cgi-bin/oaiserver.exe?verb=Identify|' # greenstone
-		echo ${URL} | sed 's|$|gsdl/cgi-bin/oaiserver?verb=Identify|' # greenstone
-		echo ${URL} | sed 's|$|ir-oai/request?verb=Identify|'
-		echo ${URL} | sed 's|$|modules/xoonips/oai.php?verb=Identify|'  # xoonips
-		echo ${URL} | sed 's|$|oai-pmh-repository.xml?verb=Identify|' # dlibra
-		echo ${URL} | sed 's|$|oai-pmh/oai-pmh?verb=Identify|'  #drupal
-		echo ${URL} | sed 's|$|oai-pmh?verb=Identify|'  #drupal
-		echo ${URL} | sed 's|$|oai/driver?verb=Identify|'
-		echo ${URL} | sed 's|$|oai/oai.php?verb=Identify|'
-		echo ${URL} | sed 's|$|oai/request?verb=Identify|' # dspace
-		echo ${URL} | sed 's|$|oai/scielo-oai.php?verb=Identify|'
-		echo ${URL} | sed 's|$|oai/scielo-oai.php?verb=Identify|'   # scilo
-		echo ${URL} | sed 's|$|oai2/oai2.php?verb=Identify|'
-		echo ${URL} | sed 's|$|oai2d?verb=Identify|'  # invenio
-		echo ${URL} | sed 's|$|oai2?verb=Identify|'
-		echo ${URL} | sed 's|$|oaicat?verb=Identify|'
-		echo ${URL} | sed 's|$|oaiextended/request?verb=Identify|'
-		echo ${URL} | sed 's|$|oaiserver.cgi?verb=Identify|'
-		echo ${URL} | sed 's|$|oaiserver?verb=Identify|'
-		echo ${URL} | sed 's|$|oai?verb=Identify|'
-		echo ${URL} | sed 's|$|opac/mmd_api/oai-pmh/?verb=Identify|'
-		echo ${URL} | sed 's|$|opus4/oai?verb=Identify|'   #  opus
-		echo ${URL} | sed 's|$|phpoai/oai2.php?verb=Identify|'   # opus
-		echo ${URL} | sed 's|$|rest/oai?verb=Identify|' #fedora 4
-		echo ${URL} | sed 's|$|sobekcm_oai.aspx?verb=Identify|'
-		echo ${URL} | sed 's|$|+/oai?verb=Identify|'
-		echo ${URL} | sed 's|$|ws/oai?verb=Identify|'
-		echo ${URL} | sed 's|$|oai-pmh-repository/request?verb=Identify|'   #omeka
-		echo ${URL} | sed 's|$|index/oai?verb=Identify|'   #omeka
-		echo ${URL} | sed 's|$|?page=oai\&amp;verb=Identify|'   #ojs no mapping
-#		echo ${URL} | sed 's|$||'
-#		echo ${URL} | sed 's|$||'
-#		echo ${URL} | sed 's|$||'
-#		echo ${URL} | sed 's|$||'
-#		echo ${URL} | sed 's|$||'
-#		echo ${URL} | sed 's|$||'
-	    else
-		true;
-	    fi
-	    
-	    URL=`echo $URL | sed 's![^/]*.$!!'`
-
-	    
-	done
-		
+	echo "${URL}" >> ${TMPIN}
+	echo "${URL}" >> ${TMPOUT}
     fi
 done
+
+cat ${TMPIN} | sed 's|$|casirgrid-oai/request?verb=Identify|' >> ${TMPOUT}
+cat ${TMPIN} | sed 's|$|cgi-bin/oai.cgi?verb=Identify|' >> ${TMPOUT} # greenstone
+cat ${TMPIN} | sed 's|$|cgi-bin/oai.exe?verb=Identify|' >> ${TMPOUT} # greenstone
+cat ${TMPIN} | sed 's|$|cgi-bin/oai?verb=Identify|' >> ${TMPOUT} # greenstone
+cat ${TMPIN} | sed 's|$|cgi-bin/oaiserver.exe?verb=Identify|' >> ${TMPOUT} # greenstone
+cat ${TMPIN} | sed 's|$|cgi-bin/oaiserver.cgi?verb=Identify|' >> ${TMPOUT} # greenstone
+cat ${TMPIN} | sed 's|$|cgi-bin/oaiserver?verb=Identify|' >> ${TMPOUT} # greenstone
+cat ${TMPIN} | sed 's|$|cgi/oai2?verb=Identify|' >> ${TMPOUT}
+cat ${TMPIN} | sed 's|$|do.oai?verb=Identify|' >> ${TMPOUT}
+cat ${TMPIN} | sed 's|$|dspace-oai/request?verb=Identify|' >> ${TMPOUT} # dspace
+cat ${TMPIN} | sed 's|$|fedora/oai?verb=Identify|' >> ${TMPOUT} #fedora 3
+cat ${TMPIN} | sed 's|$|greenstone/cgi-bin/oaiserver.cgi?verb=Identify|' >> ${TMPOUT} # greenstone
+cat ${TMPIN} | sed 's|$|greenstone/cgi-bin/oaiserver.exe?verb=Identify|' >> ${TMPOUT} # greenstone
+cat ${TMPIN} | sed 's|$|greenstone/cgi-bin/oaiserver?verb=Identify|' >> ${TMPOUT} # greenstone
+cat ${TMPIN} | sed 's|$|gsdl/cgi-bin/oaiserver.cgi?verb=Identify|' >> ${TMPOUT} # greenstone
+cat ${TMPIN} | sed 's|$|gsdl/cgi-bin/oaiserver.exe?verb=Identify|' >> ${TMPOUT} # greenstone
+cat ${TMPIN} | sed 's|$|gsdl/cgi-bin/oaiserver?verb=Identify|' >> ${TMPOUT} # greenstone
+cat ${TMPIN} | sed 's|$|ir-oai/request?verb=Identify|' >> ${TMPOUT} 
+cat ${TMPIN} | sed 's|$|modules/xoonips/oai.php?verb=Identify|' >> ${TMPOUT} # xoonips
+cat ${TMPIN} | sed 's|$|oai-pmh-repository.xml?verb=Identify|' >> ${TMPOUT} # dlibra
+cat ${TMPIN} | sed 's|$|oai-pmh/oai-pmh?verb=Identify|' >> ${TMPOUT} #drupal
+cat ${TMPIN} | sed 's|$|oai-pmh?verb=Identify|' >> ${TMPOUT} #drupal
+cat ${TMPIN} | sed 's|$|oai/driver?verb=Identify|' >> ${TMPOUT} 
+cat ${TMPIN} | sed 's|$|oai/oai.php?verb=Identify|' >> ${TMPOUT} 
+cat ${TMPIN} | sed 's|$|oai/request?verb=Identify|' >> ${TMPOUT} # dspace
+cat ${TMPIN} | sed 's|$|oai/scielo-oai.php?verb=Identify|' >> ${TMPOUT} 
+cat ${TMPIN} | sed 's|$|oai/scielo-oai.php?verb=Identify|' >> ${TMPOUT} # scilo
+cat ${TMPIN} | sed 's|$|oai2/oai2.php?verb=Identify|' >> ${TMPOUT} 
+cat ${TMPIN} | sed 's|$|oai2d?verb=Identify|' >> ${TMPOUT} # invenio
+cat ${TMPIN} | sed 's|$|oai2?verb=Identify|' >> ${TMPOUT} 
+cat ${TMPIN} | sed 's|$|oaicat?verb=Identify|' >> ${TMPOUT} 
+cat ${TMPIN} | sed 's|$|oaiextended/request?verb=Identify|' >> ${TMPOUT} 
+cat ${TMPIN} | sed 's|$|oaiserver.cgi?verb=Identify|' >> ${TMPOUT} 
+cat ${TMPIN} | sed 's|$|oaiserver?verb=Identify|' >> ${TMPOUT} 
+cat ${TMPIN} | sed 's|$|oai?verb=Identify|' >> ${TMPOUT} 
+cat ${TMPIN} | sed 's|$|opac/mmd_api/oai-pmh/?verb=Identify|' >> ${TMPOUT} 
+cat ${TMPIN} | sed 's|$|opus4/oai?verb=Identify|' >> ${TMPOUT} # opus
+cat ${TMPIN} | sed 's|$|phpoai/oai2.php?verb=Identify|' >> ${TMPOUT} # opus
+cat ${TMPIN} | sed 's|$|rest/oai?verb=Identify|' >> ${TMPOUT} #fedora 4
+cat ${TMPIN} | sed 's|$|sobekcm_oai.aspx?verb=Identify|' >> ${TMPOUT} 
+cat ${TMPIN} | sed 's|$|+/oai?verb=Identify|' >> ${TMPOUT} 
+cat ${TMPIN} | sed 's|$|ws/oai?verb=Identify|' >> ${TMPOUT} 
+cat ${TMPIN} | sed 's|$|oai-pmh-repository/request?verb=Identify|' >> ${TMPOUT} #omeka
+cat ${TMPIN} | sed 's|$|index/oai?verb=Identify|' >> ${TMPOUT} #omeka
+cat ${TMPIN} | sed 's|$|?page=oai\&amp;verb=Identify|' >> ${TMPOUT} #ojs no mapping
+cat ${TMPIN} | sed 's|$|/pycsw/csw.py?mode=oaipmh&verb=Identify|' >> ${TMPOUT} # http://docs.pycsw.org/en/1.10.4/oaipmh.html
+cat ${TMPIN} | sed 's|$|/catalogue/csw.py?mode=oaipmh&verb=Identify|' >> ${TMPOUT} # http://docs.pycsw.org/en/1.10.4/oaipmh.html
+cat ${TMPIN} | sed 's|$|/?action=repository_oaipmh|' >> ${TMPOUT} # http://ir.soken.ac.jp/?action=repository_oaipmh&verb=Identify
+
+#cat ${TMPIN} | sed 's|$||' >> ${TMPOUT} # 
+
+cat ${TMPOUT} | sort | uniq
+
+rm ${TMPOUT}
+rm ${TMPIN}
+

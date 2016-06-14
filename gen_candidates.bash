@@ -90,11 +90,11 @@ cat logs*/s* | sort | uniq | shuf > ${BUILD}/good_repositories_so_far
 #wget --force-directories --input-file=${BUILD}/good_repositories_so_far --directory-prefix=./good_repos --tries=1 --timeout=20
 
 
-mkdir ./cache-doaj
+mkdir ./cache-specials
 for count in $(seq 1 200); do
     sleep 2
     echo $i;
-    curl -X GET --header "Accept: application/json" "https://doaj.org/api/v1/search/journals/http?page=${count}&pageSize=100" --output "./cache-doaj/doaj.${count}"
+    curl -X GET --header "Accept: application/json" "https://doaj.org/api/v1/search/journals/http?page=${count}&pageSize=100" --output "./nocache-specials/doaj.${count}"
     if [ $? -ne 0 ]
     then
 	break;
@@ -102,7 +102,7 @@ for count in $(seq 1 200); do
 done
 
 mkdir ./opendoar
-curl --max-time 300 --output "./opendoar/opendoar.xml"  --referer "http://www.google.com/"  --verbose  --url "http://opendoar.org/api13.php?all=y"
+curl --max-time 300 --output "./nocache-specials/opendoar.xml"  --referer "http://www.google.com/"  --verbose  --url "http://opendoar.org/api13.php?all=y"
 
 
 

@@ -110,6 +110,10 @@ rm ./tmp_urls
 for file in logs*/urls-*; do echo $file; cat $file | sort | uniq >> ${BUILD}/tmp_urls ; done
 cat  ${BUILD}/tmp_urls | sort | uniq > ${BUILD}/tmp_urls_sorted
 
+cat logs*/s* | sort | uniq > oai-found/0.0.1/raw
+while (true); do sleep 7500; (cd oai-found; git commit -m add . &) ; done
+
+
 # Wait for all parallel jobs to finish
 while [ 1 ]; do fg 2> /dev/null; [ $? == 1 ] && break; done
 

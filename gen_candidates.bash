@@ -111,7 +111,8 @@ for file in logs*/urls-*; do echo $file; cat $file | sort | uniq >> ${BUILD}/tmp
 cat  ${BUILD}/tmp_urls | tr ' <>()"\000\r\n' '\012' | tr " '" '\012' | sort | uniq > ${BUILD}/tmp_urls_sorted
 
 
-#while (true); do sleep 7500; cat logs*/s* | sort | uniq > oai-found/0.0.1/raw; (cd oai-found; git commit -m add . &) ; done
+cat logs*/s* | tr ' <>()"\000\r\n' '\012' | tr " '" '\012' | sort | uniq > oai-found/0.0.1/raw;
+(cd oai-found; git commit -m add . &)
 
 
 # Wait for all parallel jobs to finish

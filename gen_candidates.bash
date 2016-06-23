@@ -11,13 +11,9 @@ touch ${BUILD}/starting
 
 for dir in ~/cache* ./cache*; do
     find ${dir} -type f -exec cat \{\} \;
-done | ./text_to_urls.bash |sort | uniq > ${BUILD}/raw_urls
-
-wc  ${BUILD}/raw_urls
+done | ./text_to_urls.bash | uniq  |sort | uniq > ${BUILD}/raw_urls
 
 cat  ${BUILD}/raw_urls | ./filter_urls.bash > ${BUILD}/filtered_urls
-
-wc  ${BUILD}/filtered_urls
 
 cat ${BUILD}/filtered_urls | ./trim_urls.bash |  sort | uniq > ${BUILD}/trimmed_urls
 
@@ -33,7 +29,7 @@ cat  ${BUILD}/shuffled | head -100000 | tail -100000 | shuf >  ${BUILD}/shuffled
 
 wc  ${BUILD}/*
 
-
+exit 0;
 
 for file in ${BUILD}/shuffled-*; do
     ./check_urls.bash < $file &

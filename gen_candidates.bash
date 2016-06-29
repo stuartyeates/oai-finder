@@ -17,26 +17,23 @@ cat  ${BUILD}/raw_urls | ./filter_urls.bash > ${BUILD}/filtered_urls
 
 cat ${BUILD}/filtered_urls | ./trim_urls.bash |  sort | uniq > ${BUILD}/trimmed_urls
 
-cat  ${BUILD}/trimmed_urls |  ./mutate-path-part.bash | sort | uniq > ${BUILD}/expanded
+cat  ${BUILD}/trimmed_urls |  ./mutate-path-part.bash |  sed 's^\([^:]\)//^\1/^' | sort | uniq > ${BUILD}/expanded
 
 cat logs*/succ* logs*/fail* logs*/error*  | sort | uniq > ${BUILD}/tried_urls
 comm -13 ${BUILD}/tried_urls ${BUILD}/expanded > ${BUILD}/untried_urls
 
-cat  ${BUILD}/untried_urls  > ${BUILD}/shuffled
+cat  ${BUILD}/untried_urls | shuf > ${BUILD}/shuffled
 
 cat  ${BUILD}/shuffled | head -100000 | tail -100000 | shuf >  ${BUILD}/shuffled-01
 
 
 wc  ${BUILD}/*
 
-exit 0;
 
 for file in ${BUILD}/shuffled-*; do
     ./check_urls.bash < $file &
     sleep 1
 done
-
-
 
 #cat  ${BUILD}/trimmed_urls | grep -a '/index.php' | sed 's|/index.php.*|/index.php|' | sort | uniq > ${BUILD}/ojs_installs
 #wget --force-directories --input-file=build/ojs_installs --directory-prefix=./cache-ojs4 --tries=1 --timeout=20
@@ -50,7 +47,7 @@ cat logs*/s* | tr ' <>()"\000\r\n' '\012' | tr " '" '\012' | sort | uniq | shuf 
 
 rm ./tmp_urls
 for file in logs*/urls-*; do echo $file; cat $file | ./filter_urls.bash  |sort | uniq >> ${BUILD}/tmp_urls ; done
-cat  ${BUILD}/tmp_urls | tr ' <>()"\000\r\n' '\012' | tr " '" '\012' | ./trim_urls.bash | sort | uniq > ${BUILD}/tmp_urls_sorted
+cat  ${BUILD}/tmp_urls | ./trim_urls.bash | sort | uniq > ${BUILD}/tmp_urls_sorted
 
 
 cat logs*/s* | tr ' <>()"\000\r\n' '\012' | tr " '" '\012' | sort | uniq > oai-found/0.0.1/raw;

@@ -56,8 +56,8 @@ cat logs*/s* | tr ' <>()"\000\r\n' '\012' | tr " '" '\012' | sort | uniq | shuf 
 
 
 rm ./tmp_urls
-for file in logs*/urls-*; do echo $file; cat $file | ./filter_urls.bash  |sort | uniq >> ${BUILD}/tmp_urls ; done
-cat  ${BUILD}/tmp_urls | ./trim_urls.bash | sort | uniq > ${BUILD}/tmp_urls_sorted
+for file in logs*/urls-*; do echo $file; cat $file |  ./filter_urls.bash | ./trim_urls.bash | sort | uniq > ${BUILD}/tmp_urls ; done
+cat  ${BUILD}/tmp_urls |  sort | uniq > ${BUILD}/tmp_urls_sorted
 
 
 cat logs*/s* | tr ' <>()"\000\r\n' '\012' | tr " '" '\012' | sort | uniq > oai-found/0.0.1/raw;

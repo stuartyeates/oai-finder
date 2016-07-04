@@ -24,17 +24,17 @@ comm -13 ${BUILD}/tried_urls ${BUILD}/expanded > ${BUILD}/untried_urls
 
 cat  ${BUILD}/untried_urls | shuf > ${BUILD}/shuffled
 
-cat  ${BUILD}/shuffled | head -10000 | tail -10000 | shuf >  ${BUILD}/shuffled-01
-cat  ${BUILD}/shuffled | head -20000 | tail -10000 | shuf >  ${BUILD}/shuffled-02
-cat  ${BUILD}/shuffled | head -30000 | tail -10000 | shuf >  ${BUILD}/shuffled-03
-cat  ${BUILD}/shuffled | head -40000 | tail -10000 | shuf >  ${BUILD}/shuffled-04
-cat  ${BUILD}/shuffled | head -50000 | tail -10000 | shuf >  ${BUILD}/shuffled-05
+cat  ${BUILD}/shuffled | head -20000 | tail -20000 | shuf >  ${BUILD}/shuffled-01
+cat  ${BUILD}/shuffled | head -40000 | tail -20000 | shuf >  ${BUILD}/shuffled-02
+cat  ${BUILD}/shuffled | head -60000 | tail -20000 | shuf >  ${BUILD}/shuffled-03
+cat  ${BUILD}/shuffled | head -80000 | tail -20000 | shuf >  ${BUILD}/shuffled-04
+cat  ${BUILD}/shuffled | head -100000 | tail -20000 | shuf >  ${BUILD}/shuffled-05
 
-cat  ${BUILD}/shuffled | head -60000 | tail -10000 | shuf >  ${BUILD}/shuffled-06
-cat  ${BUILD}/shuffled | head -70000 | tail -10000 | shuf >  ${BUILD}/shuffled-07
-cat  ${BUILD}/shuffled | head -80000 | tail -10000 | shuf >  ${BUILD}/shuffled-08
-cat  ${BUILD}/shuffled | head -90000 | tail -10000 | shuf >  ${BUILD}/shuffled-09
-cat  ${BUILD}/shuffled | head -100000 | tail -10000 | shuf >  ${BUILD}/shuffled-10
+cat  ${BUILD}/shuffled | head -120000 | tail -20000 | shuf >  ${BUILD}/shuffled-06
+cat  ${BUILD}/shuffled | head -140000 | tail -20000 | shuf >  ${BUILD}/shuffled-07
+cat  ${BUILD}/shuffled | head -160000 | tail -20000 | shuf >  ${BUILD}/shuffled-08
+cat  ${BUILD}/shuffled | head -180000 | tail -20000 | shuf >  ${BUILD}/shuffled-09
+cat  ${BUILD}/shuffled | head -200000 | tail -0000 | shuf >  ${BUILD}/shuffled-10
 
 
 wc  ${BUILD}/*

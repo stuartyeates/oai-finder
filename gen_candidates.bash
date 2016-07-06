@@ -51,17 +51,17 @@ done
 #cat  ${BUILD}/trimmed_urls | grep -a contentdm.oclc.org/ |sed  's|$|/oai/oai.php?verb=Identify|' > ${BUILD}/contentdm_candidate_urls
 #cat ${BUILD}/contentdm_candidate_urls | shuf   >  ${BUILD}/shuffled-cdm
 
-cat logs*/s* | tr ' <>()"\000\r\n' '\012' | tr " '" '\012' | sort | uniq | shuf > ${BUILD}/good_repositories_so_far
+#cat logs*/s* | tr ' <>()"\000\r\n' '\012' | tr " '" '\012' | sort | uniq | shuf > ${BUILD}/good_repositories_so_far
 #wget --force-directories --input-file=${BUILD}/good_repositories_so_far --directory-prefix=./good_repos --tries=1 --timeout=20
 
 
-rm ./tmp_urls
-for file in logs*/urls-*; do echo $file; cat $file |  ./filter_urls.bash | ./trim_urls.bash | sort | uniq >> ${BUILD}/tmp_urls ; done
-cat  ${BUILD}/tmp_urls |  sort | uniq > ${BUILD}/tmp_urls_sorted
+#rm ./tmp_urls
+#for file in logs*/urls-*; do echo $file; cat $file |  ./filter_urls.bash | ./trim_urls.bash | sort | uniq >> ${BUILD}/tmp_urls ; done
+#cat  ${BUILD}/tmp_urls |  sort | uniq > ${BUILD}/tmp_urls_sorted
 
 
-cat logs*/s* | tr ' <>()"\000\r\n' '\012' | tr " '" '\012' | sort | uniq > oai-found/0.0.1/raw;
-(cd oai-found; git commit -m add . &)
+#cat logs*/s* | tr ' <>()"\000\r\n' '\012' | tr " '" '\012' | sort | uniq > oai-found/0.0.1/raw;
+#(cd oai-found; git commit -m add . &)
 
 
 # Wait for all parallel jobs to finish

@@ -9,9 +9,29 @@ do
     if [ ! -z "${URL}" ]; then
 	echo "${URL}" >> ${TMPIN}
 	echo "${URL}" >> ${TMPOUT}
+
+	protocol=`echo ${URL}| sed 's|^\([^/]*\)//*\([^/]*\)/\(.*\)$|\1|'` 
+	host=`echo ${URL}| sed 's|^\([^/]*\)//*\([^/]*\)/\(.*\)$|\2|'` 
+	path=`echo ${URL}| sed 's|^\([^/]*\)//*\([^/]*\)/\(.*\)$|\3|'` 
+
+	echo "${protocol}//${host}/${path}"  >> ${TMPIN}
+	echo "${protocol}//${host}/${path}"  >> ${TMPOUT}
+
+	path=$(echo $path| sed -r 's|/?[^/]*$||')
+	
+	while [[ !  -z  $path  ]]
+	do
+	    echo "${protocol}//${host}/${path}/"  >> ${TMPIN}
+	    echo "${protocol}//${host}/${path}/"  >> ${TMPOUT}
+
+	    path=$(echo $path| sed -r 's|/?[^/]*$||')	    
+	done
     fi
 done
 
+done
+
+cat ${TMPIN} | sed 's|$|/oai/request?verb=Identify|' >> ${TMPOUT}
 cat ${TMPIN} | sed 's|$|casirgrid-oai/request?verb=Identify|' >> ${TMPOUT}
 cat ${TMPIN} | sed 's|$|cgi-bin/oai.cgi?verb=Identify|' >> ${TMPOUT} # greenstone
 cat ${TMPIN} | sed 's|$|cgi-bin/oai.exe?verb=Identify|' >> ${TMPOUT} # greenstone

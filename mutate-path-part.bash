@@ -14,6 +14,8 @@ do
 	host=`echo ${URL}| sed 's|^\([^/]*\)//*\([^/]*\)/\(.*\)$|\2|'` 
 	path=`echo ${URL}| sed 's|^\([^/]*\)//*\([^/]*\)/\(.*\)$|\3|'` 
 
+	path=$(echo $path| sed 's|\?.*||')
+	
 	echo "${protocol}//${host}/${path}"  >> ${TMPIN}
 	echo "${protocol}//${host}/${path}"  >> ${TMPOUT}
 
@@ -24,7 +26,7 @@ do
 	    echo "${protocol}//${host}/${path}/"  >> ${TMPIN}
 	    echo "${protocol}//${host}/${path}/"  >> ${TMPOUT}
 
-	    path=$(echo $path| sed -r 's|/?[^/]*$||')	    
+	    path=$(echo $path| sed -r 's|/[^/]*$||')	    
 	done
     fi
 done

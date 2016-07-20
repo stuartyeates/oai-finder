@@ -51,7 +51,8 @@ done
 #cat  ${BUILD}/trimmed_urls | grep -a contentdm.oclc.org/ |sed  's|$|/oai/oai.php?verb=Identify|' > ${BUILD}/contentdm_candidate_urls
 #cat ${BUILD}/contentdm_candidate_urls | shuf   >  ${BUILD}/shuffled-cdm
 
-cat logs*/s* | tr ' <>()"\000\r\n' '\012' | tr " '" '\012' | sort | uniq | shuf > ${BUILD}/good_repositories_so_far
+cat logs*/s* | tr ' <>()"\000\r\n' '\012' | tr " '" '\012' | sort | uniq > ${BUILD}/good_repositories_so_far
+cat ${BUILD}/good_repositories_so_far | ./mutate-path-part.bash | sort | uniq > ${BUILD}/good_repositories_expanded
 #wget --force-directories --input-file=${BUILD}/good_repositories_so_far --directory-prefix=./good_repos --tries=1 --timeout=20
 
 

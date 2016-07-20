@@ -1,5 +1,5 @@
-#!/bin/bash
-#script to create variants of the port part of the URL
+k/bin/bash
+#scipt to create variants of the port part of the URL
 
 TMPIN=`mktemp /tmp/in.XXXXXXXXXXXXX`
 TMPOUT=`mktemp /tmp/out.XXXXXXXXXXXXX`
@@ -19,8 +19,11 @@ do
 	echo "${protocol}//${host}/${path}"  >> ${TMPIN}
 	echo "${protocol}//${host}/${path}"  >> ${TMPOUT}
 
-	path=$(echo $path| sed -r 's|/?[^/]*$||')
+	path=$(echo $path| sed -r 's|[^/]*$||')
 	
+	echo "${protocol}//${host}/${path}"  >> ${TMPIN}
+	echo "${protocol}//${host}/${path}"  >> ${TMPOUT}
+
 	while [[ !  -z  $path  ]]
 	do
 	    echo "${protocol}//${host}/${path}/"  >> ${TMPIN}

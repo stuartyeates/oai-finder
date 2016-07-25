@@ -1,4 +1,4 @@
-k/bin/bash
+#!/bin/bash
 #scipt to create variants of the port part of the URL
 
 TMPIN=`mktemp /tmp/in.XXXXXXXXXXXXX`
@@ -29,12 +29,15 @@ do
 	    echo "${protocol}//${host}/${path}/"  >> ${TMPIN}
 	    echo "${protocol}//${host}/${path}/"  >> ${TMPOUT}
 
-	    path=$(echo $path| sed -r 's|/[^/]*$||')	    
+	    pathnew=$(echo $path| sed -r 's|[^/]*/$||')
+
+	    echo \"$path\" \"$pathnew\"
+
+	    path=$pathnew
 	done
     fi
 done
 
-done
 
 cat ${TMPIN} | sed 's|$|/oai/request?verb=Identify|' >> ${TMPOUT}
 cat ${TMPIN} | sed 's|$|casirgrid-oai/request?verb=Identify|' >> ${TMPOUT}

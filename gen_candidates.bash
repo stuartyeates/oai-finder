@@ -15,9 +15,9 @@ done | ./text_to_urls.bash | uniq  |sort | uniq > ${BUILD}/raw_urls
 
 cat  ${BUILD}/raw_urls | ./filter_urls.bash > ${BUILD}/filtered_urls
 
-cat ${BUILD}/filtered_urls | ./trim_urls.bash |  sort | uniq > ${BUILD}/trimmed_urls
+cat ${BUILD}/filtered_urls | ./trim_urls.bash | uniq | sort | uniq > ${BUILD}/trimmed_urls
 
-cat  ${BUILD}/trimmed_urls |  ./mutate-path-part.bash |  sed 's^\([^:]\)//^\1/^' | sort | uniq > ${BUILD}/expanded
+cat  ${BUILD}/trimmed_urls |  ./mutate-path-part.bash |  sed 's^\([^:]\)//^\1/^' | uniq | sort | uniq > ${BUILD}/expanded
 
 cat logs*/succ* logs*/fail* logs*/error*  | sort | uniq > ${BUILD}/tried_urls
 comm -13 ${BUILD}/tried_urls ${BUILD}/expanded > ${BUILD}/untried_urls
@@ -52,7 +52,7 @@ done
 #cat ${BUILD}/contentdm_candidate_urls | shuf   >  ${BUILD}/shuffled-cdm
 
 cat logs*/s* | tr ' <>()"\000\r\n' '\012' | tr " '" '\012' | sort | uniq > ${BUILD}/good_repositories_so_far
-cat ${BUILD}/good_repositories_so_far | ./mutate-path-part.bash | sort | uniq > ${BUILD}/good_repositories_expanded
+cat ${BUILD}/good_repositories_so_far | ./trim_urls.bash  | shuf | head +1000 ./mutate-path-part.bash | sort | uniq | shuf > ${BUILD}/good_repositories_expanded
 #wget --force-directories --input-file=${BUILD}/good_repositories_so_far --directory-prefix=./good_repos --tries=1 --timeout=20
 
 

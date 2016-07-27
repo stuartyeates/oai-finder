@@ -25,16 +25,16 @@ comm -13 ${BUILD}/tried_urls ${BUILD}/expanded > ${BUILD}/untried_urls
 cat  ${BUILD}/untried_urls | shuf > ${BUILD}/shuffled
 
 cat  ${BUILD}/shuffled | head -20000 | tail -20000 | shuf >  ${BUILD}/shuffled-01
-#cat  ${BUILD}/shuffled | head -40000 | tail -20000 | shuf >  ${BUILD}/shuffled-02
-#cat  ${BUILD}/shuffled | head -60000 | tail -20000 | shuf >  ${BUILD}/shuffled-03
-#cat  ${BUILD}/shuffled | head -80000 | tail -20000 | shuf >  ${BUILD}/shuffled-04
-#cat  ${BUILD}/shuffled | head -100000 | tail -20000 | shuf >  ${BUILD}/shuffled-05
+cat  ${BUILD}/shuffled | head -40000 | tail -20000 | shuf >  ${BUILD}/shuffled-02
+cat  ${BUILD}/shuffled | head -60000 | tail -20000 | shuf >  ${BUILD}/shuffled-03
+cat  ${BUILD}/shuffled | head -80000 | tail -20000 | shuf >  ${BUILD}/shuffled-04
+cat  ${BUILD}/shuffled | head -100000 | tail -20000 | shuf >  ${BUILD}/shuffled-05
 
-#cat  ${BUILD}/shuffled | head -120000 | tail -20000 | shuf >  ${BUILD}/shuffled-06
-#cat  ${BUILD}/shuffled | head -140000 | tail -20000 | shuf >  ${BUILD}/shuffled-07
-#cat  ${BUILD}/shuffled | head -160000 | tail -20000 | shuf >  ${BUILD}/shuffled-08
-#cat  ${BUILD}/shuffled | head -180000 | tail -20000 | shuf >  ${BUILD}/shuffled-09
-#cat  ${BUILD}/shuffled | head -200000 | tail -0000 | shuf >  ${BUILD}/shuffled-10
+cat  ${BUILD}/shuffled | head -120000 | tail -20000 | shuf >  ${BUILD}/shuffled-06
+cat  ${BUILD}/shuffled | head -140000 | tail -20000 | shuf >  ${BUILD}/shuffled-07
+cat  ${BUILD}/shuffled | head -160000 | tail -20000 | shuf >  ${BUILD}/shuffled-08
+cat  ${BUILD}/shuffled | head -180000 | tail -20000 | shuf >  ${BUILD}/shuffled-09
+cat  ${BUILD}/shuffled | head -200000 | tail -20000 | shuf >  ${BUILD}/shuffled-10
 
 
 wc  ${BUILD}/*
@@ -51,8 +51,8 @@ done
 #cat  ${BUILD}/trimmed_urls | grep -a contentdm.oclc.org/ |sed  's|$|/oai/oai.php?verb=Identify|' > ${BUILD}/contentdm_candidate_urls
 #cat ${BUILD}/contentdm_candidate_urls | shuf   >  ${BUILD}/shuffled-cdm
 
-cat logs*/s* | tr ' <>()"\000\r\n' '\012' | tr " '" '\012' | sort | uniq > ${BUILD}/good_repositories_so_far
-cat ${BUILD}/good_repositories_so_far | ./trim_urls.bash  | shuf | head +1000 ./mutate-path-part.bash | sort | uniq | shuf > ${BUILD}/good_repositories_expanded
+#cat logs*/s* | tr ' <>()"\000\r\n' '\012' | tr " '" '\012' | sort | uniq > ${BUILD}/good_repositories_so_far
+#cat ${BUILD}/good_repositories_so_far | ./trim_urls.bash  | shuf | head +1000 | ./mutate-path-part.bash | sort | uniq | shuf > ${BUILD}/good_repositories_expanded
 #wget --force-directories --input-file=${BUILD}/good_repositories_so_far --directory-prefix=./good_repos --tries=1 --timeout=20
 
 

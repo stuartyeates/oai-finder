@@ -31,7 +31,7 @@ do
 
 	    pathnew=$(echo $path| sed -r 's|[^/]*/$||')
 
-	    echo \"$path\" \"$pathnew\"
+#	    echo \"$path\" \"$pathnew\"
 
 	    path=$pathnew
 	done

@@ -36,6 +36,19 @@ cat  ${BUILD}/shuffled | head -160000 | tail -20000 | shuf >  ${BUILD}/shuffled-
 cat  ${BUILD}/shuffled | head -180000 | tail -20000 | shuf >  ${BUILD}/shuffled-09
 cat  ${BUILD}/shuffled | head -200000 | tail -20000 | shuf >  ${BUILD}/shuffled-10
 
+cat  ${BUILD}/shuffled | head -220000 | tail -20000 | shuf >  ${BUILD}/shuffled-11
+cat  ${BUILD}/shuffled | head -240000 | tail -20000 | shuf >  ${BUILD}/shuffled-12
+cat  ${BUILD}/shuffled | head -260000 | tail -20000 | shuf >  ${BUILD}/shuffled-13
+cat  ${BUILD}/shuffled | head -280000 | tail -20000 | shuf >  ${BUILD}/shuffled-14
+cat  ${BUILD}/shuffled | head -300000 | tail -20000 | shuf >  ${BUILD}/shuffled-15
+
+cat  ${BUILD}/shuffled | head -320000 | tail -20000 | shuf >  ${BUILD}/shuffled-16
+cat  ${BUILD}/shuffled | head -340000 | tail -20000 | shuf >  ${BUILD}/shuffled-17
+cat  ${BUILD}/shuffled | head -360000 | tail -20000 | shuf >  ${BUILD}/shuffled-18
+cat  ${BUILD}/shuffled | head -380000 | tail -20000 | shuf >  ${BUILD}/shuffled-19
+cat  ${BUILD}/shuffled | head -400000 | tail -20000 | shuf >  ${BUILD}/shuffled-20
+
+
 
 wc  ${BUILD}/*
 
@@ -56,9 +69,9 @@ done
 #wget --force-directories --input-file=${BUILD}/good_repositories_so_far --directory-prefix=./good_repos --tries=1 --timeout=20
 
 
-rm ./tmp_urls
-for file in logs*/urls-*; do echo $file; cat $file |  ./filter_urls.bash | ./trim_urls.bash | sort | uniq >> ${BUILD}/tmp_urls ; done
-cat  ${BUILD}/tmp_urls |  sort | uniq > ${BUILD}/tmp_urls_sorted
+#rm ./tmp_urls
+#for file in logs*/urls-*; do echo $file; cat $file |  ./filter_urls.bash | ./trim_urls.bash | sort | uniq >> ${BUILD}/tmp_urls ; done
+#cat  ${BUILD}/tmp_urls |  sort | uniq > ${BUILD}/tmp_urls_sorted
 
 
 cat logs*/s* | tr ' <>()"\000\r\n' '\012' | tr " '" '\012' | sort | uniq > oai-found/0.0.1/raw;

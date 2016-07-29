@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo sleeping for 60 seconds
+sleep 60
+
 mkdir -p ./logs
 mkdir -p ./tmp
 

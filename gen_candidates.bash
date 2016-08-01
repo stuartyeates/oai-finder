@@ -24,38 +24,10 @@ comm -13 ${BUILD}/tried_urls ${BUILD}/expanded > ${BUILD}/untried_urls
 
 cat  ${BUILD}/untried_urls | shuf > ${BUILD}/shuffled
 
-cat  ${BUILD}/shuffled | head -20000 | tail -20000 | shuf >  ${BUILD}/shuffled-01
-cat  ${BUILD}/shuffled | head -40000 | tail -20000 | shuf >  ${BUILD}/shuffled-02
-cat  ${BUILD}/shuffled | head -60000 | tail -20000 | shuf >  ${BUILD}/shuffled-03
-cat  ${BUILD}/shuffled | head -80000 | tail -20000 | shuf >  ${BUILD}/shuffled-04
-cat  ${BUILD}/shuffled | head -100000 | tail -20000 | shuf >  ${BUILD}/shuffled-05
+split -da 3 -l $((`wc -l < ${BUILD}/shuffled`/50)) ${BUILD}/shuffled ${BUILD}/shuffled-n-
 
-cat  ${BUILD}/shuffled | head -120000 | tail -20000 | shuf >  ${BUILD}/shuffled-06
-cat  ${BUILD}/shuffled | head -140000 | tail -20000 | shuf >  ${BUILD}/shuffled-07
-cat  ${BUILD}/shuffled | head -160000 | tail -20000 | shuf >  ${BUILD}/shuffled-08
-cat  ${BUILD}/shuffled | head -180000 | tail -20000 | shuf >  ${BUILD}/shuffled-09
-cat  ${BUILD}/shuffled | head -200000 | tail -20000 | shuf >  ${BUILD}/shuffled-10
-
-cat  ${BUILD}/shuffled | head -220000 | tail -20000 | shuf >  ${BUILD}/shuffled-11
-cat  ${BUILD}/shuffled | head -240000 | tail -20000 | shuf >  ${BUILD}/shuffled-12
-cat  ${BUILD}/shuffled | head -260000 | tail -20000 | shuf >  ${BUILD}/shuffled-13
-cat  ${BUILD}/shuffled | head -280000 | tail -20000 | shuf >  ${BUILD}/shuffled-14
-cat  ${BUILD}/shuffled | head -300000 | tail -20000 | shuf >  ${BUILD}/shuffled-15
-
-cat  ${BUILD}/shuffled | head -320000 | tail -20000 | shuf >  ${BUILD}/shuffled-16
-cat  ${BUILD}/shuffled | head -340000 | tail -20000 | shuf >  ${BUILD}/shuffled-17
-cat  ${BUILD}/shuffled | head -360000 | tail -20000 | shuf >  ${BUILD}/shuffled-18
-cat  ${BUILD}/shuffled | head -380000 | tail -20000 | shuf >  ${BUILD}/shuffled-19
-cat  ${BUILD}/shuffled | head -400000 | tail -20000 | shuf >  ${BUILD}/shuffled-20
-
-
-
-wc  ${BUILD}/*
-
-
-for file in ${BUILD}/shuffled-*; do
+for file in ${BUILD}/shuffled-n-*; do
     ./check_urls.bash < $file &
-    sleep 1
 done
 
 #cat  ${BUILD}/trimmed_urls | grep -a '/index.php' | sed 's|/index.php.*|/index.php|' | sort | uniq > ${BUILD}/ojs_installs

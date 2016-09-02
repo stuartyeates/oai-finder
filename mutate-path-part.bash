@@ -89,6 +89,11 @@ cat ${TMPIN} | sed 's|$|?page=oai\&amp;verb=Identify|' >> ${TMPOUT} #ojs no mapp
 cat ${TMPIN} | sed 's|$|/pycsw/csw.py?mode=oaipmh&verb=Identify|' >> ${TMPOUT} # http://docs.pycsw.org/en/1.10.4/oaipmh.html
 cat ${TMPIN} | sed 's|$|/catalogue/csw.py?mode=oaipmh&verb=Identify|' >> ${TMPOUT} # http://docs.pycsw.org/en/1.10.4/oaipmh.html
 cat ${TMPIN} | sed 's|$|/?action=repository_oaipmh|' >> ${TMPOUT} # http://ir.soken.ac.jp/?action=repository_oaipmh&verb=Identify
+cat ${TMPIN} | sed 's|$|/oaipmh/index/?verb=Identify|' >> ${TMPOUT} # http://uhcl.recollect.co.nz/
+cat ${TMPIN} | sed 's|$|/oaiprovider/request?verb=Identify|' >> ${TMPOUT} # https://developers.exlibrisgroup.com/rosetta/integrations/OAI-PMH 
+#cat ${TMPIN} | sed 's|$||' >> ${TMPOUT} # 
+#cat ${TMPIN} | sed 's|$||' >> ${TMPOUT} # 
+
 
 #cat ${TMPIN} | sed 's|$||' >> ${TMPOUT} # 
 

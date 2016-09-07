@@ -10,7 +10,8 @@ mkdir -p ${BUILD}
 
 touch ${BUILD}/starting
 
-for file in logs*/urls-*; do echo $file; cat $file |  ./filter_urls.bash | ./trim_urls.bash | sort | uniq >> ${BUILD}/tmp_urls ; done
+for file in logs*/urls-*; do echo $file; cat $file | ./text_to_urls.bash |  ./filter_urls.bash | ./trim_urls.bash | sort | uniq >> ${BUILD}/tmp_urls ; done
+
 cat  ${BUILD}/tmp_urls | head -${MAX} |  sort | uniq > ${BUILD}/raw_urls2
 
 cat  ${BUILD}/raw_urls2 | ./filter_urls.bash > ${BUILD}/filtered_urls2

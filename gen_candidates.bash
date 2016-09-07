@@ -9,9 +9,11 @@ mkdir -p ${BUILD}
 
 touch ${BUILD}/starting
 
-for dir in ~/cache* ./cache*; do
+for dir in ~/cache* ./cache*  ; do
     find ${dir} -type f -exec cat \{\} \;
 done | ./text_to_urls.bash | uniq  |sort | uniq > ${BUILD}/raw_urls
+
+#cat ./oai-found/0.0.1/raw | ./text_to_urls.bash | uniq  |sort | uniq > ${BUILD}/raw_urls
 
 cat  ${BUILD}/raw_urls | ./filter_urls.bash > ${BUILD}/filtered_urls
 

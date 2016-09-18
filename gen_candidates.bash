@@ -24,7 +24,7 @@ cat  ${BUILD}/trimmed_urls |  ./mutate-path-part.bash |  sed 's^\([^:]\)//^\1/^'
 cat logs*/succ* logs*/fail* logs*/error*  | sort | uniq > ${BUILD}/tried_urls
 comm -13 ${BUILD}/tried_urls ${BUILD}/expanded > ${BUILD}/untried_urls
 
-cat  ${BUILD}/untried_urls | shuf > ${BUILD}/shuffled
+cat  ${BUILD}/untried_urls  | head -10000000 | shuf > ${BUILD}/shuffled
 
 split -da 3 -l $((`wc -l < ${BUILD}/shuffled`/50)) ${BUILD}/shuffled ${BUILD}/shuffled-n-
 
